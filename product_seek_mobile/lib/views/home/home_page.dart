@@ -12,7 +12,32 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: Text("Home Page"),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            brightness: Brightness.light,
+            backgroundColor: Colors.white,
+            title: Text(
+              "Product Seek",
+              style: TextStyle(color: Colors.blue[300]),
+            ),
+            centerTitle: false,
+            floating: true,
+            actions: <Widget>[
+              Container(
+                margin: EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                    color: Colors.grey[200], shape: BoxShape.circle),
+                child: IconButton(
+                    icon: Icon(Icons.search),
+                    color: Colors.black,
+                    iconSize: 30,
+                    onPressed: () {}),
+              )
+            ],
+          )
+        ],
+      ),
     ));
   }
 }
