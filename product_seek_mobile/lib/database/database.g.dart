@@ -80,7 +80,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `UserModel` (`id` TEXT, `name` TEXT, `email` TEXT, `phone_number` TEXT, `address` TEXT, `role` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `UserModel` (`id` INTEGER, `name` TEXT, `email` TEXT, `phone_number` TEXT, `address` TEXT, `role` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -117,7 +117,7 @@ class _$UserDao extends UserDao {
   final QueryAdapter _queryAdapter;
 
   static final _userModelMapper = (Map<String, dynamic> row) => UserModel(
-      row['id'] as String,
+      row['id'] as int,
       row['name'] as String,
       row['email'] as String,
       row['phone_number'] as String,

@@ -29,20 +29,22 @@ class NetworkUtil {
   /// @usage -> Make HTTP-GET request to specified URL and returns the response in JSON format
   Future<dynamic> get({@required String url}) =>
       http.get(url) // Make HTTP-GET request
-          .then((http.Response response) { // On response received
-            // Get response status code
-            final int statusCode = response.statusCode;
+          .then((http.Response response) {
+        // On response received
+        // Get response status code
+        final int statusCode = response.statusCode;
 
-            // Check response status code for error condition
-            if (statusCode < 200 || statusCode > 400 || json == null) { // Error occurred
-              throw new Exception("Error while fetching data");
-            }else{ // No error occurred
-              // Get response body
-              final String res = response.body;
-              // Convert response body to JSON object
-              return _decoder.convert(res);
-            }
-
+        // Check response status code for error condition
+        if (statusCode < 200 || statusCode > 400 || json == null) {
+          // Error occurred
+          throw new Exception("Error while fetching data");
+        } else {
+          // No error occurred
+          // Get response body
+          final String res = response.body;
+          // Convert response body to JSON object
+          return _decoder.convert(res);
+        }
       });
 
   /// Post Method -> Future<dynamic>
@@ -51,21 +53,27 @@ class NetworkUtil {
   ///        -> body -> dynamic
   ///        -> encoding -> dynamic
   ///  @usage -> Make HTTP-POST request to specified URL and returns the response in JSON format
-  Future<dynamic> post({@required String url,Map headers, body, encoding}) =>
-      http.post(url, body: body, headers: headers, encoding: encoding) // Make HTTP-POST request
-          .then((http.Response response) { // On response received
-            // Get response status code
-            final int statusCode = response.statusCode;
+  Future<dynamic> post({@required String url, Map headers, body, encoding}) =>
+      http
+          .post(url,
+              body: body,
+              headers: headers,
+              encoding: encoding) // Make HTTP-POST request
+          .then((http.Response response) {
+        // On response received
+        // Get response status code
+        final int statusCode = response.statusCode;
 
-            // Check response status code for error condition
-            if (statusCode < 200 || statusCode > 400 || json == null) { // Error occurred
-              throw new Exception("Error while fetching data");
-            }else{ // No error occurred
-              // Get response body
-              final String res = response.body;
-              // Convert response body to JSON object
-              return _decoder.convert(res);
-            }
-
+        // Check response status code for error condition
+        if (statusCode < 200 || statusCode > 400 || json == null) {
+          // Error occurred
+          throw new Exception("Error while fetching data");
+        } else {
+          // No error occurred
+          // Get response body
+          final String res = response.body;
+          // Convert response body to JSON object
+          return _decoder.convert(res);
+        }
       });
 }

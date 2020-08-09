@@ -46,6 +46,7 @@ class _RootPageState extends State<RootPage> {
 
   Widget _buildPageView() {
     return PageView(
+      physics: new NeverScrollableScrollPhysics(),
       controller: _pageController,
       onPageChanged: (index) {
         setState(() => _selectedIndex = index);
