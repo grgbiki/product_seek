@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:product_seek_mobile/views/home/item_details.dart';
+import 'package:product_seek_mobile/models/product_model.dart';
+import 'package:product_seek_mobile/viewmodels/product_view_model.dart';
+import 'package:product_seek_mobile/views/home/product_details.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -10,8 +15,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<ProductModel> products = new List<ProductModel>();
+
   @override
   Widget build(BuildContext context) {
+    final productViewModel = Provider.of<ProductViewModel>(context);
+
+    productViewModel.getLocalProducts().listen((product) {
+      if (product.length > 0) {
+        setState(() {
+          if (products != product) products = product;
+        });
+      }
+    });
+
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -28,7 +45,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             Expanded(
                 child: GridView.builder(
-                    itemCount: 20,
+                    itemCount: products.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: MediaQuery.of(context).size.width /
@@ -36,7 +53,8 @@ class _HomePageState extends State<HomePage> {
                           0.65,
                     ),
                     itemBuilder: (context, index) {
-                      return _buildStoreItem(index);
+                      var product = products[index];
+                      return _buildStoreItem(product);
                     }))
           ],
         ),
@@ -44,7 +62,7 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
-  Widget _buildStoreItem(int index) {
+  Widget _buildStoreItem(ProductModel product) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: Card(
@@ -53,15 +71,15 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ItemDetail(index: index)));
+                    builder: (context) => ItemDetail(product: product)));
           },
           child: Column(
             children: <Widget>[
               Container(
                 child: Hero(
-                  tag: index,
+                  tag: product.id,
                   child: CachedNetworkImage(
-                    imageUrl: "https://picsum.photos/800",
+                    imageUrl: jsonDecode(product.images)[0],
                   ),
                 ),
               ),
@@ -70,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: Text(
-                    "Grid Item Number " + index.toString(),
+                    product.title,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: TextStyle(fontSize: 16),
@@ -88,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                             children: <TextSpan>[
                           TextSpan(text: 'Rs. '),
                           TextSpan(
-                              text: index.toString(),
+                              text: product.price,
                               style: TextStyle(fontWeight: FontWeight.bold))
                         ]))),
               ),

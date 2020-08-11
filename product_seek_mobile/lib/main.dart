@@ -3,8 +3,10 @@ import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:product_seek_mobile/app/app.dart';
 import 'package:product_seek_mobile/database/database.dart';
 import 'package:product_seek_mobile/repository/login_repository.dart';
+import 'package:product_seek_mobile/repository/product_repository.dart';
 import 'package:product_seek_mobile/repository/profile_repository.dart';
 import 'package:product_seek_mobile/viewmodels/login_view_model.dart';
+import 'package:product_seek_mobile/viewmodels/product_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,10 +25,15 @@ void main() async {
       profileRepo: ProfileRepository(prefs: preferences, database: database));
   profileViewModel.init();
 
+  final productViewModel = ProductViewModel(
+      productRepo: ProductRepository(prefs: preferences, database: database));
+  productViewModel.init();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<LoginViewModel>.value(value: loginViewModel),
       ChangeNotifierProvider<ProfileViewModel>.value(value: profileViewModel),
+      ChangeNotifierProvider<ProductViewModel>.value(value: productViewModel),
     ],
     child: App(),
   ));

@@ -1,18 +1,32 @@
-import 'dart:ffi';
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:product_seek_mobile/models/product_model.dart';
 
 class ItemDetail extends StatefulWidget {
-  ItemDetail({this.index});
+  ItemDetail({this.product});
 
-  final int index;
+  final ProductModel product;
 
   @override
   _ItemDetailState createState() => _ItemDetailState();
 }
 
 class _ItemDetailState extends State<ItemDetail> {
+  List<String> images = new List<String>();
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      jsonDecode(widget.product.images).forEach((item) {
+        images.add(item);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -29,18 +43,24 @@ class _ItemDetailState extends State<ItemDetail> {
                         children: <Widget>[
                           Stack(
                             children: <Widget>[
-                              Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height / 2.5,
-                                  child: FittedBox(
-                                    child: Hero(
-                                      tag: widget.index,
-                                      child: CachedNetworkImage(
-                                        imageUrl: "https://picsum.photos/600",
-                                      ),
-                                    ),
-                                  )),
+                              Hero(
+                                tag: widget.product.id,
+                                child: CarouselSlider.builder(
+                                  itemCount: images.length,
+                                  options: CarouselOptions(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              2.5,
+                                      autoPlay: false,
+                                      aspectRatio: 2,
+                                      enlargeCenterPage: true,
+                                      enableInfiniteScroll: false),
+                                  itemBuilder: (context, index) {
+                                    var imageUrl = images[index];
+                                    return _buildImageItem(imageUrl);
+                                  },
+                                ),
+                              ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -70,7 +90,7 @@ class _ItemDetailState extends State<ItemDetail> {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    "Rs. 8000",
+                                    "Rs. " + widget.product.price,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -84,7 +104,7 @@ class _ItemDetailState extends State<ItemDetail> {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    "This is an item",
+                                    widget.product.title,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(fontSize: 20),
@@ -167,5 +187,17 @@ class _ItemDetailState extends State<ItemDetail> {
         ),
       ),
     );
+  }
+
+  Widget _buildImageItem(String imageUrl) {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 2.5,
+        child: FittedBox(
+          child: CachedNetworkImage(
+            imageUrl: imageUrl,
+          ),
+          fit: BoxFit.fill,
+        ));
   }
 }
