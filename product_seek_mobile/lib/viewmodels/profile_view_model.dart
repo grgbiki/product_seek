@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/repository/profile_repository.dart';
 
 class ProfileViewModel extends ChangeNotifier {
@@ -13,4 +14,6 @@ class ProfileViewModel extends ChangeNotifier {
   _refreshAllStates() async {
     notifyListeners();
   }
+
+  Stream<UserModel> getUserData() => profileRepo.getUserInfo();
 }

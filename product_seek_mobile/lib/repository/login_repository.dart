@@ -4,6 +4,7 @@ import 'package:product_seek_mobile/database/database.dart';
 import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/network/network_config.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
+import 'package:product_seek_mobile/resources/app_constants.dart';
 import 'package:product_seek_mobile/utils/network_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:meta/meta.dart';
@@ -14,8 +15,6 @@ class LoginRepository {
 
   LoginRepository({this.prefs, this.database});
   var _isSuccessfulLogin = StreamController<bool>.broadcast();
-
-  static const String _IS_LOGGED_IN = "is_logged_in";
 
   String _serverMessage = "";
 
@@ -40,11 +39,13 @@ class LoginRepository {
       if (response != null) {
         UserModel userModel = UserModel.fromJson(response["user"]);
         database.userDao.addUserData(userModel);
-        await prefs.setBool(_IS_LOGGED_IN, true);
+        await prefs.setBool(IS_LOGGED_IN, true);
+        await prefs.setString(ACCESS_TOKEN, response["access_token"]);
+        await prefs.setInt(USER_ID, userModel.id);
         _isSuccessfulLogin.add(true);
       } else {
         _serverMessage = response["message"];
-        await prefs.setBool(_IS_LOGGED_IN, false);
+        await prefs.setBool(IS_LOGGED_IN, false);
         _isSuccessfulLogin.add(false);
       }
     });
@@ -59,23 +60,31 @@ class LoginRepository {
       if (response.toString().contains("access_token")) {
         UserModel userModel = UserModel.fromJson(response["user"]);
         database.userDao.addUserData(userModel);
-        await prefs.setBool(_IS_LOGGED_IN, true);
+        await prefs.setBool(IS_LOGGED_IN, true);
+        await prefs.setString(ACCESS_TOKEN, response["access_token"]);
+        await prefs.setInt(USER_ID, userModel.id);
         _isSuccessfulLogin.add(true);
       } else {
         _serverMessage = response["message"];
-        await prefs.setBool(_IS_LOGGED_IN, false);
+        await prefs.setBool(IS_LOGGED_IN, false);
         _isSuccessfulLogin.add(false);
       }
     });
   }
 
   Future<bool> isLoggedIn() async {
-    print(prefs.containsKey(_IS_LOGGED_IN));
-    return prefs.containsKey(_IS_LOGGED_IN);
+    if (prefs.containsKey(IS_LOGGED_IN)) {
+      return prefs.getBool(IS_LOGGED_IN);
+    } else
+      return false;
   }
 
   Stream<bool> getLoginResponse() {
     return _isSuccessfulLogin.stream;
+  }
+
+  logout() async {
+    prefs.clear();
   }
 
   getErrorMessage() {

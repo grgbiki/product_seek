@@ -127,7 +127,7 @@ class _$UserDao extends UserDao {
   final InsertionAdapter<UserModel> _userModelInsertionAdapter;
 
   @override
-  Stream<UserModel> getUserDetail(String id) {
+  Stream<UserModel> getUserDetail(int id) {
     return _queryAdapter.queryStream('SELECT * FROM UserModel WHERE id = ?',
         arguments: <dynamic>[id],
         queryableName: 'UserModel',

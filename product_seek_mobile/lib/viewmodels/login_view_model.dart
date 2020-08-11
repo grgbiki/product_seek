@@ -8,7 +8,6 @@ class LoginViewModel extends ChangeNotifier {
   final LoginRepository loginRepo;
 
   LoginViewModel({@required this.loginRepo});
-
   var _loginResponseController = StreamController<bool>.broadcast();
   bool isLoggedIn;
 
@@ -43,6 +42,11 @@ class LoginViewModel extends ChangeNotifier {
         confirmPassword: confirmPassword,
         address: address,
         number: number);
+    await _refreshAllStates();
+  }
+
+  logout() async {
+    await loginRepo.logout();
     await _refreshAllStates();
   }
 

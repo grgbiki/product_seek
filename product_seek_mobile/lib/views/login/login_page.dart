@@ -21,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isRegistering = false;
   bool _isLoading = false;
+  bool once = true;
 
   bool _showPassword = false;
   bool _showConfirmPassword = false;
@@ -59,10 +60,11 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _isLoading = false;
         if (isSuccessfulLogin) {
-          print("Login Success");
-          Navigator.pop(context);
+          if (once) {
+            once = false;
+            Navigator.pop(context);
+          }
         } else {
-          print("Login failed");
           _serverMessage = loginViewModel.getMessage();
         }
       });
@@ -290,8 +292,11 @@ class _LoginPageState extends State<LoginPage> {
   String _simplifyServerMessage() {
     if (_serverMessage == "Invalid Credentials") {
       return "Invalid email address or password";
-    } else
-      return "";
+    } else if (_serverMessage == "Error while fetching data")
+      return "Server Error";
+    else {
+      return _serverMessage;
+    }
   }
 
   Widget _buildLoginButton(LoginViewModel loginViewModel) {
@@ -303,6 +308,7 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: _isLoading
             ? null
             : () {
+                FocusScope.of(context).unfocus();
                 if (formKey.currentState.validate()) {
                   setState(() {
                     _isLoading = true;
