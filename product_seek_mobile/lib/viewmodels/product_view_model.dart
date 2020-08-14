@@ -15,8 +15,13 @@ class ProductViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  searchForProductBackend(String query) {}
+
   getProducts() => productRepo.getProducts();
 
   Stream<List<ProductModel>> getLocalProducts() =>
       productRepo.getLocalProducts();
+
+  Stream<List<ProductModel>> getSearchresults(String name) =>
+      productRepo.getSearchresults(name);
 }

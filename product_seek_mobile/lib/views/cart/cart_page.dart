@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/cart_model.dart';
-import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/viewmodels/cart_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -23,15 +22,16 @@ class _CartPageState extends State<CartPage> {
   void initState() {
     super.initState();
     setState(() {});
-    initDemoItems();
     refreshTotalCost();
   }
 
   void refreshTotalCost() {
     totalPrice = 0;
-    items.forEach((item) {
-      totalPrice += item.product.price * item.quantity;
-    });
+    if (items.length > 0) {
+      items.forEach((item) {
+        totalPrice += item.product.price * item.quantity;
+      });
+    }
   }
 
   @override
@@ -187,41 +187,5 @@ class _CartPageState extends State<CartPage> {
         ],
       ),
     );
-  }
-
-  initDemoItems() {
-    items.add(new CartItemModel(
-        null,
-        new ProductModel(
-          1,
-          "Apple",
-          '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-          120,
-          "This is an apple",
-        ),
-        1,
-        120));
-    items.add(new CartItemModel(
-        null,
-        new ProductModel(
-          2,
-          "Apple",
-          '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-          120,
-          "This is an apple",
-        ),
-        1,
-        120));
-    items.add(new CartItemModel(
-        null,
-        new ProductModel(
-          3,
-          "Apple",
-          '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-          120,
-          "This is an apple",
-        ),
-        1,
-        120));
   }
 }

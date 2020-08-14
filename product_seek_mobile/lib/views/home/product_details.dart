@@ -8,8 +8,11 @@ import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
+import 'package:product_seek_mobile/viewmodels/category_view_model.dart';
+import 'package:product_seek_mobile/viewmodels/store_view_model.dart';
 import 'package:product_seek_mobile/views/cart/cart_page.dart';
 import 'package:product_seek_mobile/views/checkout/checkout_page.dart';
+import 'package:provider/provider.dart';
 
 class ItemDetail extends StatefulWidget {
   ItemDetail({this.product});
@@ -27,6 +30,9 @@ class _ItemDetailState extends State<ItemDetail> {
   String heartPath = "assets/icons/heart_outline.svg";
 
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+
+  String categoryName = "";
+  String storeName = "";
 
   @override
   void initState() {
@@ -52,130 +58,180 @@ class _ItemDetailState extends State<ItemDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    final categoryViewModel = Provider.of<CategoryViewModel>(context);
+    final storeViewModel = Provider.of<StoreViwModel>(context);
+
+    if (storeName.isEmpty) {
+      storeViewModel.getStoreInfoFromBackend(widget.product.storeId);
+    }
+    storeViewModel.getStoreInfo(widget.product.storeId).listen((store) {
+      if (store != null) {
+        if (storeName.isEmpty) {
+          setState(() {
+            storeName = store.name;
+          });
+        }
+      }
+    });
+
+    if (categoryName.isEmpty) {
+      categoryViewModel.getCategoryInfoBackend(widget.product.categoryId);
+    }
+    categoryViewModel
+        .getCategoryInfo(widget.product.categoryId)
+        .listen((category) {
+      if (category != null) {
+        if (categoryName.isEmpty) {
+          setState(() {
+            categoryName = category.name;
+          });
+        }
+      }
+    });
+    return Scaffold(
         key: _scaffoldkey,
         body: Container(
-          child: Column(
-            children: <Widget>[
-              Expanded(
+          child: SafeArea(
+            child: Column(
+              children: <Widget>[
+                Expanded(
                   child: Container(
-                child: Column(
-                  children: <Widget>[
-                    SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          Stack(
-                            children: <Widget>[
-                              Hero(
-                                tag: widget.product.id,
-                                child: CarouselSlider.builder(
-                                  itemCount: images.length,
-                                  options: CarouselOptions(
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              2.5,
-                                      autoPlay: false,
-                                      aspectRatio: 2,
-                                      enlargeCenterPage: true,
-                                      enableInfiniteScroll: false),
-                                  itemBuilder: (context, index) {
-                                    var imageUrl = images[index];
-                                    return _buildImageItem(imageUrl);
-                                  },
+                    child: CustomScrollView(
+                      slivers: <Widget>[
+                        SliverToBoxAdapter(
+                            child: Column(
+                          children: <Widget>[
+                            Stack(
+                              children: <Widget>[
+                                Hero(
+                                  tag: widget.product.id,
+                                  child: CarouselSlider.builder(
+                                      itemCount:
+                                          jsonDecode(widget.product.images)
+                                              .length,
+                                      itemBuilder: (context, index) {
+                                        var imageUrl = images[index];
+                                        return _buildImageItem(imageUrl);
+                                      },
+                                      options: CarouselOptions(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                2.5,
+                                        autoPlay: false,
+                                        enableInfiniteScroll: false,
+                                        enlargeCenterPage: true,
+                                      )),
                                 ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Container(
-                                    margin: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        shape: BoxShape.circle),
-                                    child: IconButton(
-                                        icon: Icon(Icons.arrow_back),
-                                        color: Colors.white,
-                                        iconSize: 25,
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        }),
-                                  ),
-                                ],
-                              ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          shape: BoxShape.circle),
+                                      child: IconButton(
+                                          icon: Icon(Icons.arrow_back),
+                                          color: Colors.white,
+                                          iconSize: 25,
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          }),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          ],
+                        )),
+                        SliverToBoxAdapter(
+                          child: Column(
+                            children: <Widget>[
+                              _buildItemInfo(),
+                              _buildCategoryInfo(),
+                              _buildDescriptionPage(),
+                              _buildStoreInfo()
                             ],
                           ),
-                          Container(
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 5),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 15),
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            '\$ ' +
-                                                widget.product.price.toString(),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              toggleFavourite();
-                                            },
-                                            child: Container(
-                                                padding: EdgeInsets.all(8),
-                                                child: SvgPicture.asset(
-                                                  heartPath,
-                                                  width: 20,
-                                                )),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          widget.product.title,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                _buildDescriptionPage(),
-                                _buildStoreInfo(),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                        )
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              )),
-              _buildBottomControl(),
-            ],
+                _buildBottomControl()
+              ],
+            ),
           ),
-        ),
+        ));
+  }
+
+  _buildCategoryInfo() {
+    return Container(
+      color: Colors.white,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Row(
+        children: <Widget>[
+          Text("Category", style: TextStyle(fontSize: 16, color: Colors.grey)),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 5),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              color: Colors.grey[200],
+              child: Text(categoryName.isNotEmpty ? categoryName : ""),
+            ),
+          )
+        ],
       ),
     );
+  }
+
+  _buildItemInfo() {
+    return Container(
+        margin: EdgeInsets.only(top: 10),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        color: Colors.white,
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  '\$ ' + widget.product.price.toString(),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 20, color: Theme.of(context).primaryColor),
+                ),
+                InkWell(
+                  onTap: () {
+                    toggleFavourite();
+                  },
+                  child: Container(
+                      padding: EdgeInsets.all(8),
+                      child: SvgPicture.asset(
+                        heartPath,
+                        width: 20,
+                      )),
+                )
+              ],
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                widget.product.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ));
   }
 
   _buildStoreInfo() {
@@ -195,7 +251,10 @@ class _ItemDetailState extends State<ItemDetail> {
               SizedBox(
                 width: 10,
               ),
-              Expanded(child: InkWell(onTap: () {}, child: Text("Store Name"))),
+              Expanded(
+                  child: InkWell(
+                      onTap: () {},
+                      child: Text(storeName.isNotEmpty ? storeName : ""))),
               FlatButton(
                 onPressed: () {},
                 child: Text("Follow"),
