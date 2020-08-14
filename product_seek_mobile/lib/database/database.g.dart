@@ -62,6 +62,8 @@ class _$AppDatabase extends AppDatabase {
 
   UserDao _userDaoInstance;
 
+  ProductDao _productDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -80,7 +82,9 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `UserModel` (`id` TEXT, `name` TEXT, `email` TEXT, `phone_number` TEXT, `address` TEXT, `role` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `UserModel` (`id` INTEGER, `name` TEXT, `email` TEXT, `phone_number` TEXT, `address` TEXT, `role` TEXT, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `ProductModel` (`id` INTEGER, `title` TEXT, `images` TEXT, `price` REAL, `description` TEXT, `category_id` INTEGER, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -91,6 +95,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   UserDao get userDao {
     return _userDaoInstance ??= _$UserDao(database, changeListener);
+  }
+
+  @override
+  ProductDao get productDao {
+    return _productDaoInstance ??= _$ProductDao(database, changeListener);
   }
 }
 
@@ -117,7 +126,7 @@ class _$UserDao extends UserDao {
   final QueryAdapter _queryAdapter;
 
   static final _userModelMapper = (Map<String, dynamic> row) => UserModel(
-      row['id'] as String,
+      row['id'] as int,
       row['name'] as String,
       row['email'] as String,
       row['phone_number'] as String,
@@ -127,7 +136,7 @@ class _$UserDao extends UserDao {
   final InsertionAdapter<UserModel> _userModelInsertionAdapter;
 
   @override
-  Stream<UserModel> getUserDetail(String id) {
+  Stream<UserModel> getUserDetail(int id) {
     return _queryAdapter.queryStream('SELECT * FROM UserModel WHERE id = ?',
         arguments: <dynamic>[id],
         queryableName: 'UserModel',
@@ -139,5 +148,108 @@ class _$UserDao extends UserDao {
   Future<void> addUserData(UserModel userModel) async {
     await _userModelInsertionAdapter.insert(
         userModel, OnConflictStrategy.replace);
+  }
+}
+
+class _$ProductDao extends ProductDao {
+  _$ProductDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _productModelInsertionAdapter = InsertionAdapter(
+            database,
+            'ProductModel',
+            (ProductModel item) => <String, dynamic>{
+                  'id': item.id,
+                  'title': item.title,
+                  'images': item.images,
+                  'price': item.price,
+                  'description': item.description,
+                  'category_id': item.categoryId
+                },
+            changeListener),
+        _productModelUpdateAdapter = UpdateAdapter(
+            database,
+            'ProductModel',
+            ['id'],
+            (ProductModel item) => <String, dynamic>{
+                  'id': item.id,
+                  'title': item.title,
+                  'images': item.images,
+                  'price': item.price,
+                  'description': item.description,
+                  'category_id': item.categoryId
+                },
+            changeListener),
+        _productModelDeletionAdapter = DeletionAdapter(
+            database,
+            'ProductModel',
+            ['id'],
+            (ProductModel item) => <String, dynamic>{
+                  'id': item.id,
+                  'title': item.title,
+                  'images': item.images,
+                  'price': item.price,
+                  'description': item.description,
+                  'category_id': item.categoryId
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _productModelMapper = (Map<String, dynamic> row) => ProductModel(
+      row['id'] as int,
+      row['title'] as String,
+      row['images'] as String,
+      row['price'] as double,
+      row['description'] as String,
+      row['category_id'] as int);
+
+  final InsertionAdapter<ProductModel> _productModelInsertionAdapter;
+
+  final UpdateAdapter<ProductModel> _productModelUpdateAdapter;
+
+  final DeletionAdapter<ProductModel> _productModelDeletionAdapter;
+
+  @override
+  Stream<List<ProductModel>> getProducts() {
+    return _queryAdapter.queryListStream('SELECT * FROM ProductModel LIMIT 30',
+        queryableName: 'ProductModel',
+        isView: false,
+        mapper: _productModelMapper);
+  }
+
+  @override
+  Stream<List<ProductModel>> getProductsByCategory(int categoryId) {
+    return _queryAdapter.queryListStream(
+        'SELECT * FROM ProductModel WHERE category_id =? LIMIT 30',
+        arguments: <dynamic>[categoryId],
+        queryableName: 'ProductModel',
+        isView: false,
+        mapper: _productModelMapper);
+  }
+
+  @override
+  Future<void> addProduct(ProductModel product) async {
+    await _productModelInsertionAdapter.insert(
+        product, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> addProducts(List<ProductModel> product) async {
+    await _productModelInsertionAdapter.insertList(
+        product, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateProduct(ProductModel product) async {
+    await _productModelUpdateAdapter.update(product, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> removeProduct(ProductModel product) async {
+    await _productModelDeletionAdapter.delete(product);
   }
 }

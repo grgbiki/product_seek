@@ -34,6 +34,14 @@ class _RootPageState extends State<RootPage> {
     });
   }
 
+  void changeIndex(int index) {
+    setState(() {
+      _selectedIndex = index;
+      _pageController.animateToPage(index,
+          duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,6 +54,7 @@ class _RootPageState extends State<RootPage> {
 
   Widget _buildPageView() {
     return PageView(
+      physics: new NeverScrollableScrollPhysics(),
       controller: _pageController,
       onPageChanged: (index) {
         setState(() => _selectedIndex = index);
@@ -58,7 +67,9 @@ class _RootPageState extends State<RootPage> {
           child: CartPage(),
         ),
         Container(
-          child: ProfilePage(),
+          child: ProfilePage(
+            changeIndex: changeIndex,
+          ),
         ),
       ],
     );
