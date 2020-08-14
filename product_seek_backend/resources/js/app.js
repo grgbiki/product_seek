@@ -8,24 +8,65 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+// v-form
+import { Form, HasError, AlertError } from 'vform';
+window.Form=Form;
+Vue.component(HasError.name, HasError);
+Vue.component(AlertError.name, AlertError);
+// end v-form
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+import Swal from 'sweetalert2';
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  onOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
+ window.Toast=Toast;
+ 
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+Vue.filter('Trim_title', function(string,num){
+  // let array = string.trim().split(' ');
+  // let end = string.length > 5 ? '...' : '';
+  // return array.slice(0,5).join(' ') + end;
+  if(string.length > num){ string = string.substring(0,num)+'...'};
+  return string;
+});
+
+Vue.filter('dollar', function(string){
+    return '$ '+string;
+ })
+
+import moment from 'moment';
+ Vue.filter('myDate',function(date){
+  return moment(date).format('MMMM DD YYYY');
+ });
+
+ // pagination component
+Vue.component('pagination',require('laravel-vue-pagination'));
+
+
+
+Vue.component('loader',require('./components/UI/Loader.vue').default);
+
+
+// product components
+Vue.component('product',require('./components/backend/product/Product.vue').default);
+Vue.component('produt-cat',require('./components/backend/product/ProductCategory/Productcategory.vue').default);
+Vue.component('produt-cat-trash',require('./components/backend/product/ProductCategory/Trash.vue').default);
+// end product components
+
+
+// store components
+Vue.component('store',require('./components/backend/store/Store.vue').default);
+
+// end store components
 
 const app = new Vue({
     el: '#app',
