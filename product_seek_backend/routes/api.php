@@ -20,3 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/register','API\Authcontroller@register');
 Route::post('/login','API\Authcontroller@login');
+
+
+Route::get('/products','API\APIcontroller@products');
+Route::get('/categories','API\APIcontroller@categories');
+Route::get('/stores','API\APIcontroller@stores');

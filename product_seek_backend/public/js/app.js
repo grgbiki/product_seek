@@ -2095,7 +2095,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['admin_url'],
   data: function data() {
@@ -65536,17 +65535,9 @@ var render = function() {
                                         { staticClass: "p-image" },
                                         [
                                           _c("figure", [
-                                            _vm.ImageArrayIsCurrentOrNot(img)
-                                              ? _c("img", {
-                                                  attrs: { src: img, alt: "" }
-                                                })
-                                              : _c("img", {
-                                                  attrs: {
-                                                    src:
-                                                      "/images/uploads/" + img,
-                                                    alt: ""
-                                                  }
-                                                }),
+                                            _c("img", {
+                                              attrs: { src: img, alt: "" }
+                                            }),
                                             _vm._v(" "),
                                             _c(
                                               "figcaption",

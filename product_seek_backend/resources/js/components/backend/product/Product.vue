@@ -91,8 +91,7 @@
 								     	<div class="row m-auto" v-if='form.product_image.length'>
 								     		<div class="p-image" v-for='img,index in form.product_image'>
 								     			<figure>
-								     				<img v-if='ImageArrayIsCurrentOrNot(img)' :src="img" alt="">
-									     			<img v-else  :src="'/images/uploads/'+img"alt="">
+									     			<img :src="img"alt="">
 									     			<figcaption @click='removeImg(index)'>
 									     				<i class="fas fa-times"></i>
 									     			</figcaption>

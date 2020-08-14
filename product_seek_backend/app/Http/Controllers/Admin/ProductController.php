@@ -75,7 +75,7 @@ class ProductController extends Controller
 			$imageName='no-image.jpg';
 		}
 
-		return $imageName;
+		return '/images/uploads/'.$imageName;
   }
   // end make store product image function
 
