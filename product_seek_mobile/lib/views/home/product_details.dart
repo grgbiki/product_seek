@@ -97,7 +97,7 @@ class _ItemDetailState extends State<ItemDetail> {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    "Rs. " + widget.product.price,
+                                    "Rs. " + widget.product.price.toString(),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -186,9 +186,7 @@ class _ItemDetailState extends State<ItemDetail> {
                                             null,
                                             widget.product,
                                             1,
-                                            1 *
-                                                int.parse(widget.product.price)
-                                                    .toDouble())
+                                            1 * widget.product.price.toDouble())
                                       ],
                                       0),
                                 )));

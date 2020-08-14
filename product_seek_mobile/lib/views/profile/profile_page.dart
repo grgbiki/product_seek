@@ -64,24 +64,26 @@ class _ProfilePageState extends State<ProfilePage> {
                     : Container(
                         height: MediaQuery.of(context).size.height / 4,
                         color: Theme.of(context).primaryColor,
-                        child: Center(
-                          child: RaisedButton(
-                              child: Container(
-                                child: Text(
-                                  "Login / Sign Up",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                        child: SafeArea(
+                          child: Center(
+                            child: RaisedButton(
+                                child: Container(
+                                  child: Text(
+                                    "Login / Sign Up",
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginPage(
-                                              loginCallback: loginCallBack,
-                                            )));
-                              }),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => LoginPage(
+                                                loginCallback: loginCallBack,
+                                              )));
+                                }),
+                          ),
                         ),
                       ),
                 Container(

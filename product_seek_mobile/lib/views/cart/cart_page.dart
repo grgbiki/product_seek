@@ -17,11 +17,21 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   List<CartItemModel> items = new List<CartItemModel>();
 
+  double totalPrice = 0;
+
   @override
   void initState() {
     super.initState();
     setState(() {});
     initDemoItems();
+    refreshTotalCost();
+  }
+
+  void refreshTotalCost() {
+    totalPrice = 0;
+    items.forEach((item) {
+      totalPrice += item.product.price * item.quantity;
+    });
   }
 
   @override
@@ -32,10 +42,61 @@ class _CartPageState extends State<CartPage> {
           title: Text("My Cart"),
         ),
         body: Container(
-          child: CustomScrollView(
-            slivers: <Widget>[_buildCart()],
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: CustomScrollView(
+                  slivers: <Widget>[_buildCart()],
+                ),
+              ),
+              _buildBottomPage(),
+            ],
           ),
         ));
+  }
+
+  Widget _buildBottomPage() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: 60,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            RichText(
+                text: TextSpan(
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                    children: <TextSpan>[
+                  TextSpan(
+                      text: 'Total: ',
+                      style: TextStyle(color: Colors.black, fontSize: 16)),
+                  TextSpan(
+                      text: 'Rs. ' + totalPrice.toString(),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16))
+                ])),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 5),
+              height: 45,
+              child: RaisedButton(
+                color: Theme.of(context).primaryColor,
+                onPressed: () {},
+                child: Text(
+                  "Checkout",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildCart() {
@@ -66,55 +127,63 @@ class _CartPageState extends State<CartPage> {
             width: 15,
           ),
           Expanded(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(child: Text(item.product.title)),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 18,
-                  ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(child: Text("Rs. " + item.product.price)),
-                        IconButton(
-                          onPressed: item.quantity > 1
-                              ? () {
-                                  setState(() {
-                                    item.quantity--;
-                                  });
-                                }
-                              : null,
-                          icon: Icon(
-                            Icons.remove,
-                          ),
-                          iconSize: 16,
-                        ),
-                        Container(
-                          child: Text(item.quantity.toString()),
-                        ),
-                        IconButton(
-                          onPressed: item.quantity < 5
-                              ? () {
-                                  setState(() {
-                                    item.quantity++;
-                                  });
-                                }
-                              : null,
-                          icon: Icon(
-                            Icons.add,
-                          ),
-                          iconSize: 16,
-                        )
-                      ],
+              child: Container(
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(child: Text(item.product.title)),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.delete),
                     ),
-                  )
-                ],
-              ),
+                  ],
+                ),
+                Container(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: Container(
+                              child: Text(
+                                  "Rs. " + item.product.price.toString()))),
+                      IconButton(
+                        onPressed: item.quantity > 1
+                            ? () {
+                                setState(() {
+                                  item.quantity--;
+                                  refreshTotalCost();
+                                });
+                              }
+                            : null,
+                        icon: Icon(
+                          Icons.remove,
+                        ),
+                        iconSize: 16,
+                      ),
+                      Container(
+                        child: Text(item.quantity.toString()),
+                      ),
+                      IconButton(
+                        onPressed: item.quantity < 5
+                            ? () {
+                                setState(() {
+                                  item.quantity++;
+                                  refreshTotalCost();
+                                });
+                              }
+                            : null,
+                        icon: Icon(
+                          Icons.add,
+                        ),
+                        iconSize: 16,
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
-          )
+          ))
         ],
       ),
     );
@@ -127,7 +196,7 @@ class _CartPageState extends State<CartPage> {
             1,
             "Apple",
             '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-            "120",
+            120,
             "This is an apple",
             1),
         1,
@@ -138,7 +207,7 @@ class _CartPageState extends State<CartPage> {
             2,
             "Apple",
             '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-            "120",
+            120,
             "This is an apple",
             1),
         1,
@@ -149,7 +218,7 @@ class _CartPageState extends State<CartPage> {
             3,
             "Apple",
             '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-            "120",
+            120,
             "This is an apple",
             1),
         1,

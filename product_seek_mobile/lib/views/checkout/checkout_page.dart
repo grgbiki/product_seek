@@ -27,7 +27,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     setState(() {
       shippingFee = shippingFee * widget.checkoutitems.prductList.length;
       widget.checkoutitems.prductList.forEach((item) {
-        subTotal = subTotal + (int.parse(item.product.price) * item.quantity);
+        subTotal = subTotal + (item.product.price * item.quantity);
       });
       widget.checkoutitems.total = subTotal + shippingFee;
     });
@@ -180,7 +180,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text("Rs. " + item.product.price),
+                            Text("Rs. " + item.product.price.toString()),
                             Text("Qty. " + item.quantity.toString())
                           ],
                         ),

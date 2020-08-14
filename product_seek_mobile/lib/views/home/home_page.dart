@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                             children: <TextSpan>[
                           TextSpan(text: 'Rs. '),
                           TextSpan(
-                              text: product.price,
+                              text: product.price.toString(),
                               style: TextStyle(fontWeight: FontWeight.bold))
                         ]))),
               ),

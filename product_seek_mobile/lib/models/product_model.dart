@@ -6,7 +6,7 @@ class ProductModel {
   int id;
   String title;
   String images;
-  String price;
+  double price;
   String description;
   @ColumnInfo(name: "category_id")
   int categoryId;
