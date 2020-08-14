@@ -10,6 +10,8 @@ use App\Store;
 
 class APIController extends Controller
 {
+
+	// api to get all the products
   public function products(){
   	$products= Product::latest()->with('productCategory','productStore')->get();
 
@@ -19,40 +21,42 @@ class APIController extends Controller
 
   	return $products;
   }
+  // end api to get all the products
 
+
+  // api to get all the products category
   public function categories(){
   	return Productcategory::latest()->get();
   }
+  // end api to get all the products category
 
+ // api to get all the products category by id
   public function show_category($id){
   	return Productcategory::findOrFail($id);
   }
+  // end api to get all the products category by id
+
+ // api to get all the products store by id
   public function show_store($id){
   	return Store::findOrFail($id);
   }
+  // end api to get all the products store by id
 
+
+  // get all the store
   public function stores(){
   	return Store::latest()->get();
   }
+  // end get all the store
 
 
+  // filter by cat
   public function filter_by_cat($id){
   	$cat=Productcategory::findOrFail($id);
  		$products= Product::latest()->with('productCategory')->get();
  		
  		//filtercategory
  		$products=$this->filter_product_cat($products,$cat->id);
- 		//filtercategory
-
- 		return $products;
-  }
-
-   public function filter_by_store($id){
-  	$store=Store::findOrFail($id);
- 		$products= Product::latest()->with('productStore')->get();
- 		
- 		//filtercategory
- 		$products=$this->filter_product_store($products,$store->id);
  		//filtercategory
 
  		return $products;
@@ -77,6 +81,22 @@ class APIController extends Controller
   	return $filtered_products;
 
   }
+  // end filter by cat
+
+
+  // filter by store
+   public function filter_by_store($id){
+  	$store=Store::findOrFail($id);
+ 		$products= Product::latest()->with('productStore')->get();
+ 		
+ 		//filtercategory
+ 		$products=$this->filter_product_store($products,$store->id);
+ 		//filtercategory
+
+ 		return $products;
+  }
+
+  
    public function filter_product_store($product,$category_id){
   	$filtered_products=[];
   	foreach($product as $p){
@@ -96,6 +116,16 @@ class APIController extends Controller
   	return $filtered_products;
 
   }
+
+	// end filter by store
+	
+
+	// search product
+	public function product_search($search_term){
+		$products = Product::where('title', 'LIKE', "%{$search_term}%")->with('productCategory','productStore')->get();
+		return $products;
+	}
+	// end search product
 
   
 }
