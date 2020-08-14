@@ -4,7 +4,7 @@ import 'package:product_seek_mobile/network/network_config.dart';
 @entity
 class UserModel {
   @primaryKey
-  String id;
+  int id;
   String name;
   String email;
   @ColumnInfo(name: "phone_number")
