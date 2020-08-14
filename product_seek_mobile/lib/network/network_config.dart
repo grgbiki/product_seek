@@ -11,4 +11,10 @@ class NetworkConfig {
   static const String API_KEY_USER_ROLE = "role";
 
   static const String API_KEY_LOGIN_RESPONSE = "response";
+
+  static const String API_KEY_PRODUCT_ID = "id";
+  static const String API_KEY_PRODUCT_TITLE = "title";
+  static const String API_KEY_PRODUCT_PRICE = "price";
+  static const String API_KEY_PRODUCT_DESCRIPTION = "description";
+  static const String API_KEY_PRODUCT_IMAGE = "product_image";
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:product_seek_mobile/views/login/login_page.dart';
@@ -98,7 +99,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           Expanded(
                             child: InkWell(
                               onTap: () {
-                                print("test");
                                 widget.changeIndex(1);
                               },
                               child: Container(
@@ -117,7 +117,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: Container(
                                 child: Column(
                                   children: <Widget>[
-                                    Icon(Icons.signal_wifi_4_bar),
+                                    SvgPicture.asset(
+                                      "assets/icons/heart.svg",
+                                      width: 20,
+                                    ),
                                     Text("Favourites")
                                   ],
                                 ),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
+import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/viewmodels/product_view_model.dart';
 import 'package:product_seek_mobile/views/home/product_details.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final productViewModel = Provider.of<ProductViewModel>(context);
+
+    productViewModel.getProducts();
 
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                               childAspectRatio:
                                   MediaQuery.of(context).size.width /
                                       (MediaQuery.of(context).size.height) /
-                                      0.7,
+                                      0.68,
                             ),
                             itemBuilder: (context, index) {
                               var product = snapshot.data[index];
@@ -78,10 +81,12 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: <Widget>[
               Container(
+                height: MediaQuery.of(context).size.height / 4.5,
                 child: Hero(
                   tag: product.id,
                   child: CachedNetworkImage(
-                    imageUrl: jsonDecode(product.images)[0],
+                    imageUrl: NetworkEndpoints.BASE_URL +
+                        jsonDecode(product.images)[0],
                   ),
                 ),
               ),
@@ -106,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                             style:
                                 TextStyle(color: Theme.of(context).accentColor),
                             children: <TextSpan>[
-                          TextSpan(text: 'Rs. '),
+                          TextSpan(text: '\$ '),
                           TextSpan(
                               text: product.price.toString(),
                               style: TextStyle(fontWeight: FontWeight.bold))

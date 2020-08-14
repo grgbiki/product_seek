@@ -77,7 +77,7 @@ class _CartPageState extends State<CartPage> {
                       text: 'Total: ',
                       style: TextStyle(color: Colors.black, fontSize: 16)),
                   TextSpan(
-                      text: 'Rs. ' + totalPrice.toString(),
+                      text: '\$ ' + totalPrice.toString(),
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16))
                 ])),
@@ -145,8 +145,8 @@ class _CartPageState extends State<CartPage> {
                     children: <Widget>[
                       Expanded(
                           child: Container(
-                              child: Text(
-                                  "Rs. " + item.product.price.toString()))),
+                              child:
+                                  Text('\$ ' + item.product.price.toString()))),
                       IconButton(
                         onPressed: item.quantity > 1
                             ? () {
@@ -193,34 +193,34 @@ class _CartPageState extends State<CartPage> {
     items.add(new CartItemModel(
         null,
         new ProductModel(
-            1,
-            "Apple",
-            '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-            120,
-            "This is an apple",
-            1),
+          1,
+          "Apple",
+          '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
+          120,
+          "This is an apple",
+        ),
         1,
         120));
     items.add(new CartItemModel(
         null,
         new ProductModel(
-            2,
-            "Apple",
-            '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-            120,
-            "This is an apple",
-            1),
+          2,
+          "Apple",
+          '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
+          120,
+          "This is an apple",
+        ),
         1,
         120));
     items.add(new CartItemModel(
         null,
         new ProductModel(
-            3,
-            "Apple",
-            '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-            120,
-            "This is an apple",
-            1),
+          3,
+          "Apple",
+          '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
+          120,
+          "This is an apple",
+        ),
         1,
         120));
   }
