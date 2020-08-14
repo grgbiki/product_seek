@@ -37,6 +37,7 @@ dependencies:
 
   #Cached Image Package
   cached_network_image: ^2.2.0+1
+  flutter_svg: ^0.17.0
 
   #Shared Preferences Package
   shared_preferences : any
@@ -65,9 +66,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/icons/heart.svg
+    - assets/icons/heart_outline.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

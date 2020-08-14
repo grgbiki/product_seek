@@ -3,7 +3,8 @@ import 'package:product_seek_mobile/viewmodels/login_view_model.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+  LoginPage({this.loginCallback});
+  final VoidCallback loginCallback;
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -62,6 +63,7 @@ class _LoginPageState extends State<LoginPage> {
         if (isSuccessfulLogin) {
           if (once) {
             once = false;
+            widget.loginCallback();
             Navigator.pop(context);
           }
         } else {
