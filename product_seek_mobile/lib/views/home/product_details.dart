@@ -3,7 +3,11 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:product_seek_mobile/models/cart_model.dart';
+import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
+import 'package:product_seek_mobile/views/cart/cart_page.dart';
+import 'package:product_seek_mobile/views/checkout/checkout_page.dart';
 
 class ItemDetail extends StatefulWidget {
   ItemDetail({this.product});
@@ -16,6 +20,8 @@ class ItemDetail extends StatefulWidget {
 
 class _ItemDetailState extends State<ItemDetail> {
   List<String> images = new List<String>();
+
+  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -31,6 +37,7 @@ class _ItemDetailState extends State<ItemDetail> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldkey,
         body: Container(
           child: Column(
             children: <Widget>[
@@ -131,6 +138,7 @@ class _ItemDetailState extends State<ItemDetail> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
+        height: 60,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.only(
@@ -166,8 +174,29 @@ class _ItemDetailState extends State<ItemDetail> {
                 height: 45,
                 child: RaisedButton(
                   color: Theme.of(context).accentColor,
-                  onPressed: () {},
-                  child: Text("Buy Now"),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CheckoutPage(
+                                  checkoutitems: new CheckoutModel(
+                                      null,
+                                      [
+                                        new CartItemModel(
+                                            null,
+                                            widget.product,
+                                            1,
+                                            1 *
+                                                int.parse(widget.product.price)
+                                                    .toDouble())
+                                      ],
+                                      0),
+                                )));
+                  },
+                  child: Text(
+                    "Buy Now",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -178,8 +207,24 @@ class _ItemDetailState extends State<ItemDetail> {
                 height: 45,
                 child: RaisedButton(
                   color: Theme.of(context).primaryColor,
-                  onPressed: () {},
-                  child: Text("Add to Cart"),
+                  onPressed: () {
+                    _scaffoldkey.currentState.showSnackBar(SnackBar(
+                      content: Container(child: Text("Item added to cart")),
+                      behavior: SnackBarBehavior.floating,
+                      action: SnackBarAction(
+                          label: 'Go to cart',
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CartPage()));
+                          }),
+                    ));
+                  },
+                  child: Text(
+                    "Add to Cart",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
                 ),
               ),
             ),

@@ -21,16 +21,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final productViewModel = Provider.of<ProductViewModel>(context);
 
-    productViewModel.getLocalProducts().listen((product) {
-      if (product.length > 0) {
-        setState(() {
-          if (products != product) products = product;
-        });
-      }
-    });
-
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text("Product Seek"),
         actions: <Widget>[
@@ -44,22 +35,33 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: <Widget>[
             Expanded(
-                child: GridView.builder(
-                    itemCount: products.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: MediaQuery.of(context).size.width /
-                          (MediaQuery.of(context).size.height) /
-                          0.65,
-                    ),
-                    itemBuilder: (context, index) {
-                      var product = products[index];
-                      return _buildStoreItem(product);
+                child: StreamBuilder(
+                    stream: productViewModel.getLocalProducts(),
+                    builder:
+                        (context, AsyncSnapshot<List<ProductModel>> snapshot) {
+                      if (snapshot.data != null) {
+                        return GridView.builder(
+                            itemCount: snapshot.data.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio:
+                                  MediaQuery.of(context).size.width /
+                                      (MediaQuery.of(context).size.height) /
+                                      0.7,
+                            ),
+                            itemBuilder: (context, index) {
+                              var product = snapshot.data[index];
+                              return _buildStoreItem(product);
+                            });
+                      } else {
+                        return Center(child: Text("No products found"));
+                      }
                     }))
           ],
         ),
       ),
-    ));
+    );
   }
 
   Widget _buildStoreItem(ProductModel product) {

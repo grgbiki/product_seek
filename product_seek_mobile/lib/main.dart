@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:product_seek_mobile/app/app.dart';
 import 'package:product_seek_mobile/database/database.dart';
+import 'package:product_seek_mobile/repository/cart_repository.dart';
+import 'package:product_seek_mobile/repository/checkout_repository.dart';
 import 'package:product_seek_mobile/repository/login_repository.dart';
 import 'package:product_seek_mobile/repository/product_repository.dart';
 import 'package:product_seek_mobile/repository/profile_repository.dart';
+import 'package:product_seek_mobile/viewmodels/cart_view_model.dart';
+import 'package:product_seek_mobile/viewmodels/checkout_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/login_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/product_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
@@ -29,11 +33,21 @@ void main() async {
       productRepo: ProductRepository(prefs: preferences, database: database));
   productViewModel.init();
 
+  final cartViewModel = CartViewModel(
+      cartRepo: CartRepository(prefs: preferences, database: database));
+  cartViewModel.init();
+
+  final checkoutViewModel = CheckoutViewModel(
+      checkoutRepo: CheckoutRepository(prefs: preferences, database: database));
+  checkoutViewModel.init();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<LoginViewModel>.value(value: loginViewModel),
       ChangeNotifierProvider<ProfileViewModel>.value(value: profileViewModel),
       ChangeNotifierProvider<ProductViewModel>.value(value: productViewModel),
+      ChangeNotifierProvider<CartViewModel>.value(value: cartViewModel),
+      ChangeNotifierProvider<CheckoutViewModel>.value(value: checkoutViewModel),
     ],
     child: App(),
   ));
