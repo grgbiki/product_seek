@@ -11,7 +11,7 @@ use App\Store;
 class APIController extends Controller
 {
   public function products(){
-  	$products= Product::latest()->get();
+  	$products= Product::latest()->with('productCategory','productStore')->get();
 
   	foreach ($products as $product){
   		$product->product_image=unserialize($product->product_image);
@@ -29,69 +29,66 @@ class APIController extends Controller
   }
 
 
-  // public function filter_by_cat($id){
-  // 	$cat=Productcategory::findOrFail($id);
- 	// 	$products= Product::latest()->with('productCategory')->get();
+  public function filter_by_cat($id){
+  	$cat=Productcategory::findOrFail($id);
+ 		$products= Product::latest()->with('productCategory')->get();
  		
- 	// 	//filtercategory
- 	// 	$products=$this->filter_product_cat($products,$cat->id);
- 	// 	//filtercategory
+ 		//filtercategory
+ 		$products=$this->filter_product_cat($products,$cat->id);
+ 		//filtercategory
 
- 	// 	return $products;
-  // }
+ 		return $products;
+  }
 
-  //  public function filter_by_store($id){
-  // 	$store=Store::findOrFail($id);
- 	// 	$products= Product::latest()->with('productStore')->get();
+   public function filter_by_store($id){
+  	$store=Store::findOrFail($id);
+ 		$products= Product::latest()->with('productStore')->get();
  		
- 	// 	//filtercategory
- 	// 	$products=$this->filter_product_store($products,$store->id);
- 	// 	//filtercategory
+ 		//filtercategory
+ 		$products=$this->filter_product_store($products,$store->id);
+ 		//filtercategory
 
- 	// 	return $products;
-  // }
+ 		return $products;
+  }
 
-  // public function filter_product_cat($product,$category_id){
-  // 	$filtered_blogs=[];
-  // 	$filtered_blogs_count=0;
+  public function filter_product_cat($product,$category_id){
+  	$filtered_products=[];
+  	foreach($product as $p){
+  		$productCategory=$p->productCategory;
 
-  // 	foreach($product as $b){
+  		$productCat_id=[];
 
-  // 		$blog_categories=[$b->product_category];//blog category
-  // 		$blog_cat_ids=[];
+  		foreach($productCategory as $pc){
+  			array_push($productCat_id,$pc->id);
+  		}	
 
-  // 		for($i=0;$i<count($blog_categories);$i++){
-  // 			$blog_cat_ids[$i]=$blog_categories[$i]['id'];
-  // 		}
+  		if(in_array($category_id, $productCat_id)){
+  			array_push($filtered_products,$p);
+  		}
 
-  // 		if(in_array($category_id, $blog_cat_ids)){
-  // 			$filtered_blogs[$filtered_blogs_count]=$b;
-  // 			$filtered_blogs_count++;
-  // 		}
-  // 	}
+  	}
+  	return $filtered_products;
 
-  // 	return $filtered_blogs;
-  // }
+  }
+   public function filter_product_store($product,$category_id){
+  	$filtered_products=[];
+  	foreach($product as $p){
+  		$productCategory=$p->productStore;
 
-  // public function filter_product_store($product,$category_id){
-  // 	$filtered_blogs=[];
-  // 	$filtered_blogs_count=0;
+  		$productCat_id=[];
 
-  // 	foreach($product as $b){
+  		foreach($productCategory as $pc){
+  			array_push($productCat_id,$pc->id);
+  		}	
 
-  // 		$blog_categories=[$b->product_store];//blog category
-  // 		$blog_cat_ids=[];
+  		if(in_array($category_id, $productCat_id)){
+  			array_push($filtered_products,$p);
+  		}
 
-  // 		for($i=0;$i<count($blog_categories);$i++){
-  // 			$blog_cat_ids[$i]=$blog_categories[$i]->id;
-  // 		}
+  	}
+  	return $filtered_products;
 
-  // 		if(in_array($category_id, $blog_cat_ids)){
-  // 			$filtered_blogs[$filtered_blogs_count]=$b;
-  // 			$filtered_blogs_count++;
-  // 		}
-  // 	}
+  }
 
-  // 	return $filtered_blogs;
-  // }
+  
 }
