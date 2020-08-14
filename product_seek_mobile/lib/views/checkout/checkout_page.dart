@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
+import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/viewmodels/checkout_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,7 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
   double subTotal = 0;
 
-  double shippingFee = 50;
+  double shippingFee = 5;
 
   @override
   void initState() {
@@ -107,7 +108,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   Text("Subtotal (" +
                       widget.checkoutitems.prductList.length.toString() +
                       " Items)"),
-                  Text("Rs. " + subTotal.toString())
+                  Text('\$ ' + subTotal.toString())
                 ],
               ),
               SizedBox(
@@ -117,7 +118,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text("Shipping fee"),
-                  Text("Rs. " + shippingFee.toString())
+                  Text('\$ ' + shippingFee.toString())
                 ],
               )
             ],
@@ -143,27 +144,28 @@ class _CheckoutPageState extends State<CheckoutPage> {
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Column(
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text("Package " +
-                  (index + 1).toString() +
-                  " of " +
-                  widget.checkoutitems.prductList.length.toString()),
-              Text("Shop Name")
-            ],
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text("Package " +
+                (index + 1).toString() +
+                " of " +
+                widget.checkoutitems.prductList.length.toString()),
           ),
           Divider(),
           Row(
             children: <Widget>[
-              Container(
-                  height: MediaQuery.of(context).size.height / 10,
-                  child: FittedBox(
-                    child: CachedNetworkImage(
-                      imageUrl: jsonDecode(item.product.images)[0],
-                    ),
-                    fit: BoxFit.fill,
-                  )),
+              Hero(
+                tag: item.product.id,
+                child: Container(
+                    height: MediaQuery.of(context).size.height / 10,
+                    child: FittedBox(
+                      child: CachedNetworkImage(
+                        imageUrl: NetworkEndpoints.BASE_URL +
+                            jsonDecode(item.product.images)[0],
+                      ),
+                      fit: BoxFit.fill,
+                    )),
+              ),
               SizedBox(
                 width: 15,
               ),
@@ -180,7 +182,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text("Rs. " + item.product.price.toString()),
+                            Text('\$ ' + item.product.price.toString()),
                             Text("Qty. " + item.quantity.toString())
                           ],
                         ),
@@ -204,7 +206,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         text: 'Item(s) total: ',
                         style: TextStyle(color: Colors.black)),
                     TextSpan(
-                        text: "Rs. " + item.totalPrice.toString(),
+                        text: '\$ ' + item.totalPrice.toString(),
                         style: TextStyle(fontWeight: FontWeight.bold))
                   ])),
             ),
@@ -324,7 +326,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       text: 'Total: ',
                       style: TextStyle(color: Colors.black, fontSize: 16)),
                   TextSpan(
-                      text: 'Rs. ' + widget.checkoutitems.total.toString(),
+                      text: '\$ ' + widget.checkoutitems.total.toString(),
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16))
                 ])),
