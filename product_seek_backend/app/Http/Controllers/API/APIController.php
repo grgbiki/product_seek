@@ -24,6 +24,13 @@ class APIController extends Controller
   	return Productcategory::latest()->get();
   }
 
+  public function show_category($id){
+  	return Productcategory::findOrFail($id);
+  }
+  public function show_store($id){
+  	return Store::findOrFail($id);
+  }
+
   public function stores(){
   	return Store::latest()->get();
   }
