@@ -1,16 +1,25 @@
-# product_seek_mobile
+# Product Seek
 
 A new Flutter project.
 
+### Requirements
+
+#### Flutter 
+https://flutter.dev/docs/get-started/install  
+Follow this tutorial to install flutter on you pc
+
+#### IDE
+Android Studio  
+Vs Code (Optional)
+
 ## Getting Started
+If you have fulfilled all the requirements needed for this app.  
+Open project using any of the IDE.
 
-This project is a starting point for a Flutter application.
+In VsCode:  
+If you are using VsCode, open terminal and make sure you are in the correct path ```product_seek/product_seek_mobile``` and use this command to get all the packages  
+``` 
+flutter get package 
+```
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+After getting all the required packages, run this project on any emulator or any connected mobile device
