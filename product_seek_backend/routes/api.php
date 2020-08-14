@@ -25,3 +25,5 @@ Route::post('/login','API\Authcontroller@login');
 Route::get('/products','API\APIcontroller@products');
 Route::get('/categories','API\APIcontroller@categories');
 Route::get('/stores','API\APIcontroller@stores');
+Route::get('/products/category/{id}','API\APIcontroller@filter_by_cat');
+Route::get('/products/store/{id}','API\APIcontroller@filter_by_store');
