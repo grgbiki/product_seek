@@ -84,7 +84,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `UserModel` (`id` INTEGER, `name` TEXT, `email` TEXT, `phone_number` TEXT, `address` TEXT, `role` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `ProductModel` (`id` INTEGER, `title` TEXT, `images` TEXT, `price` REAL, `description` TEXT, `category_id` INTEGER, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `ProductModel` (`id` INTEGER, `title` TEXT, `images` TEXT, `price` REAL, `description` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -162,8 +162,7 @@ class _$ProductDao extends ProductDao {
                   'title': item.title,
                   'images': item.images,
                   'price': item.price,
-                  'description': item.description,
-                  'category_id': item.categoryId
+                  'description': item.description
                 },
             changeListener),
         _productModelUpdateAdapter = UpdateAdapter(
@@ -175,8 +174,7 @@ class _$ProductDao extends ProductDao {
                   'title': item.title,
                   'images': item.images,
                   'price': item.price,
-                  'description': item.description,
-                  'category_id': item.categoryId
+                  'description': item.description
                 },
             changeListener),
         _productModelDeletionAdapter = DeletionAdapter(
@@ -188,8 +186,7 @@ class _$ProductDao extends ProductDao {
                   'title': item.title,
                   'images': item.images,
                   'price': item.price,
-                  'description': item.description,
-                  'category_id': item.categoryId
+                  'description': item.description
                 },
             changeListener);
 
@@ -204,8 +201,7 @@ class _$ProductDao extends ProductDao {
       row['title'] as String,
       row['images'] as String,
       row['price'] as double,
-      row['description'] as String,
-      row['category_id'] as int);
+      row['description'] as String);
 
   final InsertionAdapter<ProductModel> _productModelInsertionAdapter;
 

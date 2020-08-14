@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
+import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/views/cart/cart_page.dart';
 import 'package:product_seek_mobile/views/checkout/checkout_page.dart';
 
@@ -21,15 +23,30 @@ class ItemDetail extends StatefulWidget {
 class _ItemDetailState extends State<ItemDetail> {
   List<String> images = new List<String>();
 
+  bool _isFavourite = false;
+  String heartPath = "assets/icons/heart_outline.svg";
+
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     setState(() {
+      _isFavourite = false;
+      heartPath = "assets/icons/heart_outline.svg";
       jsonDecode(widget.product.images).forEach((item) {
         images.add(item);
       });
+    });
+  }
+
+  toggleFavourite() {
+    setState(() {
+      _isFavourite = !_isFavourite;
+      if (_isFavourite)
+        heartPath = "assets/icons/heart.svg";
+      else
+        heartPath = "assets/icons/heart_outline.svg";
     });
   }
 
@@ -90,33 +107,60 @@ class _ItemDetailState extends State<ItemDetail> {
                             ],
                           ),
                           Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 10),
                             child: Column(
                               children: <Widget>[
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Rs. " + widget.product.price.toString(),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: Theme.of(context).primaryColor),
+                                Container(
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 15),
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            '\$ ' +
+                                                widget.product.price.toString(),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              toggleFavourite();
+                                            },
+                                            child: Container(
+                                                padding: EdgeInsets.all(8),
+                                                child: SvgPicture.asset(
+                                                  heartPath,
+                                                  width: 20,
+                                                )),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          widget.product.title,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    widget.product.title,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ),
+                                _buildDescriptionPage(),
+                                _buildStoreInfo(),
                               ],
                             ),
                           ),
@@ -130,6 +174,62 @@ class _ItemDetailState extends State<ItemDetail> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  _buildStoreInfo() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      color: Colors.white,
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Icon(
+                Icons.store,
+                color: Theme.of(context).accentColor,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(child: InkWell(onTap: () {}, child: Text("Store Name"))),
+              FlatButton(
+                onPressed: () {},
+                child: Text("Follow"),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  _buildDescriptionPage() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      color: Colors.white,
+      child: Column(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "Description",
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 5),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            color: Colors.grey[200],
+            width: MediaQuery.of(context).size.width,
+            child: Text(widget.product.description),
+          )
+        ],
       ),
     );
   }
@@ -238,7 +338,7 @@ class _ItemDetailState extends State<ItemDetail> {
         height: MediaQuery.of(context).size.height / 2.5,
         child: FittedBox(
           child: CachedNetworkImage(
-            imageUrl: imageUrl,
+            imageUrl: NetworkEndpoints.BASE_URL + imageUrl,
           ),
           fit: BoxFit.fill,
         ));
