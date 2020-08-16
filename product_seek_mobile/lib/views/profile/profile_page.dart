@@ -4,6 +4,7 @@ import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:product_seek_mobile/views/login/login_page.dart';
 import 'package:product_seek_mobile/views/profile/settings_page.dart';
+import 'package:product_seek_mobile/views/wishlist/wishlist_page.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -266,6 +267,12 @@ class _ProfilePageState extends State<ProfilePage> {
             child: InkWell(
               onTap: () {
                 if (_isLoggedIn) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WishlistPage(
+                                userInfo: userInfo,
+                              )));
                 } else {
                   Navigator.push(
                       context,

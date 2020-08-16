@@ -11,7 +11,6 @@ import 'package:product_seek_mobile/models/category_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/models/store_model.dart';
 import 'package:product_seek_mobile/models/user_model.dart';
-import 'package:product_seek_mobile/models/wish_list_model.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
 part 'database.g.dart';
@@ -22,7 +21,6 @@ part 'database.g.dart';
   StoreModel,
   CategoryModel,
   CartItemModel,
-  WishlistModel
 ])
 abstract class AppDatabase extends FloorDatabase {
   UserDao get userDao;

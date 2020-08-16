@@ -97,8 +97,6 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `CategoryModel` (`id` INTEGER, `name` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `CartItemModel` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `product` TEXT, `quantity` INTEGER, `total_price` REAL, `status` TEXT)');
-        await database.execute(
-            'CREATE TABLE IF NOT EXISTS `WishlistModel` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `product_id` TEXT, `user_id` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -392,12 +390,9 @@ class _$StoreDao extends StoreDao {
   }
 
   @override
-  Stream<StoreModel> getStoreFromId(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM StoreModel WHERE id = ?',
-        arguments: <dynamic>[id],
-        queryableName: 'StoreModel',
-        isView: false,
-        mapper: _storeModelMapper);
+  Future<StoreModel> getStoreFromId(int id) async {
+    return _queryAdapter.query('SELECT * FROM StoreModel WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _storeModelMapper);
   }
 
   @override
