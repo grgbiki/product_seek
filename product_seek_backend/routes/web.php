@@ -142,6 +142,9 @@ Route::middleware('auth')->prefix('/admin')->group(function(){
 		Route::get('/',function(){return view('component.backend.feedback.index');})->name('admin.feedback');// feedback page 
 
 		Route::get('/paginated_feedbacks','Admin\Feedbackcontroller@index');// get feedbacks
+
+		Route::get('/user/','Admin\Feedbackcontroller@return_user');//return user
+
 	});
 	// end feedback routes
 
