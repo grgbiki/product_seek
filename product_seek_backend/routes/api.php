@@ -52,3 +52,14 @@ Route::post('/feedback/create','API\FeedbackController@store');//create feedback
 Route::put('/feedback/update/{id}','API\FeedbackController@update');//update feedback
 
 Route::get('/feedback/{user_id}','API\FeedbackController@getFeedback');//update feedback
+
+
+// wish list routes
+
+Route::group(['prefix'=>'/wishlist/'],function(){
+	Route::post('/add','API\WishlistController@add_to_wishlist');// add product to wish list 
+	Route::get('/remove/{id}','API\WishlistController@remove_from_wishlist');//remove product from wish list
+	Route::get('/show/{user_id}','API\WishlistController@show_wishlist');// get wish list as per user
+});
+
+// end wish list routes
