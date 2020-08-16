@@ -149,7 +149,7 @@
 
 					Toast.fire({
             icon: 'success',
-            title: 'Product\'s Category Created successfully'
+            title: 'Store Created successfully'
           })
           this.loadStore()
 					$('#storeModal').modal('hide')
@@ -197,7 +197,7 @@
 
 					Toast.fire({
             icon: 'success',
-            title: 'Product\'s Category updated successfully'
+            title: 'Store updated successfully'
           })
           this.loadStore()
 					$('#storeModal').modal('hide')
@@ -217,7 +217,7 @@
 
 					Toast.fire({
             icon: 'success',
-            title: 'Product\'s Category moved to trash Successfully'
+            title: 'Store moved to trash Successfully'
           })
           this.loadStore()
 					$('#storeModal').modal('hide')

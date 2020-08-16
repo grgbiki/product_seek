@@ -33,12 +33,16 @@
             		<td><span v-for='s in p.product_store'>{{ s.name }}</span></td>
             		<td>$ {{ p.price }}</td>
             		<td>
-            			<button class="btn btn-primary" @click='editProduct(p.id)'><i class="fas fa-edit mr-2"></i>Edit</button>
+            			<button class="btn btn-primary mr-1" @click='editProduct(p.id)'><i class="fas fa-edit mr-2"></i>Edit</button>
+            			<button class="btn btn-danger" @click='trashProducts(p.id)'><i class="fas fa-trash mr-1"></i>Trash</button>
             		</td>
             	</tr>
             </tbody>
           </table>
         </div>
+        <div class="card-footer">
+					<pagination :data="products" @pagination-change-page="getResults"></pagination>
+				</div>
       </div>
 		</div>
 
@@ -50,12 +54,13 @@
 		  <div class="modal-dialog modal-lg" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h5 class="modal-title" id="exampleModalLongTitle">Add new Product</h5>
+		      	<h5 class="modal-title" v-if='editMode'id="exampleModalLongTitle">Edit Product</h5>
+		        <h5 class="modal-title" v-else id="exampleModalLongTitle">Add new Product</h5>
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
-		      <form @submit.prevent="addProduct">
+		      <form @submit.prevent="editMode?updateProduct() : addProduct()">
 			      <div class="modal-body">
 			      	<div class="row">
 				        <div class="col-md-6 form-group">
@@ -127,7 +132,8 @@
 			      </div>
 			      <div class="modal-footer">
 			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			        <button type="submit" class="btn btn-primary">Add product</button>
+			        <button type="submit" v-if='editMode' class="btn btn-primary">Update product</button>
+			        <button type="submit" v-else class="btn btn-primary">Add product</button>
 			      </div>
 		      </form>
 		    </div>
@@ -144,8 +150,8 @@
 				loading:true,
 				products:{},
 				productsLength:'',
+				editMode:false,
 				form: new Form({
-
 					id:'',
 					title:'',
 					price:'',
@@ -153,21 +159,20 @@
 					product_image:[],
 					store_id:'',
 					category_id:'',
-
-
 				}),
 				current_product_images:[],
-
 				categories:[],
 				stores:[]
 			}
 		},
 		methods:{
 			openModal(){
+				this.editMode=false
 				this.form.clear()
 				this.form.reset()
 				$('#productModal').modal('show')
 			},
+
 			productImageSelected(event){
       	let fileList = Array.prototype.slice.call(event.target.files);
 
@@ -188,9 +193,11 @@
 	        reader.readAsDataURL(f); 
 	      });
 			},
+
 			removeImg(index){
 				this.form.product_image.splice(index,1)
 			},
+
 			removeallimage(){
 				this.form.product_image=[];
 			},
@@ -212,16 +219,19 @@
 					this.loading=false
 				});
 			},
+
 			loadCategory(){
 				axios.get(this.admin_url+'/product/category/all-categories').then(({data})=>{
 					this.categories=data
 				});
 			},
+
 			loadStore(){
 				axios.get(this.admin_url+'/store/all-store').then(({data})=>{
 					this.stores=data
 				});
 			},
+
 			loadProducts(){
 				axios.get(this.admin_url+'/product/product-paginated').then(({data})=>{
 					this.products=data
@@ -229,11 +239,14 @@
 					this.loading=false
 				})
 			},
+
 			getIdarray(array){
       	 let categories_id=array[0]['id']; 
           return categories_id;
       },
+
 			editProduct(id){
+				this.editMode=true
 				this.loading=true
 				let vm=this
 				this.form.get(this.admin_url+'/product/show/'+id).then(function(response){
@@ -251,18 +264,45 @@
 					this.loading=false
 				});
 			},
-			ImageArrayIsCurrentOrNot(element){
 
-			 var mCheckMatchResult = element.match(/^(?:[data]{4}:(text|image|application)\/[a-z]*)/);
+			getResults(page = 1) {
+        this.loading=true;
+        axios.get(this.admin_url+'/product/product-paginated/?page=' + page)
+        .then(response => {
+            this.products = response.data;
+            this.loading=false;
+        });
+      },
 
-       	let query='';
-       	if (mCheckMatchResult === null || mCheckMatchResult.length <= 0) {
-       	 query=false;
-       	}else{
-       		query=true;
-       	}
-       	return query;
-       }
+			updateProduct(){
+				this.loading=true
+				this.form.put(this.admin_url+'/product/update/'+this.form.id).then(()=>{
+					this.loadProducts()
+					Toast.fire({
+            icon: 'success',
+            title: 'Product Updated successfully'
+          })
+          $('#productModal').modal('hide')
+					this.loading=false
+				}).catch((response)=>{
+					if(response.message=='Request failed with status code 401'){
+						location.reload()
+					}
+					this.loading=false
+				});
+			},
+
+			trashProducts(id){
+				this.loading=true
+				this.form.get(this.admin_url+'/product/trash/'+id).then(()=>{
+					this.loadProducts()
+					Toast.fire({
+            icon: 'success',
+            title: 'Product moved to trash successfully'
+          })
+					this.loading=false
+				});
+			}
 
 		},
 		created(){

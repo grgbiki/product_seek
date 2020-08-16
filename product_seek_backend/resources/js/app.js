@@ -67,7 +67,9 @@ Vue.component('produt-cat-trash',require('./components/backend/product/ProductCa
 Vue.component('store',require('./components/backend/store/Store.vue').default);
 
 // end store components
-
+// feed back component
+Vue.component('feedback',require('./components/backend/feedback/Feedback.vue').default);
+// end feedback component
 const app = new Vue({
     el: '#app',
 });

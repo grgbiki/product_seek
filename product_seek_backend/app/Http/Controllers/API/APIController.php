@@ -59,6 +59,10 @@ class APIController extends Controller
  		$products=$this->filter_product_cat($products,$cat->id);
  		//filtercategory
 
+    foreach ($products as $product){
+      $product->product_image=unserialize($product->product_image);
+    }
+
  		return $products;
   }
 
@@ -92,6 +96,9 @@ class APIController extends Controller
  		//filtercategory
  		$products=$this->filter_product_store($products,$store->id);
  		//filtercategory
+    foreach ($products as $product){
+      $product->product_image=unserialize($product->product_image);
+    }
 
  		return $products;
   }
@@ -123,6 +130,9 @@ class APIController extends Controller
 	// search product
 	public function product_search($search_term){
 		$products = Product::where('title', 'LIKE', "%{$search_term}%")->with('productCategory','productStore')->get();
+    foreach ($products as $product){
+      $product->product_image=unserialize($product->product_image);
+    }
 		return $products;
 	}
 	// end search product
