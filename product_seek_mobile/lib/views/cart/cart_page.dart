@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/cart_model.dart';
-import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/viewmodels/cart_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +15,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   List<CartItemModel> items = new List<CartItemModel>();
+  bool hasData = false;
 
   double totalPrice = 0;
 
@@ -23,20 +23,23 @@ class _CartPageState extends State<CartPage> {
   void initState() {
     super.initState();
     setState(() {});
-    initDemoItems();
     refreshTotalCost();
   }
 
   void refreshTotalCost() {
     totalPrice = 0;
-    items.forEach((item) {
-      totalPrice += item.product.price * item.quantity;
-    });
+    if (items.length > 0) {
+      items.forEach((item) {
+        totalPrice += jsonDecode(item.product).price * item.quantity;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final cartViewModel = Provider.of<CartViewModel>(context);
+
+    cartViewModel.getItemsFromCart();
     return Scaffold(
         appBar: AppBar(
           title: Text("My Cart"),
@@ -45,11 +48,12 @@ class _CartPageState extends State<CartPage> {
           child: Column(
             children: <Widget>[
               Expanded(
-                child: CustomScrollView(
-                  slivers: <Widget>[_buildCart()],
-                ),
+                child: _buildCart(cartViewModel),
               ),
-              _buildBottomPage(),
+              Visibility(
+                visible: hasData,
+                child: _buildBottomPage(),
+              ),
             ],
           ),
         ));
@@ -99,12 +103,47 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  Widget _buildCart() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate((context, index) {
-        var cartItem = items[index];
-        return _buildCartItems(cartItem, index);
-      }, childCount: items.length),
+  Widget _buildCart(CartViewModel cartViewModel) {
+    return Container(
+      child: StreamBuilder(
+        stream: cartViewModel.getItemsFromCart(),
+        builder: (context, AsyncSnapshot<List<CartItemModel>> snapshot) {
+          if (!snapshot.hasData) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(child: CircularProgressIndicator()),
+              ],
+            );
+          } else if (snapshot.data.length > 0) {
+            return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  var cartItem = items[index];
+                  return _buildCartItems(cartItem, index);
+                });
+          } else {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.shopping_cart,
+                    size: 25,
+                  ),
+                  Text(
+                    "There are no items in the cart",
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -119,7 +158,7 @@ class _CartPageState extends State<CartPage> {
               height: MediaQuery.of(context).size.height / 10,
               child: FittedBox(
                 child: CachedNetworkImage(
-                  imageUrl: jsonDecode(item.product.images)[0],
+                  imageUrl: jsonDecode(jsonDecode(item.product).images)[0],
                 ),
                 fit: BoxFit.fill,
               )),
@@ -133,7 +172,7 @@ class _CartPageState extends State<CartPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Container(child: Text(item.product.title)),
+                    Container(child: Text(jsonDecode(item.product).title)),
                     IconButton(
                       onPressed: () {},
                       icon: Icon(Icons.delete),
@@ -145,8 +184,8 @@ class _CartPageState extends State<CartPage> {
                     children: <Widget>[
                       Expanded(
                           child: Container(
-                              child:
-                                  Text('\$ ' + item.product.price.toString()))),
+                              child: Text('\$ ' +
+                                  jsonDecode(item.product).price.toString()))),
                       IconButton(
                         onPressed: item.quantity > 1
                             ? () {
@@ -187,41 +226,5 @@ class _CartPageState extends State<CartPage> {
         ],
       ),
     );
-  }
-
-  initDemoItems() {
-    items.add(new CartItemModel(
-        null,
-        new ProductModel(
-          1,
-          "Apple",
-          '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-          120,
-          "This is an apple",
-        ),
-        1,
-        120));
-    items.add(new CartItemModel(
-        null,
-        new ProductModel(
-          2,
-          "Apple",
-          '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-          120,
-          "This is an apple",
-        ),
-        1,
-        120));
-    items.add(new CartItemModel(
-        null,
-        new ProductModel(
-          3,
-          "Apple",
-          '[ "https://picsum.photos/600", "https://picsum.photos/600", "https://picsum.photos/600" ]',
-          120,
-          "This is an apple",
-        ),
-        1,
-        120));
   }
 }

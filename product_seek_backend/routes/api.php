@@ -31,13 +31,13 @@ Route::get('/products/search/{search_term}','API\APIcontroller@product_search');
 Route::get('/categories','API\APIcontroller@categories');
 //api route for all products category
 
-Route::get('/categories/show/{id}','API\APIcontroller@show_store');
+Route::get('/categories/show/{id}','API\APIcontroller@show_category');
 //api route products category by id
 
 Route::get('/stores','API\APIcontroller@stores');//api route for all stores
 
 
-Route::get('/stores/show/{id}','API\APIcontroller@show_category');
+Route::get('/stores/show/{id}','API\APIcontroller@show_store');
 //api route for products store by id
 
 Route::get('/products/category/{id}','API\APIcontroller@filter_by_cat');

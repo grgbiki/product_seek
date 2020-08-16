@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/repository/cart_repository.dart';
 
 class CartViewModel extends ChangeNotifier {
@@ -14,7 +15,7 @@ class CartViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  addItemToCart() {}
+  addItemToCart(CartItemModel cartItem) => cartRepo.addItemToCart(cartItem);
 
-  getItemsFromCart() {}
+  Stream<List<CartItemModel>> getItemsFromCart() => cartRepo.getItemsFromCart();
 }

@@ -5,72 +5,78 @@ import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/viewmodels/product_view_model.dart';
-import 'package:product_seek_mobile/views/home/custom_search.dart';
 import 'package:product_seek_mobile/views/home/product_details.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+class CustomSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
 
   @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  List<ProductModel> products = new List<ProductModel>();
-
-  @override
-  Widget build(BuildContext context) {
-    final productViewModel = Provider.of<ProductViewModel>(context);
-
-    productViewModel.getProducts();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Product Seek"),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              showSearch(context: context, delegate: CustomSearchDelegate());
-            },
-            icon: Icon(Icons.search),
-          )
-        ],
-      ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-                child: StreamBuilder(
-                    stream: productViewModel.getLocalProducts(),
-                    builder:
-                        (context, AsyncSnapshot<List<ProductModel>> snapshot) {
-                      if (snapshot.hasData) {
-                        return GridView.builder(
-                            itemCount: snapshot.data.length,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio:
-                                  MediaQuery.of(context).size.width /
-                                      (MediaQuery.of(context).size.height) /
-                                      0.68,
-                            ),
-                            itemBuilder: (context, index) {
-                              var product = snapshot.data[index];
-                              return _buildStoreItem(product);
-                            });
-                      } else {
-                        return Center(child: Text("No products found"));
-                      }
-                    }))
-          ],
-        ),
-      ),
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
     );
   }
 
-  Widget _buildStoreItem(ProductModel product) {
+  @override
+  Widget buildResults(BuildContext context) {
+    final productViewModel = Provider.of<ProductViewModel>(context);
+
+    return Container(
+      child: StreamBuilder(
+          stream: productViewModel.getSearchresults('%' + query + '%'),
+          builder: (context, AsyncSnapshot<List<ProductModel>> snapshot) {
+            if (!snapshot.hasData) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Center(child: CircularProgressIndicator()),
+                ],
+              );
+            } else if (snapshot.data.length > 0) {
+              return GridView.builder(
+                  itemCount: snapshot.data.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: MediaQuery.of(context).size.width /
+                        (MediaQuery.of(context).size.height) /
+                        0.68,
+                  ),
+                  itemBuilder: (context, index) {
+                    var product = snapshot.data[index];
+                    return _buildStoreItem(product, context);
+                  });
+            } else {
+              return Center(child: Text("No products found."));
+            }
+          }),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final productViewModel = Provider.of<ProductViewModel>(context);
+    if (query.length > 1) {
+      productViewModel.searchForProductBackend(query);
+    }
+    return Container();
+  }
+
+  Widget _buildStoreItem(ProductModel product, BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: Card(

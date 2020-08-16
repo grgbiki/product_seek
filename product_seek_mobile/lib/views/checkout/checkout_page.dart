@@ -4,8 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
-import 'package:product_seek_mobile/network/network_endpoints.dart';
+import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/viewmodels/checkout_view_model.dart';
+import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:provider/provider.dart';
 
 class CheckoutPage extends StatefulWidget {
@@ -25,10 +26,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
+    print("This is test");
     setState(() {
       shippingFee = shippingFee * widget.checkoutitems.prductList.length;
       widget.checkoutitems.prductList.forEach((item) {
-        subTotal = subTotal + (item.product.price * item.quantity);
+        ProductModel product =
+            ProductModel.fromLocalJson(jsonDecode(item.product));
+        subTotal = subTotal + (product.price * item.quantity);
       });
       widget.checkoutitems.total = subTotal + shippingFee;
     });
@@ -138,6 +142,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   Widget _buildItems(CartItemModel item, int index) {
+    ProductModel product = ProductModel.fromLocalJson(jsonDecode(item.product));
     return Container(
       color: Colors.white,
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -155,13 +160,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
           Row(
             children: <Widget>[
               Hero(
-                tag: item.product.id,
+                tag: product.id,
                 child: Container(
                     height: MediaQuery.of(context).size.height / 10,
                     child: FittedBox(
                       child: CachedNetworkImage(
                         imageUrl: NetworkEndpoints.BASE_URL +
-                            jsonDecode(item.product.images)[0],
+                            jsonDecode(product.images)[0],
                       ),
                       fit: BoxFit.fill,
                     )),
@@ -174,7 +179,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(item.product.title),
+                      Text(product.title),
                       SizedBox(
                         height: MediaQuery.of(context).size.height / 18,
                       ),
@@ -182,7 +187,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text('\$ ' + item.product.price.toString()),
+                            Text('\$ ' + product.price.toString()),
                             Text("Qty. " + item.quantity.toString())
                           ],
                         ),

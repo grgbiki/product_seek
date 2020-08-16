@@ -1,13 +1,14 @@
 import 'package:floor/floor.dart';
-import 'package:product_seek_mobile/models/product_model.dart';
 
 @entity
 class CartItemModel {
   @PrimaryKey(autoGenerate: true)
   final int id;
-  ProductModel product;
+  String product;
   int quantity;
+  @ColumnInfo(name: "total_price")
   double totalPrice;
+  String status;
 
   CartItemModel(this.id, this.product, this.quantity, this.totalPrice);
 }
