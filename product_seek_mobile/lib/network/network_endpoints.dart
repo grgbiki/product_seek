@@ -11,4 +11,6 @@ class NetworkEndpoints {
 
   static const String CATEGORY_INFO = _BASE_API + "/categories/show/";
   static const String STORE_INFO = _BASE_API + "/stores/show/";
+
+  static const String FEEDBACK_API = _BASE_API + "/feedback/create";
 }

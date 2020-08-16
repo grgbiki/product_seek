@@ -9,14 +9,11 @@ class CartRepository {
   CartRepository({this.prefs, this.database});
 
   addItemToCart(CartItemModel cartItem) {
-    database.cartDao.checkExistingItem(cartItem.product).then((cartItem) {
-      if (cartItem != null) {
-        print("Items exists");
-      } else {
-        database.cartDao.addItemToCart(cartItem);
-      }
-    });
+    database.cartDao.addItemToCart(cartItem);
   }
+
+  Future<void> changeQuantity(CartItemModel cartItem) =>
+      database.cartDao.updateItem(cartItem);
 
   Stream<List<CartItemModel>> getItemsFromCart() =>
       database.cartDao.getCartItems();

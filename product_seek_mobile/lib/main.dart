@@ -9,6 +9,7 @@ import 'package:product_seek_mobile/repository/login_repository.dart';
 import 'package:product_seek_mobile/repository/product_repository.dart';
 import 'package:product_seek_mobile/repository/profile_repository.dart';
 import 'package:product_seek_mobile/repository/store_repository.dart';
+import 'package:product_seek_mobile/repository/wishlist_repository.dart';
 import 'package:product_seek_mobile/viewmodels/cart_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/category_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/checkout_view_model.dart';
@@ -16,6 +17,7 @@ import 'package:product_seek_mobile/viewmodels/login_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/product_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/store_view_model.dart';
+import 'package:product_seek_mobile/viewmodels/wishlist_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,6 +55,10 @@ void main() async {
       storeRepo: StoreRepository(prefs: preferences, database: database));
   storeViewModel.init();
 
+  final wishlistViewModel = WishlistViewModel(
+      wishlistRepo: WishlistRepository(prefs: preferences, database: database));
+  wishlistViewModel.init();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<LoginViewModel>.value(value: loginViewModel),
@@ -62,6 +68,7 @@ void main() async {
       ChangeNotifierProvider<CheckoutViewModel>.value(value: checkoutViewModel),
       ChangeNotifierProvider<CategoryViewModel>.value(value: categoryViewModel),
       ChangeNotifierProvider<StoreViwModel>.value(value: storeViewModel),
+      ChangeNotifierProvider<WishlistViewModel>.value(value: wishlistViewModel),
     ],
     child: App(),
   ));

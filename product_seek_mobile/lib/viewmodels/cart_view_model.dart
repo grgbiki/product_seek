@@ -15,6 +15,9 @@ class CartViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> changeQuantity(CartItemModel item) =>
+      cartRepo.changeQuantity(item);
+
   addItemToCart(CartItemModel cartItem) => cartRepo.addItemToCart(cartItem);
 
   Stream<List<CartItemModel>> getItemsFromCart() => cartRepo.getItemsFromCart();

@@ -6,6 +6,8 @@ class WishlistModel {
   int id;
   @ColumnInfo(name: "product_id")
   String productId;
+  @ColumnInfo(name: "user_id")
+  int userId;
 
-  WishlistModel(this.id, this.productId);
+  WishlistModel(this.id, this.productId, this.userId);
 }

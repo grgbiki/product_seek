@@ -8,4 +8,7 @@ abstract class UserDao {
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> addUserData(UserModel userModel);
+
+  @Query('DELETE FROM UserModel')
+  Future<void> remoteItems();
 }

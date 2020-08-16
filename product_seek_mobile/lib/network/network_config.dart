@@ -31,4 +31,7 @@ class NetworkConfig {
 
   static const String API_KEY_CATEGORY_ID = "id";
   static const String API_KEY_CATEGORY_NAME = "name";
+
+  static const String API_KEY_FEEDBACK_USER_ID = "user_id";
+  static const String API_KEY_FEEDBACK = "feedback";
 }

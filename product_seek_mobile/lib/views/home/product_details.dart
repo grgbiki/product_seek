@@ -345,8 +345,12 @@ class _ItemDetailState extends State<ItemDetail> {
                                   checkoutitems: new CheckoutModel(
                                       null,
                                       [
-                                        new CartItemModel(null, product, 1,
-                                            1 * widget.product.price.toDouble())
+                                        new CartItemModel(
+                                            null,
+                                            product,
+                                            1,
+                                            1 * widget.product.price.toDouble(),
+                                            "pending")
                                       ],
                                       0),
                                 )));
@@ -370,7 +374,8 @@ class _ItemDetailState extends State<ItemDetail> {
                         null,
                         jsonEncode(widget.product.toJson()),
                         1,
-                        1 * widget.product.price.toDouble()));
+                        1 * widget.product.price.toDouble(),
+                        "pending"));
                     _scaffoldkey.currentState.showSnackBar(SnackBar(
                       content: Container(child: Text("Item added to cart")),
                       behavior: SnackBarBehavior.floating,

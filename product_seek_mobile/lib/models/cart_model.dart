@@ -10,5 +10,6 @@ class CartItemModel {
   double totalPrice;
   String status;
 
-  CartItemModel(this.id, this.product, this.quantity, this.totalPrice);
+  CartItemModel(
+      this.id, this.product, this.quantity, this.totalPrice, this.status);
 }
