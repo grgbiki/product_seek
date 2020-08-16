@@ -37,9 +37,18 @@ Route::middleware('auth')->prefix('/admin')->group(function(){
 		//paginated product
 			Route::get('/product-paginated/','Admin\Productcontroller@paginated_products');
 		//paginated product
-			//paginated product
+
+		//paginated product
 			Route::get('/show/{id}','Admin\Productcontroller@show');
 		//paginated product
+
+		//update product
+			Route::put('/update/{id}','Admin\Productcontroller@update');
+		//update product
+
+		//trash product
+			Route::get('/trash/{id}','Admin\Productcontroller@trash');
+		//trash product
 
 
 		Route::group(['prefix'=>'/category/'],function(){
@@ -125,5 +134,15 @@ Route::middleware('auth')->prefix('/admin')->group(function(){
 
 	});
 	// end store routes
+
+
+	// feedback routes
+	Route::group(['prefix'=>'/feedback/'],function(){
+
+		Route::get('/',function(){return view('component.backend.feedback.index');})->name('admin.feedback');// feedback page 
+
+		Route::get('/paginated_feedbacks','Admin\Feedbackcontroller@index');// get feedbacks
+	});
+	// end feedback routes
 
 });//admin routes 

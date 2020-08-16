@@ -45,3 +45,10 @@ Route::get('/products/category/{id}','API\APIcontroller@filter_by_cat');
 
 Route::get('/products/store/{id}','API\APIcontroller@filter_by_store');
 //api route for products filtered by store id
+
+
+Route::post('/feedback/create','API\FeedbackController@store');//create feedback
+
+Route::put('/feedback/update/{id}','API\FeedbackController@update');//update feedback
+
+Route::get('/feedback/{user_id}','API\FeedbackController@getFeedback');//update feedback

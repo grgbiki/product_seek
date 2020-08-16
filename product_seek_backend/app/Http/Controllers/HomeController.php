@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Product;
+use App\Productcategory;
+use App\Store;
 
 class HomeController extends Controller
 {
@@ -23,6 +26,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+      $products=Product::latest()->get();
+      $categories=Productcategory::latest()->get();
+      $stores=Store::latest()->get();
+      return view('home',compact('products','categories','stores'));
     }
 }

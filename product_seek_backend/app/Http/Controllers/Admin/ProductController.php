@@ -37,7 +37,8 @@ class ProductController extends Controller
   		$request->merge(['product_image'=>serialize($product_images)]);
 
   	}else{
-  		$request->merge(['product_image'=>'no-image.jpg']);
+  		$noImg=array('no-image.jpg');
+      $request->merge(['product_image'=>serialize($noImg)]);
   	}
 
   	$product=Product::create([
@@ -89,4 +90,90 @@ class ProductController extends Controller
 		return $current_product;
 	}
 	//edit
+
+
+  // update product
+  public function update(Request $request, $id){
+    $this->validate($request,[
+      'title'=>'required',
+      'price'=>'required',
+    ]);
+
+    $current_product=Product::findOrFail($id);
+    $slug=Str::slug($request->title,'-');
+    $current_images=unserialize($current_product->product_image);
+    $images=$request->product_image;
+
+    if($images){
+      // incase of new related images
+      $product_images=[];
+      $remaining=[];
+      $i=0;
+      $j=0;
+      foreach($images as $image){
+        if(!in_array($image, $current_images)){
+          $product_images[$i]=$this->makeStoreProductImage($image,$slug,$i);
+          $i++;
+        }else{
+          $remaining[$j]=$image;
+          $j++;
+        }
+      }
+      // incase of new related images
+
+      $request->merge(['product_image'=>serialize(array_merge($product_images,$remaining))]);//array to be saved into database is being serialized
+      
+      // remove the related image which in not in the update
+      foreach($current_images as $ci){
+        if(!in_array($ci, unserialize($request->product_image))){
+          $ci_file=public_path($ci);//current image file
+          //delete file
+          if(file_exists($ci_file)){
+            @unlink($ci_file);
+          }
+          //delete file
+        }
+      }
+      // remove the related image which in not in the update    
+    }
+    else{
+      foreach($current_images as $ci){
+        $ci_file=public_path($ci);//current image file
+        //delete file
+        if(file_exists($ci_file)){
+          @unlink($ci_file);
+        }
+        //delete file
+
+        $noImg=array('no-image.jpg');// arry to be save in case of no product image
+
+        $request->merge(['product_image'=>serialize($noImg)]);//value to be stored in database
+      }
+    }
+    //incase of no image in 
+    $current_product->update([
+      'title'=>$request['title'],
+      'price'=>$request['price'],
+      'product_image'=>$request['product_image'],
+      'description'=>$request['description'],
+    ]);
+    return $request->product_image;
+  }
+  //update product
+
+
+  // trash product
+  public function trash($id){
+    $current_product=Product::findOrFail($id);
+    $current_product->delete();
+  }
+  // / trash product
+
+
+
+
+
+
+
+
 }
