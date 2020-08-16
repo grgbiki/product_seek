@@ -1983,13 +1983,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'feedback',
   props: ['feedback_url'],
   data: function data() {
     return {
       loading: true,
-      feedback: {}
+      feedback: {},
+      fdlength: 0,
+      users: []
     };
   },
   methods: {
@@ -1999,12 +2038,25 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(this.feedback_url + '/paginated_feedbacks').then(function (_ref) {
         var data = _ref.data;
         _this.feedback = data;
+        _this.fdlength = _this.feedback.data.length;
         _this.loading = false;
       });
+    },
+    getUsers: function getUsers() {
+      var _this2 = this;
+
+      axios.get(this.feedback_url + '/user/').then(function (_ref2) {
+        var data = _ref2.data;
+        _this2.users = data;
+      });
+    },
+    openModal: function openModal(id) {
+      $('#feedback-' + id).modal('show');
     }
   },
   created: function created() {
     this.loadFeedbacks();
+    this.getUsers();
   }
 });
 
@@ -65285,7 +65337,149 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "row" },
-    [_vm.loading ? _c("loader") : _vm._e(), _vm._v(" "), _vm._m(0)],
+    [
+      _vm.loading ? _c("loader") : _vm._e(),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-12" }, [
+        _c("div", { staticClass: "card mt-2" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-bodytable-responsive p-0" }, [
+            _c("table", { staticClass: "table table-hover text-nowrap" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                [
+                  !_vm.fdlength
+                    ? _c("tr", [
+                        _c("td", { attrs: { colspan: "3" } }, [
+                          _vm._v(
+                            "\r\n          \t\t\tSorry no feedbacks!!\r\n          \t\t"
+                          )
+                        ])
+                      ])
+                    : _vm._l(_vm.feedback.data, function(f) {
+                        return _c(
+                          "tr",
+                          { key: f.id },
+                          [
+                            _c("td", [
+                              _vm._v(
+                                _vm._s(_vm._f("Trim_title")(f.feedback, 20))
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _vm._l(_vm.users, function(u) {
+                              return u.id == f.user_id
+                                ? _c("td", [_vm._v(_vm._s(u.name))])
+                                : _vm._e()
+                            }),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(_vm._s(_vm._f("myDate")(f.created_at)))
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-primary",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.openModal(f.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "far fa-eye mr-1" }),
+                                  _vm._v("View\r\n          \t\t\t")
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass: "modal fade",
+                                attrs: {
+                                  id: "feedback-" + f.id,
+                                  tabindex: "-1",
+                                  role: "dialog",
+                                  "aria-labelledby": "exampleModalCenterTitle",
+                                  "aria-hidden": "true"
+                                }
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "modal-dialog modal-dialog-centered",
+                                    attrs: { role: "document" }
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      { staticClass: "modal-content" },
+                                      [
+                                        _c(
+                                          "div",
+                                          { staticClass: "modal-header" },
+                                          [
+                                            _vm._l(_vm.users, function(u) {
+                                              return u.id == f.user_id
+                                                ? _c(
+                                                    "h5",
+                                                    {
+                                                      staticClass:
+                                                        "modal-title",
+                                                      attrs: {
+                                                        id:
+                                                          "exampleModalLongTitle"
+                                                      }
+                                                    },
+                                                    [_vm._v(_vm._s(u.name))]
+                                                  )
+                                                : _vm._e()
+                                            }),
+                                            _vm._v(" "),
+                                            _vm._m(2, true)
+                                          ],
+                                          2
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          { staticClass: "modal-body" },
+                                          [
+                                            _vm._v(
+                                              "\r\n\t\t\t\t\t\t\t       " +
+                                                _vm._s(f.feedback) +
+                                                "\r\n\t\t\t\t\t\t\t      "
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _vm._m(3, true)
+                                      ]
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          ],
+                          2
+                        )
+                      })
+                ],
+                2
+              )
+            ])
+          ])
+        ])
+      ])
+    ],
     1
   )
 }
@@ -65294,28 +65488,56 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-12" }, [
-      _c("div", { staticClass: "card mt-2" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("h4", [_vm._v("Feedback")])
-        ]),
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h4", [_vm._v("Feedback")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Feedback")]),
         _vm._v(" "),
-        _c("div", { staticClass: "card-bodytable-responsive p-0" }, [
-          _c("table", { staticClass: "table table-hover text-nowrap" }, [
-            _c("thead", [
-              _c("tr", [
-                _c("th", [_vm._v("Feedback")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Customer")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Actions")])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tbody")
-          ])
-        ])
+        _c("th", [_vm._v("Customer")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Published")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Actions")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      )
     ])
   }
 ]
@@ -79231,7 +79453,7 @@ Vue.filter('dollar', function (string) {
 });
 
 Vue.filter('myDate', function (date) {
-  return moment__WEBPACK_IMPORTED_MODULE_2___default()(date).format('MMMM DD YYYY');
+  return moment__WEBPACK_IMPORTED_MODULE_2___default()(date).format('MMMM DD YYYY , hh:mm a');
 }); // pagination component
 
 Vue.component('pagination', __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js"));

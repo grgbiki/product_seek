@@ -45,7 +45,7 @@ Vue.filter('dollar', function(string){
 
 import moment from 'moment';
  Vue.filter('myDate',function(date){
-  return moment(date).format('MMMM DD YYYY');
+  return moment(date).format('MMMM DD YYYY , hh:mm a');
  });
 
  // pagination component
