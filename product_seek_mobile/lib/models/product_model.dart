@@ -33,4 +33,24 @@ class ProductModel {
     this.storeId =
         StoreModel.fromJson(json[NetworkConfig.API_KEY_PRODUCT_STORE][0]).id;
   }
+
+  ProductModel.fromLocalJson(dynamic json) {
+    this.id = json[NetworkConfig.API_KEY_PRODUCT_ID];
+    this.title = json[NetworkConfig.API_KEY_PRODUCT_TITLE];
+    this.price = json[NetworkConfig.API_KEY_PRODUCT_PRICE].toDouble();
+    this.description = json[NetworkConfig.API_KEY_PRODUCT_DESCRIPTION];
+    this.images = json[NetworkConfig.API_KEY_PRODUCT_IMAGE];
+    this.categoryId = json[NetworkConfig.API_KEY_PRODUCT_CATEGORY_ID];
+    this.storeId = json[NetworkConfig.API_KEY_PRODUCT_STORE_ID];
+  }
+
+  Map toJson() => {
+        NetworkConfig.API_KEY_PRODUCT_ID: id,
+        NetworkConfig.API_KEY_PRODUCT_TITLE: title,
+        NetworkConfig.API_KEY_PRODUCT_PRICE: price,
+        NetworkConfig.API_KEY_PRODUCT_DESCRIPTION: description,
+        NetworkConfig.API_KEY_PRODUCT_IMAGE: images,
+        NetworkConfig.API_KEY_PRODUCT_CATEGORY_ID: categoryId,
+        NetworkConfig.API_KEY_PRODUCT_STORE_ID: storeId,
+      };
 }

@@ -12,8 +12,12 @@ class NetworkUtil {
   factory NetworkUtil() => _instance;
   final JsonDecoder _decoder = new JsonDecoder();
 
-  Future<dynamic> get({@required String url}) =>
-      http.get(url).then((http.Response response) {
+  Future<dynamic> get({@required String url}) {
+    try {
+      return http
+          .get(url)
+          .timeout(Duration(seconds: 10))
+          .then((http.Response response) {
         final int statusCode = response.statusCode;
         if (statusCode < 200 || statusCode > 400 || json == null) {
           throw new Exception("Error while fetching data");
@@ -22,6 +26,10 @@ class NetworkUtil {
           return _decoder.convert(res);
         }
       });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   Future<dynamic> post(
       {@required String url, Map headers, body, encoding}) async {

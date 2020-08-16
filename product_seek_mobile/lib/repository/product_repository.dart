@@ -23,11 +23,29 @@ class ProductRepository {
     });
   }
 
+  searchForProductBackend(String query) {
+    NetworkUtil()
+        .get(url: NetworkEndpoints.PRODUCT_SEARCH_API + query)
+        .then((response) async {
+      if (response != null) {
+        List<ProductModel> productModels;
+        productModels =
+            (response as List).map((i) => ProductModel.fromJson(i)).toList();
+        await database.productDao.addProducts(productModels);
+      } else {
+        print("Could not fetch product data");
+      }
+    });
+  }
+
   Stream<List<ProductModel>> getLocalProducts() =>
       database.productDao.getProducts();
 
   Stream<List<ProductModel>> getSearchresults(String name) =>
       database.productDao.getSearchresults(name);
+
+  Future<ProductModel> getProductById(int id) =>
+      database.productDao.getProductById(id);
 
   Future<void> addProducts(List<ProductModel> products) {
     return database.productDao.addProducts(products);

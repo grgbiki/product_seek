@@ -70,9 +70,10 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     final productViewModel = Provider.of<ProductViewModel>(context);
-
-    productViewModel.searchForProductBackend(query);
-    return Column();
+    if (query.length > 1) {
+      productViewModel.searchForProductBackend(query);
+    }
+    return Container();
   }
 
   Widget _buildStoreItem(ProductModel product, BuildContext context) {

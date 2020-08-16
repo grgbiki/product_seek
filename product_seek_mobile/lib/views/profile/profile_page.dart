@@ -53,114 +53,163 @@ class _ProfilePageState extends State<ProfilePage> {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: <Widget>[
-                _isLoggedIn
-                    ? Container(
-                        height: MediaQuery.of(context).size.height / 8,
-                        color: Theme.of(context).primaryColor,
-                        child: Column(
-                          children: <Widget>[
-                            SafeArea(child: _buildProfileView())
+                Container(
+                    height: _isLoggedIn
+                        ? MediaQuery.of(context).size.height / 6
+                        : MediaQuery.of(context).size.height / 4,
+                    color: Theme.of(context).primaryColor,
+                    child: Column(
+                      children: <Widget>[
+                        SafeArea(
+                            child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.settings),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: _isLoggedIn
+                                  ? _buildProfileView()
+                                  : Center(
+                                      child: RaisedButton(
+                                          child: Container(
+                                            child: Text(
+                                              "Login / Sign Up",
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              ),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginPage(
+                                                          loginCallback:
+                                                              loginCallBack,
+                                                        )));
+                                          }),
+                                    ),
+                            ),
                           ],
                         ))
-                    : Container(
-                        height: MediaQuery.of(context).size.height / 4,
-                        color: Theme.of(context).primaryColor,
-                        child: SafeArea(
-                          child: Center(
-                            child: RaisedButton(
-                                child: Container(
-                                  child: Text(
-                                    "Login / Sign Up",
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginPage(
-                                                loginCallback: loginCallBack,
-                                              )));
-                                }),
-                          ),
-                        ),
-                      ),
-                Container(
-                  color: Colors.white,
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                widget.changeIndex(1);
-                              },
-                              child: Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    Icon(Icons.shopping_cart),
-                                    Text("My Cart")
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    SvgPicture.asset(
-                                      "assets/icons/heart.svg",
-                                      width: 20,
-                                    ),
-                                    Text("Favourites")
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                print("test");
-                              },
-                              child: Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    Icon(Icons.history),
-                                    Text("My Orders")
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    Icon(Icons.undo),
-                                    Text("My Returns")
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
+                      ],
+                    ))
               ],
+            ),
+          ),
+          _buildOrdersMenu(),
+          _buildFeedback()
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeedback() {
+    return Container(
+      color: Colors.white,
+      margin: EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                widget.changeIndex(1);
+              },
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.rate_review),
+                    Text("My Reviews")
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                widget.changeIndex(1);
+              },
+              child: Container(
+                child: Column(
+                  children: <Widget>[Icon(Icons.chat), Text("Feedback")],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOrdersMenu() {
+    return Container(
+      color: Colors.white,
+      margin: EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                widget.changeIndex(1);
+              },
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.shopping_cart),
+                    Text("My Cart")
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () {},
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    SvgPicture.asset(
+                      "assets/icons/heart.svg",
+                      width: 20,
+                    ),
+                    Text("Favourites")
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                print("test");
+              },
+              child: Container(
+                child: Column(
+                  children: <Widget>[Icon(Icons.history), Text("My Orders")],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () {},
+              child: Container(
+                child: Column(
+                  children: <Widget>[Icon(Icons.undo), Text("My Returns")],
+                ),
+              ),
             ),
           ),
         ],

@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
                     stream: productViewModel.getLocalProducts(),
                     builder:
                         (context, AsyncSnapshot<List<ProductModel>> snapshot) {
-                      if (snapshot.data != null) {
+                      if (snapshot.hasData) {
                         return GridView.builder(
                             itemCount: snapshot.data.length,
                             gridDelegate:

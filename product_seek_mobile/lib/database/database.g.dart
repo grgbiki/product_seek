@@ -68,6 +68,8 @@ class _$AppDatabase extends AppDatabase {
 
   StoreDao _storeDaoInstance;
 
+  CartDao _cartDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -93,6 +95,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `StoreModel` (`id` INTEGER, `name` TEXT, `email` TEXT, `contact` TEXT, `address` TEXT, `mapUrl` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `CategoryModel` (`id` INTEGER, `name` TEXT, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `CartItemModel` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `product` TEXT, `quantity` INTEGER, `total_price` REAL, `status` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -118,6 +122,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   StoreDao get storeDao {
     return _storeDaoInstance ??= _$StoreDao(database, changeListener);
+  }
+
+  @override
+  CartDao get cartDao {
+    return _cartDaoInstance ??= _$CartDao(database, changeListener);
   }
 }
 
@@ -241,6 +250,12 @@ class _$ProductDao extends ProductDao {
         queryableName: 'ProductModel',
         isView: false,
         mapper: _productModelMapper);
+  }
+
+  @override
+  Future<ProductModel> getProductById(int id) async {
+    return _queryAdapter.query('SELECT * FROM ProductModel where id =?',
+        arguments: <dynamic>[id], mapper: _productModelMapper);
   }
 
   @override
@@ -382,5 +397,56 @@ class _$StoreDao extends StoreDao {
   Future<void> addStore(StoreModel storeModel) async {
     await _storeModelInsertionAdapter.insert(
         storeModel, OnConflictStrategy.replace);
+  }
+}
+
+class _$CartDao extends CartDao {
+  _$CartDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _cartItemModelInsertionAdapter = InsertionAdapter(
+            database,
+            'CartItemModel',
+            (CartItemModel item) => <String, dynamic>{
+                  'id': item.id,
+                  'product': item.product,
+                  'quantity': item.quantity,
+                  'total_price': item.totalPrice,
+                  'status': item.status
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _cartItemModelMapper = (Map<String, dynamic> row) =>
+      CartItemModel(row['id'] as int, row['product'] as String,
+          row['quantity'] as int, row['total_price'] as double);
+
+  final InsertionAdapter<CartItemModel> _cartItemModelInsertionAdapter;
+
+  @override
+  Stream<List<CartItemModel>> getCartItems() {
+    return _queryAdapter.queryListStream(
+        'SELECT * FROM CartItemModel WHERE status = "pending"',
+        queryableName: 'CartItemModel',
+        isView: false,
+        mapper: _cartItemModelMapper);
+  }
+
+  @override
+  Future<CartItemModel> checkExistingItem(String product) async {
+    return _queryAdapter.query(
+        'SELECT * FROM CartItemModel WHERE status="pending" AND product =?',
+        arguments: <dynamic>[product],
+        mapper: _cartItemModelMapper);
+  }
+
+  @override
+  Future<void> addItemToCart(CartItemModel cartItem) async {
+    await _cartItemModelInsertionAdapter.insert(
+        cartItem, OnConflictStrategy.replace);
   }
 }

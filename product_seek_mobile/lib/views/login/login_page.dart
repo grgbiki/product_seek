@@ -166,6 +166,26 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 
+  String validatePhone(String value) {
+    if (value.trim().isEmpty) {
+      return 'Please enter phone number';
+    } else if (value.trim().length != 10) {
+      return 'Please enter valid phone number. Number must be of 10 digit';
+    } else {
+      return null;
+    }
+  }
+
+  String validateAddress(String value) {
+    if (value.trim().isEmpty) {
+      return 'Please enter your current address';
+    } else if (value.trim().length < 8) {
+      return 'Please enter valid full address.';
+    } else {
+      return null;
+    }
+  }
+
   String validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -214,7 +234,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildAddressFormField() {
     return TextFormField(
       controller: _address,
-      validator: validateEmail,
+      validator: validateAddress,
       decoration: InputDecoration(
           prefixIcon: Icon(Icons.location_on),
           border: OutlineInputBorder(),
@@ -225,7 +245,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildPhoneFormField() {
     return TextFormField(
       controller: _phone,
-      validator: validateEmail,
+      validator: validatePhone,
       decoration: InputDecoration(
           prefixIcon: Icon(Icons.phone),
           border: OutlineInputBorder(),
@@ -305,6 +325,7 @@ class _LoginPageState extends State<LoginPage> {
     return ButtonTheme(
       height: 45,
       child: RaisedButton(
+        color: Theme.of(context).primaryColor,
         disabledColor: Colors.grey,
         disabledTextColor: Colors.black,
         onPressed: _isLoading

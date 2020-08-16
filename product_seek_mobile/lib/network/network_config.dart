@@ -18,7 +18,9 @@ class NetworkConfig {
   static const String API_KEY_PRODUCT_DESCRIPTION = "description";
   static const String API_KEY_PRODUCT_IMAGE = "product_image";
   static const String API_KEY_PRODUCT_CATEGORY = "product_category";
+  static const String API_KEY_PRODUCT_CATEGORY_ID = "product_category_id";
   static const String API_KEY_PRODUCT_STORE = "product_store";
+  static const String API_KEY_PRODUCT_STORE_ID = "product_store_id";
 
   static const String API_KEY_STORE_ID = "id";
   static const String API_KEY_STORE_NAME = "name";

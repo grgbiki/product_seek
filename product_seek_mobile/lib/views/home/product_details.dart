@@ -8,6 +8,7 @@ import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
+import 'package:product_seek_mobile/viewmodels/cart_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/category_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/store_view_model.dart';
 import 'package:product_seek_mobile/views/cart/cart_page.dart';
@@ -60,6 +61,7 @@ class _ItemDetailState extends State<ItemDetail> {
   Widget build(BuildContext context) {
     final categoryViewModel = Provider.of<CategoryViewModel>(context);
     final storeViewModel = Provider.of<StoreViwModel>(context);
+    final cartViewModel = Provider.of<CartViewModel>(context);
 
     if (storeName.isEmpty) {
       storeViewModel.getStoreInfoFromBackend(widget.product.storeId);
@@ -159,7 +161,7 @@ class _ItemDetailState extends State<ItemDetail> {
                     ),
                   ),
                 ),
-                _buildBottomControl()
+                _buildBottomControl(cartViewModel)
               ],
             ),
           ),
@@ -293,7 +295,7 @@ class _ItemDetailState extends State<ItemDetail> {
     );
   }
 
-  _buildBottomControl() {
+  _buildBottomControl(CartViewModel cartViewModel) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -334,6 +336,8 @@ class _ItemDetailState extends State<ItemDetail> {
                 child: RaisedButton(
                   color: Theme.of(context).accentColor,
                   onPressed: () {
+                    var product = jsonEncode(widget.product.toJson());
+                    print(product);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -341,10 +345,7 @@ class _ItemDetailState extends State<ItemDetail> {
                                   checkoutitems: new CheckoutModel(
                                       null,
                                       [
-                                        new CartItemModel(
-                                            null,
-                                            widget.product,
-                                            1,
+                                        new CartItemModel(null, product, 1,
                                             1 * widget.product.price.toDouble())
                                       ],
                                       0),
@@ -365,6 +366,11 @@ class _ItemDetailState extends State<ItemDetail> {
                 child: RaisedButton(
                   color: Theme.of(context).primaryColor,
                   onPressed: () {
+                    cartViewModel.addItemToCart(new CartItemModel(
+                        null,
+                        jsonEncode(widget.product.toJson()),
+                        1,
+                        1 * widget.product.price.toDouble()));
                     _scaffoldkey.currentState.showSnackBar(SnackBar(
                       content: Container(child: Text("Item added to cart")),
                       behavior: SnackBarBehavior.floating,

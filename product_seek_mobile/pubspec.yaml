@@ -37,7 +37,7 @@ dependencies:
 
   #Cached Image Package
   cached_network_image: ^2.2.0+1
-  flutter_svg: ^0.17.0
+  flutter_svg: ^0.18.0
 
   #Shared Preferences Package
   shared_preferences : any
