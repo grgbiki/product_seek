@@ -7,12 +7,17 @@ import 'package:flutter_svg/svg.dart';
 import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
+import 'package:product_seek_mobile/models/user_model.dart';
+import 'package:product_seek_mobile/models/wish_list_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/viewmodels/cart_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/category_view_model.dart';
+import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/store_view_model.dart';
+import 'package:product_seek_mobile/viewmodels/wishlist_view_model.dart';
 import 'package:product_seek_mobile/views/cart/cart_page.dart';
 import 'package:product_seek_mobile/views/checkout/checkout_page.dart';
+import 'package:product_seek_mobile/views/login/login_page.dart';
 import 'package:provider/provider.dart';
 
 class ItemDetail extends StatefulWidget {
@@ -26,6 +31,8 @@ class ItemDetail extends StatefulWidget {
 
 class _ItemDetailState extends State<ItemDetail> {
   List<String> images = new List<String>();
+  bool _isLoggedIn = false;
+  UserModel userInfo;
 
   bool _isFavourite = false;
   String heartPath = "assets/icons/heart_outline.svg";
@@ -34,6 +41,50 @@ class _ItemDetailState extends State<ItemDetail> {
 
   String categoryName = "";
   String storeName = "";
+  ProfileViewModel profileViewModel;
+  StoreViwModel storeViewModel;
+  CategoryViewModel categoryViewModel;
+  WishlistViewModel wishlistViewModel;
+  CartViewModel cartViewModel;
+  List<WishlistModel> wishlists = new List<WishlistModel>();
+
+  WishlistModel currentWishListModel;
+
+  toggleFavourite() {
+    setState(() {
+      _isFavourite = !_isFavourite;
+      if (_isFavourite) {
+        wishlistViewModel.addWishList(widget.product.id, userInfo.id);
+      } else
+        wishlistViewModel.removeWishList(currentWishListModel);
+      refreshWishlist();
+    });
+  }
+
+  refreshWishlist() async {
+    if (_isLoggedIn) {
+      await wishlistViewModel.getWishlist(userInfo.id).then((datas) {
+        wishlists = datas;
+      });
+    }
+
+    var wishItem = wishlists.singleWhere(
+        (it) => it.product.id == widget.product.id,
+        orElse: () => null);
+
+    if (wishItem != null) {
+      setState(() {
+        currentWishListModel = wishItem;
+        _isFavourite = true;
+        heartPath = "assets/icons/heart.svg";
+      });
+    } else {
+      setState(() {
+        _isFavourite = false;
+        heartPath = "assets/icons/heart_outline.svg";
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -45,28 +96,28 @@ class _ItemDetailState extends State<ItemDetail> {
         images.add(item);
       });
     });
-  }
 
-  toggleFavourite() {
-    setState(() {
-      _isFavourite = !_isFavourite;
-      if (_isFavourite)
-        heartPath = "assets/icons/heart.svg";
-      else
-        heartPath = "assets/icons/heart_outline.svg";
+    profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
+    wishlistViewModel = Provider.of<WishlistViewModel>(context, listen: false);
+    storeViewModel = Provider.of<StoreViwModel>(context, listen: false);
+    categoryViewModel = Provider.of<CategoryViewModel>(context, listen: false);
+    cartViewModel = Provider.of<CartViewModel>(context, listen: false);
+
+    profileViewModel.getUserData().listen((data) {
+      setState(() {
+        if (data != null) {
+          _isLoggedIn = true;
+          userInfo = data;
+          refreshWishlist();
+        } else {
+          _isLoggedIn = false;
+        }
+      });
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final categoryViewModel = Provider.of<CategoryViewModel>(context);
-    final storeViewModel = Provider.of<StoreViwModel>(context);
-    final cartViewModel = Provider.of<CartViewModel>(context);
-
     if (storeName.isEmpty) {
       storeViewModel.getStoreInfoFromBackend(widget.product.storeId);
     }
-    storeViewModel.getStoreInfo(widget.product.storeId).listen((store) {
+    storeViewModel.getStoreInfo(widget.product.storeId).then((store) {
       if (store != null) {
         if (storeName.isEmpty) {
           setState(() {
@@ -90,6 +141,10 @@ class _ItemDetailState extends State<ItemDetail> {
         }
       }
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldkey,
         body: Container(
@@ -161,7 +216,7 @@ class _ItemDetailState extends State<ItemDetail> {
                     ),
                   ),
                 ),
-                _buildBottomControl(cartViewModel)
+                _buildBottomControl()
               ],
             ),
           ),
@@ -295,7 +350,7 @@ class _ItemDetailState extends State<ItemDetail> {
     );
   }
 
-  _buildBottomControl(CartViewModel cartViewModel) {
+  _buildBottomControl() {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -336,20 +391,30 @@ class _ItemDetailState extends State<ItemDetail> {
                 child: RaisedButton(
                   color: Theme.of(context).accentColor,
                   onPressed: () {
-                    var product = jsonEncode(widget.product.toJson());
-                    print(product);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CheckoutPage(
-                                  checkoutitems: new CheckoutModel(
-                                      null,
-                                      [
-                                        new CartItemModel(null, product, 1,
-                                            1 * widget.product.price.toDouble())
-                                      ],
-                                      0),
-                                )));
+                    if (_isLoggedIn) {
+                      var product = jsonEncode(widget.product.toJson());
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CheckoutPage(
+                                    checkoutitems: new CheckoutModel(
+                                        null,
+                                        [
+                                          new CartItemModel(
+                                              null,
+                                              product,
+                                              1,
+                                              1 *
+                                                  widget.product.price
+                                                      .toDouble(),
+                                              "pending")
+                                        ],
+                                        0),
+                                  )));
+                    } else {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    }
                   },
                   child: Text(
                     "Buy Now",
@@ -366,23 +431,29 @@ class _ItemDetailState extends State<ItemDetail> {
                 child: RaisedButton(
                   color: Theme.of(context).primaryColor,
                   onPressed: () {
-                    cartViewModel.addItemToCart(new CartItemModel(
-                        null,
-                        jsonEncode(widget.product.toJson()),
-                        1,
-                        1 * widget.product.price.toDouble()));
-                    _scaffoldkey.currentState.showSnackBar(SnackBar(
-                      content: Container(child: Text("Item added to cart")),
-                      behavior: SnackBarBehavior.floating,
-                      action: SnackBarAction(
-                          label: 'Go to cart',
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CartPage()));
-                          }),
-                    ));
+                    if (_isLoggedIn) {
+                      cartViewModel.addItemToCart(new CartItemModel(
+                          null,
+                          jsonEncode(widget.product.toJson()),
+                          1,
+                          1 * widget.product.price.toDouble(),
+                          "pending"));
+                      _scaffoldkey.currentState.showSnackBar(SnackBar(
+                        content: Container(child: Text("Item added to cart")),
+                        behavior: SnackBarBehavior.floating,
+                        action: SnackBarAction(
+                            label: 'Go to cart',
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CartPage()));
+                            }),
+                      ));
+                    } else {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    }
                   },
                   child: Text(
                     "Add to Cart",

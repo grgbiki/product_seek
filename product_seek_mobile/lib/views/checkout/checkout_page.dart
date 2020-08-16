@@ -159,18 +159,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
           Divider(),
           Row(
             children: <Widget>[
-              Hero(
-                tag: product.id,
-                child: Container(
-                    height: MediaQuery.of(context).size.height / 10,
-                    child: FittedBox(
-                      child: CachedNetworkImage(
-                        imageUrl: NetworkEndpoints.BASE_URL +
-                            jsonDecode(product.images)[0],
-                      ),
-                      fit: BoxFit.fill,
-                    )),
-              ),
+              Container(
+                  height: MediaQuery.of(context).size.height / 10,
+                  child: FittedBox(
+                    child: CachedNetworkImage(
+                      imageUrl: NetworkEndpoints.BASE_URL +
+                          jsonDecode(product.images)[0],
+                    ),
+                    fit: BoxFit.fill,
+                  )),
               SizedBox(
                 width: 15,
               ),

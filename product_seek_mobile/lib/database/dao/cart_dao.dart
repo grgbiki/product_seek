@@ -10,6 +10,12 @@ abstract class CartDao {
       'SELECT * FROM CartItemModel WHERE status="pending" AND product =:product')
   Future<CartItemModel> checkExistingItem(String product);
 
+  @update
+  Future<void> updateItem(CartItemModel item);
+
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> addItemToCart(CartItemModel cartItem);
+
+  @Query('DELETE FROM CartItemModel')
+  Future<void> remoteItems();
 }

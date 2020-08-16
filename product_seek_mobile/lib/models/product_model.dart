@@ -27,11 +27,23 @@ class ProductModel {
     this.price = json[NetworkConfig.API_KEY_PRODUCT_PRICE].toDouble();
     this.description = json[NetworkConfig.API_KEY_PRODUCT_DESCRIPTION];
     this.images = jsonEncode(json[NetworkConfig.API_KEY_PRODUCT_IMAGE]);
-    this.categoryId =
-        CategoryModel.fromJson(json[NetworkConfig.API_KEY_PRODUCT_CATEGORY][0])
-            .id;
-    this.storeId =
-        StoreModel.fromJson(json[NetworkConfig.API_KEY_PRODUCT_STORE][0]).id;
+    try {
+      this.categoryId = CategoryModel.fromJson(
+              json[NetworkConfig.API_KEY_PRODUCT_CATEGORY][0])
+          .id;
+      this.storeId =
+          StoreModel.fromJson(json[NetworkConfig.API_KEY_PRODUCT_STORE][0]).id;
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  ProductModel.fromWishlistJson(dynamic json) {
+    this.id = json[NetworkConfig.API_KEY_PRODUCT_ID];
+    this.title = json[NetworkConfig.API_KEY_PRODUCT_TITLE];
+    this.price = json[NetworkConfig.API_KEY_PRODUCT_PRICE].toDouble();
+    this.description = json[NetworkConfig.API_KEY_PRODUCT_DESCRIPTION];
+    this.images = jsonEncode(json[NetworkConfig.API_KEY_PRODUCT_IMAGE]);
   }
 
   ProductModel.fromLocalJson(dynamic json) {

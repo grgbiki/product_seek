@@ -16,4 +16,9 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   Stream<UserModel> getUserData() => profileRepo.getUserInfo();
+
+  Future<void> logOut() => profileRepo.logOut();
+
+  postFeedback(String feedback, int userId) =>
+      profileRepo.postFeedback(feedback, userId);
 }

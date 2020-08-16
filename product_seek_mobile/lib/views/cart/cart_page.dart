@@ -3,7 +3,11 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/cart_model.dart';
+import 'package:product_seek_mobile/models/checkout_model.dart';
+import 'package:product_seek_mobile/models/product_model.dart';
+import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/viewmodels/cart_view_model.dart';
+import 'package:product_seek_mobile/views/checkout/checkout_page.dart';
 import 'package:provider/provider.dart';
 
 class CartPage extends StatefulWidget {
@@ -14,7 +18,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  List<CartItemModel> items = new List<CartItemModel>();
+  List<CartItemModel> cartIems = new List<CartItemModel>();
   bool hasData = false;
 
   double totalPrice = 0;
@@ -22,24 +26,29 @@ class _CartPageState extends State<CartPage> {
   @override
   void initState() {
     super.initState();
-    setState(() {});
-    refreshTotalCost();
-  }
-
-  void refreshTotalCost() {
-    totalPrice = 0;
-    if (items.length > 0) {
-      items.forEach((item) {
-        totalPrice += jsonDecode(item.product).price * item.quantity;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     final cartViewModel = Provider.of<CartViewModel>(context);
 
-    cartViewModel.getItemsFromCart();
+    cartViewModel.getItemsFromCart().listen((items) {
+      if (items.length > 0) {
+        setState(() {
+          cartIems = items;
+          hasData = true;
+          totalPrice = 0;
+          items.forEach((element) {
+            totalPrice += element.totalPrice;
+          });
+        });
+      } else {
+        setState(() {
+          hasData = false;
+          totalPrice = 0;
+        });
+      }
+    });
     return Scaffold(
         appBar: AppBar(
           title: Text("My Cart"),
@@ -90,7 +99,15 @@ class _CartPageState extends State<CartPage> {
               height: 45,
               child: RaisedButton(
                 color: Theme.of(context).primaryColor,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CheckoutPage(
+                                checkoutitems:
+                                    new CheckoutModel(null, cartIems, 0),
+                              )));
+                },
                 child: Text(
                   "Checkout",
                   style: TextStyle(fontSize: 16, color: Colors.white),
@@ -106,123 +123,108 @@ class _CartPageState extends State<CartPage> {
   Widget _buildCart(CartViewModel cartViewModel) {
     return Container(
       child: StreamBuilder(
-        stream: cartViewModel.getItemsFromCart(),
-        builder: (context, AsyncSnapshot<List<CartItemModel>> snapshot) {
-          if (!snapshot.hasData) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Center(child: CircularProgressIndicator()),
-              ],
-            );
-          } else if (snapshot.data.length > 0) {
-            return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  var cartItem = items[index];
-                  return _buildCartItems(cartItem, index);
-                });
-          } else {
-            return Center(
-              child: Column(
+          stream: cartViewModel.getItemsFromCart(),
+          builder: (context, AsyncSnapshot<List<CartItemModel>> snapshot) {
+            if (!snapshot.hasData) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(
-                    Icons.shopping_cart,
-                    size: 25,
-                  ),
-                  Text(
-                    "There are no items in the cart",
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
+                  Center(child: CircularProgressIndicator()),
                 ],
-              ),
-            );
-          }
-        },
-      ),
+              );
+            } else if (snapshot.data.length > 0) {
+              return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    var item = snapshot.data[index];
+                    return _buildCartItem(item, cartViewModel);
+                  });
+            } else {
+              return Center(
+                child: Text("No Items in cart"),
+              );
+            }
+          }),
     );
   }
 
-  Widget _buildCartItems(CartItemModel item, int index) {
+  Widget _buildCartItem(CartItemModel item, CartViewModel cartViewModel) {
+    ProductModel product = ProductModel.fromLocalJson(jsonDecode(item.product));
     return Container(
       color: Colors.white,
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: Row(
+      child: Column(
         children: <Widget>[
-          Container(
-              height: MediaQuery.of(context).size.height / 10,
-              child: FittedBox(
-                child: CachedNetworkImage(
-                  imageUrl: jsonDecode(jsonDecode(item.product).images)[0],
-                ),
-                fit: BoxFit.fill,
-              )),
-          SizedBox(
-            width: 15,
-          ),
-          Expanded(
-              child: Container(
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(child: Text(jsonDecode(item.product).title)),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.delete),
+          Row(
+            children: <Widget>[
+              Container(
+                  height: MediaQuery.of(context).size.height / 10,
+                  child: FittedBox(
+                    child: CachedNetworkImage(
+                      imageUrl: NetworkEndpoints.BASE_URL +
+                          jsonDecode(product.images)[0],
                     ),
-                  ],
-                ),
-                Container(
-                  child: Row(
+                    fit: BoxFit.fill,
+                  )),
+              SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Expanded(
-                          child: Container(
-                              child: Text('\$ ' +
-                                  jsonDecode(item.product).price.toString()))),
-                      IconButton(
-                        onPressed: item.quantity > 1
-                            ? () {
-                                setState(() {
-                                  item.quantity--;
-                                  refreshTotalCost();
-                                });
-                              }
-                            : null,
-                        icon: Icon(
-                          Icons.remove,
+                      Text(product.title),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              IconButton(
+                                onPressed: item.quantity < 2
+                                    ? null
+                                    : () async {
+                                        item.quantity--;
+                                        item.totalPrice =
+                                            item.quantity * product.price;
+                                        await cartViewModel
+                                            .changeQuantity(item);
+                                      },
+                                icon: Icon(
+                                  Icons.remove,
+                                  size: 20,
+                                ),
+                              ),
+                              Text(item.quantity.toString()),
+                              IconButton(
+                                onPressed: item.quantity > 4
+                                    ? null
+                                    : () async {
+                                        item.quantity++;
+                                        item.totalPrice =
+                                            item.quantity * product.price;
+                                        await cartViewModel
+                                            .changeQuantity(item);
+                                      },
+                                icon: Icon(
+                                  Icons.add,
+                                  size: 20,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        iconSize: 16,
                       ),
-                      Container(
-                        child: Text(item.quantity.toString()),
-                      ),
-                      IconButton(
-                        onPressed: item.quantity < 5
-                            ? () {
-                                setState(() {
-                                  item.quantity++;
-                                  refreshTotalCost();
-                                });
-                              }
-                            : null,
-                        icon: Icon(
-                          Icons.add,
-                        ),
-                        iconSize: 16,
-                      )
+                      Text('\$ ' + product.price.toString()),
                     ],
                   ),
-                )
-              ],
-            ),
-          ))
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );

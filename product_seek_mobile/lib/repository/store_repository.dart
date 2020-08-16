@@ -21,7 +21,7 @@ class StoreRepository {
     });
   }
 
-  Stream<StoreModel> getStoreInfo(int id) {
+  Future<StoreModel> getStoreInfo(int id) {
     return database.storeDao.getStoreFromId(id);
   }
 }

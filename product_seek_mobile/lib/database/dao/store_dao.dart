@@ -7,7 +7,7 @@ abstract class StoreDao {
   Stream<StoreModel> getStore();
 
   @Query('SELECT * FROM StoreModel WHERE id = :id')
-  Stream<StoreModel> getStoreFromId(int id);
+  Future<StoreModel> getStoreFromId(int id);
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> addStore(StoreModel storeModel);

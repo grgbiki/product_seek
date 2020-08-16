@@ -20,7 +20,7 @@ part 'database.g.dart';
   ProductModel,
   StoreModel,
   CategoryModel,
-  CartItemModel
+  CartItemModel,
 ])
 abstract class AppDatabase extends FloorDatabase {
   UserDao get userDao;
