@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
+//Network utils for nerwork requests
 class NetworkUtil {
   static NetworkUtil _instance = new NetworkUtil.internal();
 

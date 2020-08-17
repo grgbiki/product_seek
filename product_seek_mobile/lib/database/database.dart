@@ -15,6 +15,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 
 part 'database.g.dart';
 
+//Database class
 @Database(version: 1, entities: [
   UserModel,
   ProductModel,
@@ -22,6 +23,8 @@ part 'database.g.dart';
   CategoryModel,
   CartItemModel,
 ])
+
+//Dao for the appp
 abstract class AppDatabase extends FloorDatabase {
   UserDao get userDao;
   ProductDao get productDao;
