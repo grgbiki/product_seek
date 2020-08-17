@@ -15,16 +15,16 @@ class UserTableSeeder extends Seeder
     {
       $users=array(
       	[
-      		'name'         =>'Suraj Thapa Magar',
-      		'email'        =>'suraj.mazar@gmail.com',
+      		'name'         =>'Govinda Thapa',
+      		'email'        =>'thapagovinda560@gmail.com',
       		'phone_number' =>'9860151059',
       		'address'      =>'Budhanilkantha',
       		'role'				 =>'admin',
       		'password'		 =>'123456789'
       	],
       	[
-      		'name'         =>'Bikram Gurung',
-      		'email'        =>'gbikram53@gmail.com',
+      		'name'         =>'Bhishan',
+      		'email'        =>'bishang@gmail.com',
       		'phone_number' =>'9860151059',
       		'address'      =>'Gongabu',
       		'role'				 =>'admin',
