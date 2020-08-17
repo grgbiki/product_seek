@@ -24,7 +24,7 @@ class UserTableSeeder extends Seeder
       	],
       	[
       		'name'         =>'Bhishan',
-      		'email'        =>'bishang@gmail.com',
+      		'email'        =>'bhishang@gmail.com',
       		'phone_number' =>'9860151059',
       		'address'      =>'Gongabu',
       		'role'				 =>'admin',
