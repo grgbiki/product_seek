@@ -21,12 +21,17 @@ import 'package:product_seek_mobile/viewmodels/wishlist_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+//Main method of the app
 void main() async {
+  //Initializes stetho for debug
   Stetho.initialize();
+
+  //Initializes app database
   final database =
       await $FloorAppDatabase.databaseBuilder('app_database.db').build();
   final preferences = await SharedPreferences.getInstance();
 
+  //Initializes all required viewmodels
   final loginViewModel = LoginViewModel(
       loginRepo: LoginRepository(prefs: preferences, database: database));
   loginViewModel.init();
@@ -59,6 +64,7 @@ void main() async {
       wishlistRepo: WishlistRepository(prefs: preferences, database: database));
   wishlistViewModel.init();
 
+  //Runs app with multiple providers
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<LoginViewModel>.value(value: loginViewModel),

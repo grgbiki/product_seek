@@ -52,6 +52,7 @@ class _RootPageState extends State<RootPage> {
     );
   }
 
+  //Builds page view with bottom navigationbar
   Widget _buildPageView() {
     return PageView(
       physics: new NeverScrollableScrollPhysics(),
@@ -75,6 +76,7 @@ class _RootPageState extends State<RootPage> {
     );
   }
 
+  //Creates bottom nav bar and returns it as widget
   Widget _buildBottomNavBar() {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[

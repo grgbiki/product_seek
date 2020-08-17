@@ -1,3 +1,4 @@
+//Network endpoints
 class NetworkEndpoints {
   static const String _BASE_URL = "http://192.168.1.97:8000";
   static const String BASE_URL = "http://192.168.1.97:8000";
