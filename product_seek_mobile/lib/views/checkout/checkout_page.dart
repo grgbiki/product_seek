@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
+import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/viewmodels/checkout_view_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
+import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:provider/provider.dart';
 
 class CheckoutPage extends StatefulWidget {
@@ -23,10 +25,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   double shippingFee = 5;
 
+  UserModel userInfo;
+
   @override
   void initState() {
     super.initState();
-    print("This is test");
     setState(() {
       shippingFee = shippingFee * widget.checkoutitems.prductList.length;
       widget.checkoutitems.prductList.forEach((item) {
@@ -41,6 +44,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     final checkoutViewModel = Provider.of<CheckoutViewModel>(context);
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
+
+    profileViewModel.getUserData().listen((data) {
+      setState(() {
+        if (data != null) {
+          userInfo = data;
+        }
+      });
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -62,7 +75,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(
-                              "Bikram gurung",
+                              userInfo.name,
                               style: TextStyle(fontSize: 16),
                             ),
                             InkWell(
@@ -268,7 +281,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       border: Border.all(),
                       borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: Text(
-                    "+977 9860168996",
+                    userInfo.phoneNumber,
                   ),
                 ),
               ),
@@ -295,7 +308,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       border: Border.all(),
                       borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: Text(
-                    "gbikram53@gmail.com",
+                    userInfo.email,
                   ),
                 ),
               ),
