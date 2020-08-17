@@ -18,7 +18,8 @@ class WishlistController extends Controller
   		'user_id'=>'required',
   	]);
 
-  	$product=Product::findOrFail($request->product_id);
+  	$product=Product::with('productCategory','productStore');
+  	$product=$product->findOrFail($request->product_id);
   	$product->product_image=unserialize($product->product_image);
 
   	$product=serialize($product);
