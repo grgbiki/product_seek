@@ -70,6 +70,13 @@ Vue.component('store',require('./components/backend/store/Store.vue').default);
 // feed back component
 Vue.component('feedback',require('./components/backend/feedback/Feedback.vue').default);
 // end feedback component
+
+
+// order component
+Vue.component('order',require('./components/backend/order/Order.vue').default);
+// order component end
+
+
 const app = new Vue({
     el: '#app',
 });

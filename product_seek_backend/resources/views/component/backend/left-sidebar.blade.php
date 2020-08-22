@@ -74,7 +74,7 @@
 
         <li class="nav-header">Orders & Customers</li>
         <li class="nav-item has-treeview">
-          <a href="#" class="nav-link">
+          <a href="{{ route('admin.order') }}" class="nav-link">
             <i class="nav-icon fas fa-cart-arrow-down"></i>
             <p>
               Orders
@@ -104,15 +104,6 @@
             <i class="nav-icon fas fa-user-cog"></i>
             <p>
               Profile
-            </p>
-          </a>
-        </li>
-
-        <li class="nav-item has-treeview">
-          <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-cogs"></i>
-            <p>
-              Store setting
             </p>
           </a>
         </li>

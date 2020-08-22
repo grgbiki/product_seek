@@ -42,7 +42,7 @@
 							          <span aria-hidden="true">&times;</span>
 							        </button>
 							      </div>
-							      <div class="modal-body">
+							      <div class="modal-body" style="white-space: normal">
 							       {{ f.feedback }}
 							      </div>
 							      <div class="modal-footer">
