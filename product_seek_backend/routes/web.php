@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect('/login');
 });
+Route::get('/password-reset-success',function(){
+			return view('password-reset-redirect');
+		});
 
 Auth::routes();
 
@@ -147,5 +150,19 @@ Route::middleware('auth')->prefix('/admin')->group(function(){
 
 	});
 	// end feedback routes
+
+	// order route
+	Route::group(['prefix'=>'/orders'],function(){
+
+		Route::get('/',function(){return view('component.backend.order.index');})->name('admin.order');// order page 
+
+		Route::get('/paginated_orders','Admin\OrderController@paginated_orders');// get order
+
+		Route::get('/show/{id}','Admin\OrderController@show');// get order by id
+
+		Route::put('/update/{id}','Admin\OrderController@update');// update order by id
+	});
+	
+	// end order route
 
 });//admin routes 

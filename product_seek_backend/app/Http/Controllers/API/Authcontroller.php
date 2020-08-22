@@ -43,6 +43,39 @@ class Authcontroller extends Controller
 
       return response(['user'=>auth()->user(),'access_token'=>$accessToken]);
 
+    }
 
+    public function update(Request $request,$id){
+       $validateUser=$this->validate($request,[
+        'name'=>['required'],
+        'email'=>['email','required'],
+        'password'=>['sometime','confirmed'],
+        'address'=>['required'],
+        'phone_number'=>'required',
+      ]);
+
+       $user=User::findOrFail($id);
+         if($request->password){
+           $user->update( [
+                        'name'=>$request['name'],
+                     'email'=>$request['email'],
+                     'password'=>$request['password'],
+                     'address'=>$request['address'],
+                     'phone_number'=>$request['phone_number'],
+                     'role'=>$request['role']
+                   ]);
+         }else{
+           $user->update(  ['name'=>$request['name'],
+                     'email'=>$request['email'],
+                     'address'=>$request['address'],
+                     'phone_number'=>$request['phone_number'],
+                     'role'=>$request['role']
+                     ]);
+         }
+      
+
+        $accessToken= $user->createToken('authToken')->accessToken;
+
+        return response(['user'=>$user,'access_token'=>$accessToken]);
     }
 }

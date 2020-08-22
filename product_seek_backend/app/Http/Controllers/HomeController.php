@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\Productcategory;
 use App\Store;
+use App\Order;
 
 class HomeController extends Controller
 {
@@ -26,9 +27,14 @@ class HomeController extends Controller
      */
     public function index()
     {
+      $orders=Order::where('status','delivered')->get();
+      $income=0;
+       for($i=0;$i<count($orders);$i++){
+        $income=$income+$orders[$i]->total;
+       }
       $products=Product::latest()->get();
       $categories=Productcategory::latest()->get();
       $stores=Store::latest()->get();
-      return view('home',compact('products','categories','stores'));
+      return view('home',compact('products','categories','stores','income'));
     }
 }

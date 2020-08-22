@@ -19,6 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/register','API\Authcontroller@register');//api route for register
+
+Route::put('/update/{id}','API\Authcontroller@update');//api route for update
+
 Route::post('/login','API\Authcontroller@login');//api route for login
 
 
@@ -63,3 +66,16 @@ Route::group(['prefix'=>'/wishlist/'],function(){
 });
 
 // end wish list routes
+
+// order api routes
+
+Route::group(['prefix'=>'/order/'],function(){
+
+	Route::post('/add','API\Ordercontroller@store');// order request;
+
+	Route::get('/cancle/{id}','API\Ordercontroller@cancle');//cancle order
+
+	Route::get('/user-orders/{user_id}','API\Ordercontroller@get_order');// orders by user id 
+
+});
+// end order api routes
