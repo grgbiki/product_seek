@@ -6,12 +6,15 @@ import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
+import 'package:product_seek_mobile/resources/app_constants.dart';
 import 'package:product_seek_mobile/viewmodels/cart_view_model.dart';
 import 'package:product_seek_mobile/views/checkout/checkout_page.dart';
+import 'package:product_seek_mobile/views/login/login_page.dart';
 import 'package:provider/provider.dart';
 
 class CartPage extends StatefulWidget {
-  CartPage({Key key}) : super(key: key);
+  CartPage({this.changeIndex});
+  final Function(int) changeIndex;
 
   @override
   _CartPageState createState() => _CartPageState();
@@ -49,6 +52,7 @@ class _CartPageState extends State<CartPage> {
         });
       }
     });
+
     return Scaffold(
         appBar: AppBar(
           title: Text("My Cart"),

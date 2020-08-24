@@ -45,8 +45,6 @@ class _WishlistPageState extends State<WishlistPage> {
                         ],
                       );
                     } else if (snapshot.data.length > 0) {
-                      print("Data Length of snapshot" +
-                          snapshot.data.length.toString());
                       return GridView.builder(
                           itemCount: snapshot.data.length,
                           gridDelegate:

@@ -3,9 +3,11 @@ import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 
 class SettingPage extends StatelessWidget {
-  const SettingPage({this.userInfo, this.profileViewModel});
+  const SettingPage(
+      {this.userInfo, this.profileViewModel, this.logOutCallBack});
   final UserModel userInfo;
   final ProfileViewModel profileViewModel;
+  final VoidCallback logOutCallBack;
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +140,10 @@ class SettingPage extends StatelessWidget {
       width: double.infinity,
       child: FlatButton(
           onPressed: () {
-            profileViewModel.logOut().then((value) => Navigator.pop(context));
+            profileViewModel.logOut().then((value) {
+              logOutCallBack();
+              Navigator.pop(context);
+            });
           },
           color: Theme.of(context).primaryColor,
           child: Container(

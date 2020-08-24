@@ -22,19 +22,22 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  login({@required String email, @required String password}) async {
-    await loginRepo.login(email: email, password: password);
+  login(
+      {@required String email,
+      @required String password,
+      @required bool rememberMe}) async {
+    await loginRepo.login(
+        email: email, password: password, rememberMe: rememberMe);
     await _refreshAllStates();
   }
 
-  register({
-    @required String name,
-    @required String email,
-    @required String password,
-    @required String confirmPassword,
-    @required String address,
-    @required String number,
-  }) async {
+  register(
+      {@required String name,
+      @required String email,
+      @required String password,
+      @required String confirmPassword,
+      @required String address,
+      @required String number}) async {
     await loginRepo.register(
         name: name,
         email: email,

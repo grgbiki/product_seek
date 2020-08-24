@@ -44,6 +44,7 @@ class LoginRepository {
         await prefs.setString(ACCESS_TOKEN, response["access_token"]);
         await prefs.setInt(USER_ID, userModel.id);
         _isSuccessfulLogin.add(true);
+        globalIsLoggedIn = true;
       } else {
         _serverMessage = response["message"];
         await prefs.setBool(IS_LOGGED_IN, false);
@@ -52,7 +53,10 @@ class LoginRepository {
     });
   }
 
-  login({@required String email, @required String password}) {
+  login(
+      {@required String email,
+      @required String password,
+      @required bool rememberMe}) {
     _serverMessage = "";
     NetworkUtil().post(url: NetworkEndpoints.LOGIN_API, body: {
       NetworkConfig.API_KEY_USER_EMAIL: email,
@@ -60,11 +64,14 @@ class LoginRepository {
     }).then((response) async {
       if (response.toString().contains("access_token")) {
         UserModel userModel = UserModel.fromJson(response["user"]);
-        database.userDao.addUserData(userModel);
         userDetails = userModel;
-        await prefs.setBool(IS_LOGGED_IN, true);
-        await prefs.setString(ACCESS_TOKEN, response["access_token"]);
-        await prefs.setInt(USER_ID, userModel.id);
+        if (rememberMe) {
+          database.userDao.addUserData(userModel);
+          await prefs.setBool(IS_LOGGED_IN, true);
+          await prefs.setString(ACCESS_TOKEN, response["access_token"]);
+          await prefs.setInt(USER_ID, userModel.id);
+        }
+        globalIsLoggedIn = true;
         _isSuccessfulLogin.add(true);
       } else {
         _serverMessage = response["message"];
@@ -87,6 +94,10 @@ class LoginRepository {
 
   logout() async {
     prefs.clear();
+    userDetails = null;
+    globalIsLoggedIn = false;
+    database.userDao.remoteItems();
+    database.cartDao.remoteItems();
   }
 
   getErrorMessage() {

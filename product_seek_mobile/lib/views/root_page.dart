@@ -3,6 +3,7 @@ import 'package:product_seek_mobile/resources/app_constants.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:product_seek_mobile/views/cart/cart_page.dart';
 import 'package:product_seek_mobile/views/home/home_page.dart';
+import 'package:product_seek_mobile/views/login/login_page.dart';
 import 'package:product_seek_mobile/views/profile/profile_page.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +26,10 @@ class _RootPageState extends State<RootPage> {
     final profileViewModel =
         Provider.of<ProfileViewModel>(context, listen: false);
     profileViewModel.getUserData().then((userData) {
-      userDetails = userData;
+      if (userData != null) {
+        userDetails = userData;
+        globalIsLoggedIn = true;
+      }
     });
   }
 

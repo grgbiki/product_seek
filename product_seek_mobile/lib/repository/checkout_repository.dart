@@ -16,7 +16,6 @@ class CheckoutRepository {
     List<Map> products = checkoutItems.prductList != null
         ? checkoutItems.prductList.map((i) => i.toJson()).toList()
         : null;
-    print(jsonEncode(products));
     return NetworkUtil().post(url: NetworkEndpoints.ADD_ORDERS_API, body: {
       "user_id": checkoutItems.userId.toString(),
       "total_amount": checkoutItems.total.toString(),
