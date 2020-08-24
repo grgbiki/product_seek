@@ -113,17 +113,13 @@
 					              </tr>
 					            </thead>
 					            <tbody>
-					            	<tr v-for='p in currentOrder.products' :key='p.id'>
-					            		<td>
-					            			<img :src="p.product.product_image[0]" alt="" style="width: 50px">
-					            		</td>
-					            		<td>{{ p.product.title }}</td>
-					            		<td>$ {{ p.product.price }} </td>
-					            		<td>{{ p.quantity }}</td>
-					            		<td>$ {{ p.total_price }}</td>
-					            	</tr>
 					            	<tr>
-					            		<td colspan="4">Grand Total</td>
+					            		<td>
+					            			<img :src="currentOrder.products.product_image[0]" alt="" style="width: 50px">
+					            		</td>
+					            		<td>{{ currentOrder.products.title }}</td>
+					            		<td>$ {{ currentOrder.products.price }} </td>
+					            		<td>{{ currentOrder.quantity }}</td>
 					            		<td>$ {{ currentOrder.total }}</td>
 					            	</tr>
 					            </tbody>	

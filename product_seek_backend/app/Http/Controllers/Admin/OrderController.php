@@ -13,7 +13,8 @@ class OrderController extends Controller
   	$orders = Order::latest()->with('usersOrder')->paginate(10);
 
   	foreach($orders as $order){
-  		$order->products=unserialize($order->products) ;
+  		$order->products=unserialize($order->products);
+      $order->products->product_image=unserialize($order->products->product_image);
   	}
 
   	return $orders;
@@ -28,6 +29,7 @@ class OrderController extends Controller
   	$orders = $orders->findOrFail($id);
   	
   	$orders->products=unserialize($orders->products) ;
+    $orders->products->product_image=unserialize($orders->products->product_image);
 
   	return  $orders ;
   }

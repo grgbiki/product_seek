@@ -82,7 +82,7 @@
           </a>
         </li>
         <li class="nav-item has-treeview">
-          <a href="#" class="nav-link">
+          <a href="{{ route('admin.customers') }}" class="nav-link">
             <i class="nav-icon fas fa-user-friends"></i>
             <p>
               Customers
@@ -100,7 +100,7 @@
 
         <li class="nav-header">Customization</li>
         <li class="nav-item has-treeview">
-          <a href="#" class="nav-link">
+          <a href="{{ route('admin.user-profile') }}" class="nav-link">
             <i class="nav-icon fas fa-user-cog"></i>
             <p>
               Profile
