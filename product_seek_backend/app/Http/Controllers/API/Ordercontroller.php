@@ -22,7 +22,11 @@ class Ordercontroller extends Controller
 
 
 		$products=json_decode($request->products);
-		
+
+		foreach ($products as $product){
+			$p=$product->product;
+			$p->product_image=json_decode($p->product_image);
+		}
 
 		$order=Order::create([
 			'order_no' => $orderno,
