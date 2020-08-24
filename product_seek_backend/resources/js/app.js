@@ -43,6 +43,11 @@ Vue.filter('dollar', function(string){
     return '$ '+string;
  })
 
+Vue.filter('reverse', function(value) {
+  // slice to make a copy of array, then reverse the copy
+  return value.slice().reverse();
+});
+
 import moment from 'moment';
  Vue.filter('myDate',function(date){
   return moment(date).format('MMMM DD YYYY , hh:mm a');
@@ -65,8 +70,8 @@ Vue.component('produt-cat-trash',require('./components/backend/product/ProductCa
 
 // store components
 Vue.component('store',require('./components/backend/store/Store.vue').default);
-
 // end store components
+
 // feed back component
 Vue.component('feedback',require('./components/backend/feedback/Feedback.vue').default);
 // end feedback component
@@ -75,6 +80,15 @@ Vue.component('feedback',require('./components/backend/feedback/Feedback.vue').d
 // order component
 Vue.component('order',require('./components/backend/order/Order.vue').default);
 // order component end
+
+
+// customer component
+Vue.component('customer',require('./components/backend/customer/Customer.vue').default);
+//customer component
+
+// user profile
+Vue.component('user-profile',require('./components/backend/user-profile/UserProfile.vue').default);
+// end user profile
 
 
 const app = new Vue({

@@ -6,6 +6,10 @@
 				<i class="fas fa-plus mr-1"></i>
 				Add product
 			</button>
+			<button class="btn btn-danger" @click='openTrash'>
+				<i class="fas fa-trash mr-1"></i>
+				Trash
+			</button>
 		</div>
 		<div class="col-md-12">
 			<div class="card mt-2">
@@ -29,8 +33,8 @@
             	</tr>
             	<tr v-else v-for='p in products.data' :key='p.id' >
             		<td>{{ p.title }}</td>
-            		<td><span v-for='c in p.product_category'>{{ c.name }}</span></td>
-            		<td><span v-for='s in p.product_store'>{{ s.name }}</span></td>
+            		<td><span v-for='c in p.product_category' :key='c.id'>{{ c.name }}</span></td>
+            		<td><span v-for='s in p.product_store' :key='s.id>{{ s.name }}</span></td>
             		<td>$ {{ p.price }}</td>
             		<td>
             			<button class="btn btn-primary mr-1" @click='editProduct(p.id)'><i class="fas fa-edit mr-2"></i>Edit</button>
@@ -140,6 +144,21 @@
 		  </div>
 		</div>
 		<!-- end product model -->
+
+		<!-- trashed products  model-->
+		<div class="modal fade" id="trashproduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-lg" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">Trash</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!-- trashed products  model-->
 	</div>
 </template>
 <script>
@@ -302,6 +321,9 @@
           })
 					this.loading=false
 				});
+			},
+			openTrash(){
+				$('#trashproduct').modal('show')
 			}
 
 		},

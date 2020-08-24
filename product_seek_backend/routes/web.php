@@ -20,12 +20,12 @@ Route::get('/password-reset-success',function(){
 			return view('password-reset-redirect');
 		});
 
-Auth::routes();
+Auth::routes(['verify'=>true]);
 
 Route::get('/admin', 'HomeController@index')->name('admin');
 
 
-Route::middleware('auth')->prefix('/admin')->group(function(){
+Route::middleware(['auth','verified'])->prefix('/admin')->group(function(){
 
 
 	Route::group(['prefix'=>'/product/'],function(){
@@ -164,5 +164,35 @@ Route::middleware('auth')->prefix('/admin')->group(function(){
 	});
 	
 	// end order route
+
+	// customers routes
+	Route::group(['prefix'=>'/customers'],function(){
+
+		Route::get('/',function(){return view('component.backend.customer.index');})->name('admin.customers');// customers page
+
+		//paginated customers
+		Route::get('/paginated_customers','Admin\CustomerController@paginated_customers');
+		//get paginated customers
+
+	});
+	// end customers routes
+
+	Route::group(['prefix'=>'/user-profile/'],function(){
+
+		Route::get('/',function(){return view('component.backend.user-profile.index');})->name('admin.user-profile');// customers page
+
+		//paginated customers
+		Route::get('/show/{id}','Admin\CustomerController@show');
+		//get paginated customers
+
+		// update user from user profile
+		Route::put('/update/{id}','Admin\CustomerController@update');
+		// end update user from user profile
+
+	});
+
+	// user profile routes
+
+	// end user profile routes
 
 });//admin routes 
