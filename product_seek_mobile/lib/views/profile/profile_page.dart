@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:product_seek_mobile/models/user_model.dart';
+import 'package:product_seek_mobile/resources/app_constants.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:product_seek_mobile/views/login/login_page.dart';
+import 'package:product_seek_mobile/views/order/order_page.dart';
 import 'package:product_seek_mobile/views/profile/settings_page.dart';
 import 'package:product_seek_mobile/views/wishlist/wishlist_page.dart';
 import 'package:provider/provider.dart';
@@ -25,33 +27,43 @@ class _ProfilePageState extends State<ProfilePage> {
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
   void loginCallBack() {
-    profileViewModel.getUserData().then((data) {
-      setState(() {
-        if (data != null) {
+    setState(() {
+      if (globalIsLoggedIn) {
+        if (userDetails != null) {
           _isLoggedIn = true;
-          userInfo = data;
-        } else {
-          _isLoggedIn = false;
+          userInfo = userDetails;
         }
-      });
+      } else {
+        _isLoggedIn = false;
+      }
     });
+  }
+
+  void logOutCallBack() {
+    setState(() {
+      print("isLoggedIn " + globalIsLoggedIn.toString());
+      print(userDetails);
+      _isLoggedIn = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print("isLoggedIn " + globalIsLoggedIn.toString());
+    if (globalIsLoggedIn) {
+      if (userDetails != null) {
+        _isLoggedIn = true;
+        userInfo = userDetails;
+      }
+    } else {
+      _isLoggedIn = false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     profileViewModel = Provider.of<ProfileViewModel>(context);
-
-    profileViewModel.getUserData().then((data) {
-      setState(() {
-        if (data != null) {
-          _isLoggedIn = true;
-          userInfo = data;
-        } else {
-          _isLoggedIn = false;
-        }
-      });
-    });
-
     return Scaffold(
       key: _scaffoldkey,
       body: Column(
@@ -78,10 +90,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => SettingPage(
-                                                userInfo: userInfo,
-                                                profileViewModel:
-                                                    profileViewModel,
-                                              )));
+                                              userInfo: userInfo,
+                                              profileViewModel:
+                                                  profileViewModel,
+                                              logOutCallBack: logOutCallBack)));
                                 },
                                 icon: Icon(Icons.settings),
                               ),
@@ -251,7 +263,16 @@ class _ProfilePageState extends State<ProfilePage> {
           Expanded(
             child: InkWell(
               onTap: () {
-                widget.changeIndex(1);
+                if (_isLoggedIn) {
+                  widget.changeIndex(1);
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LoginPage(
+                                loginCallback: loginCallBack,
+                              )));
+                }
               },
               child: Container(
                 child: Column(
@@ -299,6 +320,8 @@ class _ProfilePageState extends State<ProfilePage> {
             child: InkWell(
               onTap: () {
                 if (_isLoggedIn) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => OrderPage()));
                 } else {
                   Navigator.push(
                       context,

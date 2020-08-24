@@ -91,10 +91,13 @@ class _ItemDetailState extends State<ItemDetail> {
   void initState() {
     super.initState();
     setState(() {
-      if (userDetails != null) {
-        _isLoggedIn = true;
-        userInfo = userDetails;
+      if (globalIsLoggedIn) {
+        if (userDetails != null) {
+          _isLoggedIn = true;
+          userInfo = userDetails;
+        }
       }
+
       _isFavourite = false;
       heartPath = "assets/icons/heart_outline.svg";
       jsonDecode(widget.product.images).forEach((item) {

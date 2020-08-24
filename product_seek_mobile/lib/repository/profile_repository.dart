@@ -20,6 +20,8 @@ class ProfileRepository {
   Future<void> logOut() async {
     database.cartDao.remoteItems();
     database.userDao.remoteItems();
+    userDetails = null;
+    globalIsLoggedIn = false;
     await prefs.clear();
   }
 

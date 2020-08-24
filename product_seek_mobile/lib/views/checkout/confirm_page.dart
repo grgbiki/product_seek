@@ -24,6 +24,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   bool _isCard = false;
   bool _saveCard = false;
   bool _isLoading = false;
+  bool _showPassword = false;
 
   final TextEditingController _cardNumber =
       new MaskedTextController(mask: '0000 0000 0000 0000');
@@ -75,6 +76,21 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                           Visibility(
                             visible: _isCard,
                             child: _buildCardNumberForm(),
+                          ),
+                          Visibility(
+                            visible: !_isCard,
+                            child: _buildEmailFormField(),
+                          ),
+                          Visibility(
+                            visible: !_isCard,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                _buildPasswordFormField(),
+                              ],
+                            ),
                           ),
                           Visibility(
                             visible: _isCard,
@@ -157,7 +173,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                   globalScaffoldkey.currentState
                                       .showSnackBar(SnackBar(
                                     content: Container(
-                                        child: Text("Item added to cart")),
+                                        child:
+                                            Text("Item ordered successfully")),
                                     behavior: SnackBarBehavior.floating,
                                     action: SnackBarAction(
                                         label: 'My Orders', onPressed: () {}),
@@ -260,5 +277,61 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         Text("Save card info for this device")
       ],
     );
+  }
+
+  Widget _buildEmailFormField() {
+    return TextFormField(
+      controller: _paypalEmail,
+      validator: validateEmail,
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+          prefixIcon: Icon(Icons.email),
+          border: OutlineInputBorder(),
+          labelText: 'Email'),
+    );
+  }
+
+  Widget _buildPasswordFormField() {
+    return TextFormField(
+      controller: _paypalPassword,
+      validator: validatePassword,
+      obscureText: !_showPassword,
+      decoration: InputDecoration(
+          prefixIcon: Icon(Icons.lock),
+          suffixIcon: IconButton(
+            icon: Icon(
+              Icons.remove_red_eye,
+              color: this._showPassword ? Colors.blue : Colors.grey,
+            ),
+            onPressed: () {
+              setState(() => this._showPassword = !this._showPassword);
+            },
+          ),
+          border: OutlineInputBorder(),
+          labelText: 'Password'),
+    );
+  }
+
+  String validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (value.trim().isNotEmpty) {
+      if (!regex.hasMatch(value.trim()))
+        return 'Please enter valid email';
+      else
+        return null;
+    } else
+      return 'Please enter your Email';
+  }
+
+  String validatePassword(String value) {
+    if (value.trim().isNotEmpty) {
+      if (value.trim().length < 8)
+        return 'Password must be more than or equal to 8 characters';
+      else
+        return null;
+    } else
+      return 'Please enter your password';
   }
 }

@@ -39,4 +39,10 @@ class NetworkConfig {
   static const String API_KEY_WISHLIST_PRODUCT = "product";
   static const String API_KEY_WISHLIST_PRODUCT_ID = "product_id";
   static const String API_KEY_WISHLIST_USER_ID = "user_id";
+
+  static const String API_KEY_ORDER_ID = "id";
+  static const String API_KEY_ORDER_NUMBER = "order_no";
+  static const String API_KEY_ORDER_PRODUCTS = "products";
+  static const String API_KEY_ORDER_STATUS = "status";
+  static const String API_KEY_ORDER_TOTAL = "total";
 }

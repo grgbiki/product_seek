@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/viewmodels/login_view_model.dart';
+import 'package:product_seek_mobile/views/login/forget_password_page.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -42,7 +43,9 @@ class _LoginPageState extends State<LoginPage> {
     });
     if (!_isRegistering) {
       await loginViewModel.login(
-          email: _email.text.trim(), password: _password.text.trim());
+          email: _email.text.trim(),
+          password: _password.text.trim(),
+          rememberMe: _rememberMe);
     } else {
       await loginViewModel.register(
           name: _name.text.trim(),
@@ -64,7 +67,9 @@ class _LoginPageState extends State<LoginPage> {
         if (isSuccessfulLogin) {
           if (once) {
             once = false;
-            widget.loginCallback();
+            if (widget.loginCallback != null) {
+              widget.loginCallback();
+            }
             Navigator.pop(context);
           }
         } else {
@@ -403,7 +408,12 @@ class _LoginPageState extends State<LoginPage> {
             Visibility(
               visible: !_isRegistering,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ForgetPasswordPage()));
+                },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   child: Text(

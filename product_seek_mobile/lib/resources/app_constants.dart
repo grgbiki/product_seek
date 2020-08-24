@@ -6,7 +6,7 @@ const String ACCESS_TOKEN = "access_token";
 const String USER_ID = "user_id";
 
 UserModel userDetails;
-bool isLoggedIn = false;
+bool globalIsLoggedIn = false;
 
 final GlobalKey<ScaffoldState> globalScaffoldkey =
     new GlobalKey<ScaffoldState>();
