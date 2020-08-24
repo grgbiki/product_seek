@@ -55,34 +55,33 @@ Route::get('/products/category/{id}','API\APIcontroller@filter_by_cat');
 Route::get('/products/store/{id}','API\APIcontroller@filter_by_store');
 //api route for products filtered by store id
 
-Route::group(['middleware' => 'auth:api'], function () {
-	Route::post('/feedback/create','API\FeedbackController@store');//create feedback
 
-	Route::put('/feedback/update/{id}','API\FeedbackController@update');//update feedback
+Route::post('/feedback/create','API\FeedbackController@store');//create feedback
 
-	Route::get('/feedback/{user_id}','API\FeedbackController@getFeedback');//update feedback
+Route::put('/feedback/update/{id}','API\FeedbackController@update');//update feedback
+
+Route::get('/feedback/{user_id}','API\FeedbackController@getFeedback');//update feedback
 
 
-	// wish list routes
+// wish list routes
 
-	Route::group(['prefix'=>'/wishlist/'],function(){
-		Route::post('/add','API\WishlistController@add_to_wishlist');// add product to wish list 
-		Route::get('/remove/{id}','API\WishlistController@remove_from_wishlist');//remove product from wish list
-		Route::get('/show/{user_id}','API\WishlistController@show_wishlist');// get wish list as per user
-	});
+Route::group(['prefix'=>'/wishlist/'],function(){
+	Route::post('/add','API\WishlistController@add_to_wishlist');// add product to wish list 
+	Route::get('/remove/{id}','API\WishlistController@remove_from_wishlist');//remove product from wish list
+	Route::get('/show/{user_id}','API\WishlistController@show_wishlist');// get wish list as per user
+});
 
-	// end wish list routes
+// end wish list routes
 
-	// order api routes
+// order api routes
 
-	Route::group(['prefix'=>'/order/'],function(){
+Route::group(['prefix'=>'/order/'],function(){
 
-		Route::post('/add','API\Ordercontroller@store');// order request;
+	Route::post('/add','API\Ordercontroller@store');// order request;
 
-		Route::get('/cancle/{id}','API\Ordercontroller@cancle');//cancle order
+	Route::get('/cancle/{id}','API\Ordercontroller@cancle');//cancle order
 
-		Route::get('/user-orders/{user_id}','API\Ordercontroller@get_order');// orders by user id 
+	Route::get('/user-orders/{user_id}','API\Ordercontroller@get_order');// orders by user id 
 
-	});
 });
 // end order api routes

@@ -34,7 +34,7 @@
             	<tr v-else v-for='p in products.data' :key='p.id' >
             		<td>{{ p.title }}</td>
             		<td><span v-for='c in p.product_category' :key='c.id'>{{ c.name }}</span></td>
-            		<td><span v-for='s in p.product_store' :key='s.id>{{ s.name }}</span></td>
+            		<td><span v-for='s in p.product_store' :key='s.id'>{{ s.name }}</span></td>
             		<td>$ {{ p.price }}</td>
             		<td>
             			<button class="btn btn-primary mr-1" @click='editProduct(p.id)'><i class="fas fa-edit mr-2"></i>Edit</button>
