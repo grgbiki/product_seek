@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:product_seek_mobile/resources/app_constants.dart';
+import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:product_seek_mobile/views/cart/cart_page.dart';
 import 'package:product_seek_mobile/views/home/home_page.dart';
 import 'package:product_seek_mobile/views/profile/profile_page.dart';
+import 'package:provider/provider.dart';
 
 class RootPage extends StatefulWidget {
   RootPage({Key key}) : super(key: key);
@@ -18,6 +21,12 @@ class _RootPageState extends State<RootPage> {
   void initState() {
     super.initState();
     _pageController = PageController();
+
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
+    profileViewModel.getUserData().then((userData) {
+      userDetails = userData;
+    });
   }
 
   @override

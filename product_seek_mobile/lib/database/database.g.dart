@@ -132,7 +132,7 @@ class _$AppDatabase extends AppDatabase {
 
 class _$UserDao extends UserDao {
   _$UserDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+      : _queryAdapter = QueryAdapter(database),
         _userModelInsertionAdapter = InsertionAdapter(
             database,
             'UserModel',
@@ -143,8 +143,7 @@ class _$UserDao extends UserDao {
                   'phone_number': item.phoneNumber,
                   'address': item.address,
                   'role': item.role
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -163,12 +162,9 @@ class _$UserDao extends UserDao {
   final InsertionAdapter<UserModel> _userModelInsertionAdapter;
 
   @override
-  Stream<UserModel> getUserDetail(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM UserModel WHERE id = ?',
-        arguments: <dynamic>[id],
-        queryableName: 'UserModel',
-        isView: false,
-        mapper: _userModelMapper);
+  Future<UserModel> getUserDetail(int id) async {
+    return _queryAdapter.query('SELECT * FROM UserModel WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _userModelMapper);
   }
 
   @override

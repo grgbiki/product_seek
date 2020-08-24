@@ -7,7 +7,14 @@ class CheckoutModel {
   final int id;
   List<CartItemModel> prductList;
   double total;
-  bool status;
+  int userId;
 
-  CheckoutModel(this.id, this.prductList, this.total);
+  CheckoutModel(this.id, this.prductList, this.total, this.userId);
+
+  Map toJson() {
+    List<Map> products = this.prductList != null
+        ? this.prductList.map((i) => i.toJson()).toList()
+        : null;
+    return {'products': products, 'total_amount': total, 'user_id': userId};
+  }
 }

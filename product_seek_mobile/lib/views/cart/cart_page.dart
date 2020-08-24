@@ -105,7 +105,7 @@ class _CartPageState extends State<CartPage> {
                       MaterialPageRoute(
                           builder: (context) => CheckoutPage(
                                 checkoutitems:
-                                    new CheckoutModel(null, cartIems, 0),
+                                    new CheckoutModel(null, cartIems, 0, 2),
                               )));
                 },
                 child: Text(

@@ -10,6 +10,7 @@ import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/models/wish_list_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
+import 'package:product_seek_mobile/resources/app_constants.dart';
 import 'package:product_seek_mobile/viewmodels/cart_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/category_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
@@ -90,6 +91,10 @@ class _ItemDetailState extends State<ItemDetail> {
   void initState() {
     super.initState();
     setState(() {
+      if (userDetails != null) {
+        _isLoggedIn = true;
+        userInfo = userDetails;
+      }
       _isFavourite = false;
       heartPath = "assets/icons/heart_outline.svg";
       jsonDecode(widget.product.images).forEach((item) {
@@ -103,17 +108,6 @@ class _ItemDetailState extends State<ItemDetail> {
     categoryViewModel = Provider.of<CategoryViewModel>(context, listen: false);
     cartViewModel = Provider.of<CartViewModel>(context, listen: false);
 
-    profileViewModel.getUserData().listen((data) {
-      setState(() {
-        if (data != null) {
-          _isLoggedIn = true;
-          userInfo = data;
-          refreshWishlist();
-        } else {
-          _isLoggedIn = false;
-        }
-      });
-    });
     if (storeName.isEmpty) {
       storeViewModel.getStoreInfoFromBackend(widget.product.storeId);
     }
@@ -392,7 +386,7 @@ class _ItemDetailState extends State<ItemDetail> {
                   color: Theme.of(context).accentColor,
                   onPressed: () {
                     if (_isLoggedIn) {
-                      var product = jsonEncode(widget.product.toJson());
+                      var product = jsonEncode(widget.product);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -409,7 +403,8 @@ class _ItemDetailState extends State<ItemDetail> {
                                                       .toDouble(),
                                               "pending")
                                         ],
-                                        0),
+                                        0,
+                                        userInfo.id),
                                   )));
                     } else {
                       Navigator.push(context,

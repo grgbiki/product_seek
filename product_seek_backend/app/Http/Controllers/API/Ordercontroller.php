@@ -21,7 +21,7 @@ class Ordercontroller extends Controller
 		$orderno='order-'.strtotime(date('m/d/Y h:i:s a', time()));
 
 
-		$products=$request->products;
+		$products=json_decode($request->products);
 		
 
 		$order=Order::create([
