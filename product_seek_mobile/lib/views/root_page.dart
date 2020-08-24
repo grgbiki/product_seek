@@ -54,6 +54,7 @@ class _RootPageState extends State<RootPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: globalScaffoldkey,
       body: Center(
         child: _buildPageView(),
       ),

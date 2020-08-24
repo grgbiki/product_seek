@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/user_model.dart';
 
 const String IS_LOGGED_IN = "is_logged_in";
@@ -6,3 +7,6 @@ const String USER_ID = "user_id";
 
 UserModel userDetails;
 bool isLoggedIn = false;
+
+final GlobalKey<ScaffoldState> globalScaffoldkey =
+    new GlobalKey<ScaffoldState>();

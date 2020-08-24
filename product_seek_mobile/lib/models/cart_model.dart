@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:floor/floor.dart';
-import 'package:product_seek_mobile/network/network_config.dart';
 
 @entity
 class CartItemModel {

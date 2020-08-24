@@ -6,6 +6,7 @@ import 'package:product_seek_mobile/repository/cart_repository.dart';
 import 'package:product_seek_mobile/repository/category_repository.dart';
 import 'package:product_seek_mobile/repository/checkout_repository.dart';
 import 'package:product_seek_mobile/repository/login_repository.dart';
+import 'package:product_seek_mobile/repository/order_repository.dart';
 import 'package:product_seek_mobile/repository/product_repository.dart';
 import 'package:product_seek_mobile/repository/profile_repository.dart';
 import 'package:product_seek_mobile/repository/store_repository.dart';
@@ -14,6 +15,7 @@ import 'package:product_seek_mobile/viewmodels/cart_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/category_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/checkout_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/login_view_model.dart';
+import 'package:product_seek_mobile/viewmodels/order_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/product_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/store_view_model.dart';
@@ -64,6 +66,10 @@ void main() async {
       wishlistRepo: WishlistRepository(prefs: preferences, database: database));
   wishlistViewModel.init();
 
+  final orderViewModel = OrderViewModel(
+      orderRepo: OrderRepository(prefs: preferences, database: database));
+  orderViewModel.init();
+
   //Runs app with multiple providers
   runApp(MultiProvider(
     providers: [
@@ -75,6 +81,7 @@ void main() async {
       ChangeNotifierProvider<CategoryViewModel>.value(value: categoryViewModel),
       ChangeNotifierProvider<StoreViwModel>.value(value: storeViewModel),
       ChangeNotifierProvider<WishlistViewModel>.value(value: wishlistViewModel),
+      ChangeNotifierProvider<OrderViewModel>.value(value: orderViewModel),
     ],
     child: App(),
   ));

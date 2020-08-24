@@ -38,6 +38,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           MaterialPageRoute(
                               builder: (context) => ConfirmationPage(
                                     checkoutitems: widget.checkoutitems,
+                                    paymentType: "card",
                                   )));
                     },
                     child: Container(
@@ -71,6 +72,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           MaterialPageRoute(
                               builder: (context) => ConfirmationPage(
                                     checkoutitems: widget.checkoutitems,
+                                    paymentType: "paypal",
                                   )));
                     },
                     child: Container(

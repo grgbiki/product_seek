@@ -38,6 +38,8 @@ class ProductModel {
     }
   }
 
+  ProductModel.fromOrderJson(dynamic json) {}
+
   ProductModel.fromWishlistJson(dynamic json) {
     this.id = json[NetworkConfig.API_KEY_PRODUCT_ID];
     this.title = json[NetworkConfig.API_KEY_PRODUCT_TITLE];

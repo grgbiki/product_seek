@@ -164,6 +164,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   height: MediaQuery.of(context).size.height / 10,
                   child: FittedBox(
                     child: CachedNetworkImage(
+                      height: MediaQuery.of(context).size.height / 10,
                       imageUrl: NetworkEndpoints.BASE_URL +
                           jsonDecode(product.images)[0],
                     ),
