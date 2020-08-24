@@ -32,7 +32,7 @@ class UserTableSeeder extends Seeder
       	],
         [
           'name'         =>'Bikram',
-          'email'        =>'gbikram56@gmail.com',
+          'email'        =>'gbikram53@gmail.com',
           'phone_number' =>'9860151059',
           'address'      =>'Gongabu',
           'role'         =>'admin',
