@@ -12,7 +12,7 @@ class ProfileRepository {
 
   ProfileRepository({this.prefs, this.database});
 
-  Stream<UserModel> getUserInfo() {
+  Future<UserModel> getUserInfo() {
     return database.userDao
         .getUserDetail(prefs.containsKey(USER_ID) ? prefs.getInt(USER_ID) : 0);
   }

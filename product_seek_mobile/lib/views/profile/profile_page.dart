@@ -25,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
   void loginCallBack() {
-    profileViewModel.getUserData().listen((data) {
+    profileViewModel.getUserData().then((data) {
       setState(() {
         if (data != null) {
           _isLoggedIn = true;
@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     profileViewModel = Provider.of<ProfileViewModel>(context);
 
-    profileViewModel.getUserData().listen((data) {
+    profileViewModel.getUserData().then((data) {
       setState(() {
         if (data != null) {
           _isLoggedIn = true;

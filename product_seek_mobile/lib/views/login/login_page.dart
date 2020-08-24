@@ -19,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _phone = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
+  bool _rememberMe = false;
 
   bool _isRegistering = false;
   bool _isLoading = false;
@@ -140,6 +141,10 @@ class _LoginPageState extends State<LoginPage> {
                                     _buildConfirmPasswordFormField(),
                                   ],
                                 ),
+                              ),
+                              Visibility(
+                                visible: !_isRegistering,
+                                child: _buildRememberMe(),
                               ),
                               SizedBox(
                                 height: 5,
@@ -293,6 +298,22 @@ class _LoginPageState extends State<LoginPage> {
           ),
           border: OutlineInputBorder(),
           labelText: 'Confirm Password'),
+    );
+  }
+
+  Widget _buildRememberMe() {
+    return Row(
+      children: [
+        Checkbox(
+            value: _rememberMe,
+            onChanged: (value) {
+              setState(() {
+                _rememberMe = value;
+              });
+              print(_rememberMe);
+            }),
+        Text("Remember Me")
+      ],
     );
   }
 

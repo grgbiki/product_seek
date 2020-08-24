@@ -18,4 +18,8 @@ class NetworkEndpoints {
   static const String WISHLIST_API = _BASE_API + "/wishlist/show/";
   static const String ADD_WISHLIST_API = _BASE_API + "/wishlist/add";
   static const String REMOVE_WISHLIST_API = _BASE_API + "/wishlist/remove/";
+
+  static const String ADD_ORDERS_API = _BASE_API + "/order/add";
+  static const String CANCEL_ORDERS_API = _BASE_API + "/order/cancle/";
+  static const String USER_ORDERS_API = _BASE_API + "/order/user-orders/";
 }

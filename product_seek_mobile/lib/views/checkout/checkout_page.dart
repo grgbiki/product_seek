@@ -6,10 +6,9 @@ import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/models/user_model.dart';
-import 'package:product_seek_mobile/viewmodels/checkout_view_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
-import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
-import 'package:provider/provider.dart';
+import 'package:product_seek_mobile/resources/app_constants.dart';
+import 'package:product_seek_mobile/views/checkout/payment_page.dart';
 
 class CheckoutPage extends StatefulWidget {
   CheckoutPage({this.checkoutitems});
@@ -31,6 +30,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void initState() {
     super.initState();
     setState(() {
+      if (userDetails != null) userInfo = userDetails;
       shippingFee = shippingFee * widget.checkoutitems.prductList.length;
       widget.checkoutitems.prductList.forEach((item) {
         ProductModel product =
@@ -43,18 +43,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    final checkoutViewModel = Provider.of<CheckoutViewModel>(context);
-    final profileViewModel =
-        Provider.of<ProfileViewModel>(context, listen: false);
-
-    profileViewModel.getUserData().listen((data) {
-      setState(() {
-        if (data != null) {
-          userInfo = data;
-        }
-      });
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Checkout"),
@@ -176,6 +164,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   height: MediaQuery.of(context).size.height / 10,
                   child: FittedBox(
                     child: CachedNetworkImage(
+                      height: MediaQuery.of(context).size.height / 10,
                       imageUrl: NetworkEndpoints.BASE_URL +
                           jsonDecode(product.images)[0],
                     ),
@@ -254,7 +243,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       border: Border.all(),
                       borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: Text(
-                    "Kathmandu ,Nepal",
+                    userInfo.address,
                   ),
                 ),
               ),
@@ -350,7 +339,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
               height: 45,
               child: RaisedButton(
                 color: Theme.of(context).primaryColor,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PaymentPage(
+                                checkoutitems: widget.checkoutitems,
+                                userInfo: userInfo,
+                              )));
+                },
                 child: Text(
                   "Proceed to Pay",
                   style: TextStyle(fontSize: 16, color: Colors.white),

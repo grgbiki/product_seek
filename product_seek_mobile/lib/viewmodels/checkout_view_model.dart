@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/repository/checkout_repository.dart';
 
 class CheckoutViewModel extends ChangeNotifier {
@@ -17,4 +18,7 @@ class CheckoutViewModel extends ChangeNotifier {
   addItemToCart() {}
 
   getItemsFromCart() {}
+
+  Future<void> orderItems(CheckoutModel checkoutItems) =>
+      checkoutRepo.orderItems(checkoutItems);
 }

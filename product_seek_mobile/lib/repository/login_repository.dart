@@ -39,6 +39,7 @@ class LoginRepository {
       if (response != null) {
         UserModel userModel = UserModel.fromJson(response["user"]);
         database.userDao.addUserData(userModel);
+        userDetails = userModel;
         await prefs.setBool(IS_LOGGED_IN, true);
         await prefs.setString(ACCESS_TOKEN, response["access_token"]);
         await prefs.setInt(USER_ID, userModel.id);
@@ -60,6 +61,7 @@ class LoginRepository {
       if (response.toString().contains("access_token")) {
         UserModel userModel = UserModel.fromJson(response["user"]);
         database.userDao.addUserData(userModel);
+        userDetails = userModel;
         await prefs.setBool(IS_LOGGED_IN, true);
         await prefs.setString(ACCESS_TOKEN, response["access_token"]);
         await prefs.setInt(USER_ID, userModel.id);
