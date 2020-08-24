@@ -20,6 +20,7 @@ class CustomerController extends Controller
 	  	}
 	  	foreach($user->usersOrder as $o){
 	  	 	$o->products=unserialize($o->products);
+	  	 	$o->products->product_image=unserialize($o->products->product_image);
 	  	}
   	}
 

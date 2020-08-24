@@ -136,28 +136,23 @@
 				              </tr>
 				            </thead>
 				            <tbody>
-				            	<tr v-for='p in co.products'>
-				            		<td>
-				            			<img :src="p.product.product_image[0]" style="width:50px" alt="">
-				            		</td>
-				            		<td>
-				            			{{ p.product.title }}
-				            		</td>
-				            		<td>
-				            			{{ p.product.price }}
-				            		</td>
-				            		<td>
-				            			{{ p.quantity }}
-				            		</td>
-				            		<td>
-				            			$ {{ p.total_price }}
-				            		</td>
-				            	</tr>
 				            	<tr>
-				            		<td colspan="4">Grand total</td>
-				            		<td>$ {{ co.total }}</td>
+				            		<td>
+				            			<img :src="co.products.product_image[0]" style="width:50px" alt="">
+				            		</td>
+				            		<td>
+				            			{{ co.products.title }}
+				            		</td>
+				            		<td>
+				            			{{ co.products.price }}
+				            		</td>
+				            		<td>
+				            			{{ co.quantity }}
+				            		</td>
+				            		<td>
+				            			$ {{ co.total }}
+				            		</td>
 				            	</tr>
-				            	
 				            </tbody>
 				          </table>
 				        </div>

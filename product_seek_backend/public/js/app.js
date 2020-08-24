@@ -2131,11 +2131,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'customer',
   props: ['admin_url'],
@@ -2337,10 +2332,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
 //
 //
 //
@@ -66334,65 +66325,51 @@ var render = function() {
                             _c("table", { staticClass: "table text-nowrap" }, [
                               _vm._m(5, true),
                               _vm._v(" "),
-                              _c(
-                                "tbody",
-                                [
-                                  _vm._l(co.products, function(p) {
-                                    return _c("tr", [
-                                      _c("td", [
-                                        _c("img", {
-                                          staticStyle: { width: "50px" },
-                                          attrs: {
-                                            src: p.product.product_image[0],
-                                            alt: ""
-                                          }
-                                        })
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(
-                                          "\n\t\t\t\t            \t\t\t" +
-                                            _vm._s(p.product.title) +
-                                            "\n\t\t\t\t            \t\t"
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(
-                                          "\n\t\t\t\t            \t\t\t" +
-                                            _vm._s(p.product.price) +
-                                            "\n\t\t\t\t            \t\t"
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(
-                                          "\n\t\t\t\t            \t\t\t" +
-                                            _vm._s(p.quantity) +
-                                            "\n\t\t\t\t            \t\t"
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(
-                                          "\n\t\t\t\t            \t\t\t$ " +
-                                            _vm._s(p.total_price) +
-                                            "\n\t\t\t\t            \t\t"
-                                        )
-                                      ])
-                                    ])
-                                  }),
+                              _c("tbody", [
+                                _c("tr", [
+                                  _c("td", [
+                                    _c("img", {
+                                      staticStyle: { width: "50px" },
+                                      attrs: {
+                                        src: co.products.product_image[0],
+                                        alt: ""
+                                      }
+                                    })
+                                  ]),
                                   _vm._v(" "),
-                                  _c("tr", [
-                                    _c("td", { attrs: { colspan: "4" } }, [
-                                      _vm._v("Grand total")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("td", [_vm._v("$ " + _vm._s(co.total))])
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n\t\t\t\t            \t\t\t" +
+                                        _vm._s(co.products.title) +
+                                        "\n\t\t\t\t            \t\t"
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n\t\t\t\t            \t\t\t" +
+                                        _vm._s(co.products.price) +
+                                        "\n\t\t\t\t            \t\t"
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n\t\t\t\t            \t\t\t" +
+                                        _vm._s(co.quantity) +
+                                        "\n\t\t\t\t            \t\t"
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n\t\t\t\t            \t\t\t$ " +
+                                        _vm._s(co.total) +
+                                        "\n\t\t\t\t            \t\t"
+                                    )
                                   ])
-                                ],
-                                2
-                              )
+                                ])
+                              ])
                             ])
                           ]
                         ),
@@ -67018,64 +66995,51 @@ var render = function() {
                                 [
                                   _vm._m(5),
                                   _vm._v(" "),
-                                  _c(
-                                    "tbody",
-                                    [
-                                      _vm._l(
-                                        _vm.currentOrder.products,
-                                        function(p) {
-                                          return _c("tr", { key: p.id }, [
-                                            _c("td", [
-                                              _c("img", {
-                                                staticStyle: { width: "50px" },
-                                                attrs: {
-                                                  src:
-                                                    p.product.product_image[0],
-                                                  alt: ""
-                                                }
-                                              })
-                                            ]),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(_vm._s(p.product.title))
-                                            ]),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(
-                                                "$ " +
-                                                  _vm._s(p.product.price) +
-                                                  " "
-                                              )
-                                            ]),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(_vm._s(p.quantity))
-                                            ]),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(
-                                                "$ " + _vm._s(p.total_price)
-                                              )
-                                            ])
-                                          ])
-                                        }
-                                      ),
+                                  _c("tbody", [
+                                    _c("tr", [
+                                      _c("td", [
+                                        _c("img", {
+                                          staticStyle: { width: "50px" },
+                                          attrs: {
+                                            src:
+                                              _vm.currentOrder.products
+                                                .product_image[0],
+                                            alt: ""
+                                          }
+                                        })
+                                      ]),
                                       _vm._v(" "),
-                                      _c("tr", [
-                                        _c("td", { attrs: { colspan: "4" } }, [
-                                          _vm._v("Grand Total")
-                                        ]),
-                                        _vm._v(" "),
-                                        _c("td", [
-                                          _vm._v(
-                                            "$ " +
-                                              _vm._s(_vm.currentOrder.total)
+                                      _c("td", [
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm.currentOrder.products.title
                                           )
-                                        ])
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v(
+                                          "$ " +
+                                            _vm._s(
+                                              _vm.currentOrder.products.price
+                                            ) +
+                                            " "
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v(
+                                          _vm._s(_vm.currentOrder.quantity)
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v(
+                                          "$ " + _vm._s(_vm.currentOrder.total)
+                                        )
                                       ])
-                                    ],
-                                    2
-                                  )
+                                    ])
+                                  ])
                                 ]
                               )
                             ]

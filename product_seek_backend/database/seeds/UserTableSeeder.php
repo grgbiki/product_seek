@@ -30,6 +30,14 @@ class UserTableSeeder extends Seeder
       		'role'				 =>'admin',
       		'password'		 =>'123456789'
       	],
+        [
+          'name'         =>'Bikram',
+          'email'        =>'gbikram56@gmail.com',
+          'phone_number' =>'9860151059',
+          'address'      =>'Gongabu',
+          'role'         =>'admin',
+          'password'     =>'123456789'
+        ],
       );
 
       foreach ($users as $user){

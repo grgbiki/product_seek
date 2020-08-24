@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Wishlist;
 use App\Order;
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable 
 {
   use HasApiTokens,Notifiable;
 
