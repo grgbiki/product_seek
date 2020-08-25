@@ -408,6 +408,7 @@ class _ItemDetailState extends State<ItemDetail> {
                                         ],
                                         0,
                                         userInfo.id),
+                                    isFromCart: false,
                                   )));
                     } else {
                       Navigator.push(context,

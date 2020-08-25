@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:product_seek_mobile/resources/app_constants.dart';
+import 'package:product_seek_mobile/viewmodels/login_view_model.dart';
+import 'package:provider/provider.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   @override
@@ -15,6 +18,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loginViewModel = Provider.of<LoginViewModel>(context);
     return Scaffold(
       body: Container(
         child: Column(
@@ -48,7 +52,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    _simplifyServerMessage(),
+                                    _serverMessage,
                                     style: TextStyle(color: Colors.red),
                                   ),
                                 ),
@@ -71,6 +75,27 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                                   if (formKey.currentState.validate()) {
                                     setState(() {
                                       _isLoading = true;
+                                      _serverMessage = "";
+                                    });
+                                    loginViewModel
+                                        .resetPassword(_email.text.trim())
+                                        .then((message) {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                      _serverMessage = message;
+                                      if (_serverMessage ==
+                                          "We have emailed your password reset link!") {
+                                        globalScaffoldkey.currentState
+                                            .showSnackBar(SnackBar(
+                                          content: Container(
+                                              child: Text(
+                                                  "Password reset link has been sent to your mail.")),
+                                          behavior: SnackBarBehavior.floating,
+                                        ));
+                                        Navigator.of(context)
+                                            .popUntil((route) => route.isFirst);
+                                      }
                                     });
                                   }
                                 },
@@ -114,15 +139,5 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
         return null;
     } else
       return 'Please enter your Email';
-  }
-
-  String _simplifyServerMessage() {
-    if (_serverMessage == "Invalid Credentials") {
-      return "Invalid email address or password";
-    } else if (_serverMessage == "Error while fetching data")
-      return "Server Error";
-    else {
-      return _serverMessage;
-    }
   }
 }

@@ -18,6 +18,7 @@ class OrderRepository {
         List<OrderModel> orderModel;
         orderModel =
             (response as List).map((i) => OrderModel.fromJson(i)).toList();
+        print(orderModel[0].product.title);
         return orderModel;
       } else {
         print("Could not fetch product data");

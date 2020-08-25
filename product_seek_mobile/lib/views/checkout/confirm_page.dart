@@ -6,13 +6,15 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/resources/app_constants.dart';
 import 'package:product_seek_mobile/viewmodels/checkout_view_model.dart';
+import 'package:product_seek_mobile/views/order/order_page.dart';
 import 'package:provider/provider.dart';
 
 class ConfirmationPage extends StatefulWidget {
-  ConfirmationPage({this.checkoutitems, this.paymentType});
+  ConfirmationPage({this.checkoutitems, this.paymentType, this.isFromCart});
 
   final CheckoutModel checkoutitems;
   final String paymentType;
+  final bool isFromCart;
 
   @override
   _ConfirmationPageState createState() => _ConfirmationPageState();
@@ -170,6 +172,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                   setState(() {
                                     _isLoading = false;
                                   });
+                                  if (widget.isFromCart) {
+                                    checkoutViewModel.clearCart();
+                                  }
                                   globalScaffoldkey.currentState
                                       .showSnackBar(SnackBar(
                                     content: Container(
@@ -177,7 +182,14 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                             Text("Item ordered successfully")),
                                     behavior: SnackBarBehavior.floating,
                                     action: SnackBarAction(
-                                        label: 'My Orders', onPressed: () {}),
+                                        label: 'My Orders',
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OrderPage()));
+                                        }),
                                   ));
                                   Navigator.of(context)
                                       .popUntil((route) => route.isFirst);
