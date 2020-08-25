@@ -36,7 +36,7 @@ class Ordercontroller extends Controller
 				'products' => serialize($prod),
 				'user_id'  => $request['user_id'],
 				'quantity' => $product->quantity,
-				'status'   => 'processing',
+				'status'   => 'Processing',
 				'total'    => $product->total_price,
 			]);
 

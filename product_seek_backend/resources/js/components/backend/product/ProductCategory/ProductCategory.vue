@@ -34,7 +34,7 @@
             	</tr>
             	<tr v-else v-for='pc in productCats.data' :key='pc.id'>
             		<td>{{ pc.name }}</td>
-            		<td>0</td>
+            		<td>{{ pc.product_category.length }}</td>
             		<td>
             			<button class="btn btn-primary mr-2" @click='editCat(pc.id)'><i class="fas fa-edit mr-2"></i>Edit</button>
             			<button class="btn btn-danger" @click='trashCat(pc.id)'><i class="fas fa-trash mr-2"></i>Trash</button>

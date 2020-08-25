@@ -36,7 +36,7 @@
             	</tr>
             	<tr v-else v-for='pc in stores.data' :key='pc.id'>
             		<td>{{ pc.name }}</td>
-            		<td>0</td>
+            		<td>{{ pc.product_store.length }}</td>
             		<td>{{ pc.email }}</td>
             		<td>{{ pc.contact }}</td>
             		<td>

@@ -66952,27 +66952,27 @@ var render = function() {
                               [
                                 _c(
                                   "option",
-                                  { attrs: { value: "processing" } },
+                                  { attrs: { value: "Processing" } },
                                   [_vm._v("Processing")]
                                 ),
                                 _vm._v(" "),
                                 _c(
                                   "option",
-                                  { attrs: { value: "on the way" } },
+                                  { attrs: { value: "On the way" } },
                                   [_vm._v("On the way")]
                                 ),
                                 _vm._v(" "),
                                 _c(
                                   "option",
-                                  { attrs: { value: "delivered" } },
+                                  { attrs: { value: "Delivered" } },
                                   [_vm._v("Delivered")]
                                 ),
                                 _vm._v(" "),
-                                _c("option", { attrs: { value: "returned" } }, [
+                                _c("option", { attrs: { value: "Returned" } }, [
                                   _vm._v("Returned")
                                 ]),
                                 _vm._v(" "),
-                                _c("option", { attrs: { value: "cancled" } }, [
+                                _c("option", { attrs: { value: "Cancled" } }, [
                                   _vm._v("Cancled")
                                 ])
                               ]
@@ -67952,7 +67952,9 @@ var render = function() {
                         return _c("tr", { key: pc.id }, [
                           _c("td", [_vm._v(_vm._s(pc.name))]),
                           _vm._v(" "),
-                          _c("td", [_vm._v("0")]),
+                          _c("td", [
+                            _vm._v(_vm._s(pc.product_category.length))
+                          ]),
                           _vm._v(" "),
                           _c("td", [
                             _c(
@@ -68447,7 +68449,7 @@ var render = function() {
                         return _c("tr", { key: pc.id }, [
                           _c("td", [_vm._v(_vm._s(pc.name))]),
                           _vm._v(" "),
-                          _c("td", [_vm._v("0")]),
+                          _c("td", [_vm._v(_vm._s(pc.product_store.length))]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(pc.email))]),
                           _vm._v(" "),
