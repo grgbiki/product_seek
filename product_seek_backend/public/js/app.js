@@ -67244,10 +67244,34 @@ var render = function() {
                             0
                           ),
                           _vm._v(" "),
+                          _c(
+                            "td",
+                            _vm._l(p.product_store, function(s) {
+                              return _c("span", { key: s.id }, [
+                                _vm._v(_vm._s(s.name))
+                              ])
+                            }),
+                            0
+                          ),
+                          _vm._v(" "),
+                          _c("td", [_vm._v("$ " + _vm._s(p.price))]),
+                          _vm._v(" "),
                           _c("td", [
-                            _vm._v("'>"),
-                            _c("i", { staticClass: "fas fa-edit mr-2" }),
-                            _vm._v("Edit"),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-primary mr-1",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.editProduct(p.id)
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", { staticClass: "fas fa-edit mr-2" }),
+                                _vm._v("Edit")
+                              ]
+                            ),
                             _vm._v(" "),
                             _c(
                               "button",

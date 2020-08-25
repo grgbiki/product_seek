@@ -18,6 +18,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/forgot_password', 'API\Authcontroller@forgot_password');
+
+// Route::group(['middleware' => 'auth:api'], function () {
+//  Route::post('change_password', 'API\Authcontroller@change_password');
+// });
+
 Route::post('/register','API\Authcontroller@register');//api route for register
 
 Route::put('/update/{id}','API\Authcontroller@update');//api route for update
