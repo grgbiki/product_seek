@@ -47,6 +47,7 @@ class LoginRepository {
         globalIsLoggedIn = true;
       } else {
         _serverMessage = response["message"];
+        globalIsLoggedIn = false;
         await prefs.setBool(IS_LOGGED_IN, false);
         _isSuccessfulLogin.add(false);
       }
@@ -75,9 +76,18 @@ class LoginRepository {
         _isSuccessfulLogin.add(true);
       } else {
         _serverMessage = response["message"];
+        globalIsLoggedIn = false;
         await prefs.setBool(IS_LOGGED_IN, false);
         _isSuccessfulLogin.add(false);
       }
+    });
+  }
+
+  Future<String> resetPassword(String email) {
+    return NetworkUtil().post(url: NetworkEndpoints.RESET_PASSWORD_API, body: {
+      NetworkConfig.API_KEY_USER_EMAIL: email,
+    }).then((response) async {
+      return (response["message"]);
     });
   }
 

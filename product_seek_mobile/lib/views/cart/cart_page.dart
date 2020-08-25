@@ -9,7 +9,6 @@ import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/resources/app_constants.dart';
 import 'package:product_seek_mobile/viewmodels/cart_view_model.dart';
 import 'package:product_seek_mobile/views/checkout/checkout_page.dart';
-import 'package:product_seek_mobile/views/login/login_page.dart';
 import 'package:provider/provider.dart';
 
 class CartPage extends StatefulWidget {
@@ -108,8 +107,13 @@ class _CartPageState extends State<CartPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => CheckoutPage(
-                                checkoutitems:
-                                    new CheckoutModel(null, cartIems, 0, 2),
+                                checkoutitems: new CheckoutModel(
+                                  null,
+                                  cartIems,
+                                  0,
+                                  userDetails.id,
+                                ),
+                                isFromCart: true,
                               )));
                 },
                 child: Text(

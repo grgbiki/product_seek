@@ -11,9 +11,10 @@ import 'package:product_seek_mobile/resources/app_constants.dart';
 import 'package:product_seek_mobile/views/checkout/payment_page.dart';
 
 class CheckoutPage extends StatefulWidget {
-  CheckoutPage({this.checkoutitems});
+  CheckoutPage({this.checkoutitems, this.isFromCart});
 
   final CheckoutModel checkoutitems;
+  final bool isFromCart;
 
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
@@ -344,9 +345,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => PaymentPage(
-                                checkoutitems: widget.checkoutitems,
-                                userInfo: userInfo,
-                              )));
+                              checkoutitems: widget.checkoutitems,
+                              userInfo: userInfo,
+                              isFromCart: widget.isFromCart)));
                 },
                 child: Text(
                   "Proceed to Pay",

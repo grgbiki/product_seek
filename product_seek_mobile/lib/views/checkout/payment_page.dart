@@ -5,10 +5,11 @@ import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/views/checkout/confirm_page.dart';
 
 class PaymentPage extends StatefulWidget {
-  PaymentPage({this.checkoutitems, this.userInfo});
+  PaymentPage({this.checkoutitems, this.userInfo, this.isFromCart});
 
   final CheckoutModel checkoutitems;
   final UserModel userInfo;
+  final bool isFromCart;
 
   @override
   _PaymentPageState createState() => _PaymentPageState();
@@ -37,9 +38,9 @@ class _PaymentPageState extends State<PaymentPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ConfirmationPage(
-                                    checkoutitems: widget.checkoutitems,
-                                    paymentType: "card",
-                                  )));
+                                  checkoutitems: widget.checkoutitems,
+                                  paymentType: "card",
+                                  isFromCart: widget.isFromCart)));
                     },
                     child: Container(
                       padding:
@@ -71,9 +72,9 @@ class _PaymentPageState extends State<PaymentPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ConfirmationPage(
-                                    checkoutitems: widget.checkoutitems,
-                                    paymentType: "paypal",
-                                  )));
+                                  checkoutitems: widget.checkoutitems,
+                                  paymentType: "paypal",
+                                  isFromCart: widget.isFromCart)));
                     },
                     child: Container(
                       padding:

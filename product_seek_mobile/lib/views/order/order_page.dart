@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/order_model.dart';
+import 'package:product_seek_mobile/models/product_model.dart';
+import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/resources/app_constants.dart';
 import 'package:product_seek_mobile/viewmodels/order_view_model.dart';
 import 'package:provider/provider.dart';
@@ -47,34 +52,61 @@ class OrderPage extends StatelessWidget {
   }
 
   Widget _buildOrderItem(OrderModel item, BuildContext context) {
-    return Card(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  item.orderNumber,
-                  style: TextStyle(fontSize: 20),
+    ProductModel product = item.product;
+    return Container(
+      color: Colors.white,
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Container(
+                  height: MediaQuery.of(context).size.height / 10,
+                  child: FittedBox(
+                    child: CachedNetworkImage(
+                      imageUrl: NetworkEndpoints.BASE_URL +
+                          jsonDecode(product.images)[0],
+                    ),
+                    fit: BoxFit.fill,
+                  )),
+              SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(item.orderNumber, style: TextStyle(fontSize: 16)),
+                      Text(product.title),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          item.status.toString(),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).primaryColor),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text("Quantity: " + item.quantity.toString()),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text("\$ " + item.totalPrice.toString()),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  item.status,
-                  style: TextStyle(
-                      fontSize: 16, color: Theme.of(context).primaryColor),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text("\$ " + item.totalPrice.toString()),
-            )
-          ],
-        ),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }

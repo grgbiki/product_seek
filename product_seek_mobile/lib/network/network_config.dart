@@ -45,4 +45,5 @@ class NetworkConfig {
   static const String API_KEY_ORDER_PRODUCTS = "products";
   static const String API_KEY_ORDER_STATUS = "status";
   static const String API_KEY_ORDER_TOTAL = "total";
+  static const String API_KEY_ORDER_QUANTITY = "quantity";
 }

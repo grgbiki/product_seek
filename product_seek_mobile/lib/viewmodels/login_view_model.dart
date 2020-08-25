@@ -48,6 +48,8 @@ class LoginViewModel extends ChangeNotifier {
     await _refreshAllStates();
   }
 
+  Future<String> resetPassword(String email) => loginRepo.resetPassword(email);
+
   logout() async {
     await loginRepo.logout();
     await _refreshAllStates();

@@ -22,4 +22,6 @@ class CheckoutRepository {
       "products": jsonEncode(products)
     });
   }
+
+  clearCart() => database.cartDao.remoteItems();
 }

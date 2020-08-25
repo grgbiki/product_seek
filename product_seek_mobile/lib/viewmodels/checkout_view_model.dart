@@ -19,6 +19,8 @@ class CheckoutViewModel extends ChangeNotifier {
 
   getItemsFromCart() {}
 
+  clearCart() => checkoutRepo.clearCart();
+
   Future<void> orderItems(CheckoutModel checkoutItems) =>
       checkoutRepo.orderItems(checkoutItems);
 }

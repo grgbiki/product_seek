@@ -4,17 +4,21 @@ import 'package:product_seek_mobile/network/network_config.dart';
 class OrderModel {
   int id;
   String orderNumber;
-  List<ProductModel> products;
+  ProductModel product;
   String status;
+  int quantity;
   double totalPrice;
 
-  OrderModel(
-      this.id, this.orderNumber, this.products, this.status, this.totalPrice);
+  OrderModel(this.id, this.orderNumber, this.product, this.status,
+      this.quantity, this.totalPrice);
 
   OrderModel.fromJson(dynamic json) {
     this.id = json[NetworkConfig.API_KEY_ORDER_ID];
     this.orderNumber = json[NetworkConfig.API_KEY_ORDER_NUMBER];
+    this.product =
+        ProductModel.fromJson(json[NetworkConfig.API_KEY_ORDER_PRODUCTS]);
     this.status = json[NetworkConfig.API_KEY_ORDER_STATUS];
+    this.quantity = json[NetworkConfig.API_KEY_ORDER_QUANTITY];
     this.totalPrice = json[NetworkConfig.API_KEY_ORDER_TOTAL].toDouble();
   }
 }
