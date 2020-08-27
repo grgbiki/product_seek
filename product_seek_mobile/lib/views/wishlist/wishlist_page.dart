@@ -6,7 +6,7 @@ import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/models/wish_list_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/viewmodels/wishlist_view_model.dart';
-import 'package:product_seek_mobile/views/home/product_details.dart';
+import 'package:product_seek_mobile/views/product/product_details.dart';
 import 'package:provider/provider.dart';
 
 class WishlistPage extends StatefulWidget {

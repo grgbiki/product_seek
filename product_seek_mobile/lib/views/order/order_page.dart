@@ -40,7 +40,7 @@ class OrderPage extends StatelessWidget {
                           return _buildOrderItem(item, context);
                         });
                   } else {
-                    return Center(child: Text("No order history."));
+                    return Center(child: Text("No order history"));
                   }
                 },
               ),

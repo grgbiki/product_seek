@@ -189,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
   String validateAddress(String value) {
     if (value.trim().isEmpty) {
       return 'Please enter your current address';
-    } else if (value.trim().length < 8) {
+    } else if (value.trim().length < 6) {
       return 'Please enter valid full address.';
     } else {
       return null;

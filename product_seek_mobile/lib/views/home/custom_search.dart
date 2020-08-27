@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/viewmodels/product_view_model.dart';
-import 'package:product_seek_mobile/views/home/product_details.dart';
+import 'package:product_seek_mobile/views/product/product_details.dart';
 import 'package:provider/provider.dart';
 
 class CustomSearchDelegate extends SearchDelegate {

@@ -19,6 +19,7 @@ import 'package:product_seek_mobile/viewmodels/wishlist_view_model.dart';
 import 'package:product_seek_mobile/views/cart/cart_page.dart';
 import 'package:product_seek_mobile/views/checkout/checkout_page.dart';
 import 'package:product_seek_mobile/views/login/login_page.dart';
+import 'package:product_seek_mobile/views/product/store_page.dart';
 import 'package:provider/provider.dart';
 
 class ItemDetail extends StatefulWidget {
@@ -362,9 +363,21 @@ class _ItemDetailState extends State<ItemDetail> {
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.home),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => StorePage()));
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.store,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Text("Store"),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -375,9 +388,18 @@ class _ItemDetailState extends State<ItemDetail> {
             ),
             Expanded(
               flex: 1,
-              child: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.chat),
+              child: InkWell(
+                onTap: () {},
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.chat,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Text("Chat"),
+                  ],
+                ),
               ),
             ),
             Expanded(

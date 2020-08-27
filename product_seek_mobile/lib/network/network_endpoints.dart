@@ -7,6 +7,7 @@ class NetworkEndpoints {
   static const String LOGIN_API = _BASE_API + "/login";
   static const String REGISTER_API = _BASE_API + "/register";
   static const String RESET_PASSWORD_API = _BASE_API + "/forgot_password";
+  static const String PROFILE_UPDATE_API = _BASE_API + "/update/";
 
   static const String PRODUCT_API = _BASE_API + "/products";
   static const String PRODUCT_SEARCH_API = _BASE_API + "/products/search/";
