@@ -89,11 +89,11 @@
 			        		<label for="order-Status">Order Status</label>
 			        		<div class="form-group">
 			        			<select  v-model='form.status' class="form-control">
-			        				<option value="processing">Processing</option>
-			        				<option value="on the way">On the way</option>
-			        				<option value="delivered">Delivered</option>
-			        				<option value="returned">Returned</option>
-			        				<option value="cancled">Cancled</option>
+			        				<option value="Processing">Processing</option>
+			        				<option value="On the way">On the way</option>
+			        				<option value="Delivered">Delivered</option>
+			        				<option value="Returned">Returned</option>
+			        				<option value="Cancled">Cancled</option>
 			        			</select>
 			        		</div>
 			        	</div>

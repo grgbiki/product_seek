@@ -27,7 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-      $orders=Order::where('status','delivered')->get();
+      $orders=Order::where('status','Delivered')->get();
       $income=0;
        for($i=0;$i<count($orders);$i++){
         $income=$income+$orders[$i]->total;
