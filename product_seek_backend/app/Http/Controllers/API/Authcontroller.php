@@ -52,34 +52,27 @@ class Authcontroller extends Controller
        $validateUser=$this->validate($request,[
         'name'=>['required'],
         'email'=>['email','required'],
-        'password'=>['sometime','confirmed'],
+        'password'=>['required'],
         'address'=>['required'],
         'phone_number'=>'required',
       ]);
 
        $user=User::findOrFail($id);
-         if($request->password){
-           $user->update( [
-                        'name'=>$request['name'],
-                     'email'=>$request['email'],
-                     'password'=>$request['password'],
-                     'address'=>$request['address'],
-                     'phone_number'=>$request['phone_number'],
-                     'role'=>$request['role']
-                   ]);
-         }else{
-           $user->update(  ['name'=>$request['name'],
-                     'email'=>$request['email'],
-                     'address'=>$request['address'],
-                     'phone_number'=>$request['phone_number'],
-                     'role'=>$request['role']
-                     ]);
-         }
       
+         if(Hash::check($request->password, $user->password)){
+           $user->update(
+            [
+              'name'=>$request['name'],
+              'email'=>$request['email'],
+              'address'=>$request['address'],
+              'phone_number'=>$request['phone_number'],
+            ]);
+          $accessToken= $user->createToken('authToken')->accessToken;
+          return response(['user'=>$user,'access_token'=>$accessToken]);
+         }else{
+           return 'The given password is incorrect.';
+         }
 
-        $accessToken= $user->createToken('authToken')->accessToken;
-
-        return response(['user'=>$user,'access_token'=>$accessToken]);
     }
 
     public function forgot_password(Request $request)
