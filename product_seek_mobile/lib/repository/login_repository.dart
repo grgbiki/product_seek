@@ -36,7 +36,7 @@ class LoginRepository {
       NetworkConfig.API_KEY_USER_ROLE: "user",
       NetworkConfig.API_KEY_USER_PHONE_NUMBER: number,
     }).then((response) async {
-      if (response != null) {
+      if (response.toString().contains("access_token")) {
         UserModel userModel = UserModel.fromJson(response["user"]);
         database.userDao.addUserData(userModel);
         userDetails = userModel;

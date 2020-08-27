@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
+import 'package:product_seek_mobile/views/profile/update_profile.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage(
@@ -93,38 +94,22 @@ class SettingPage extends StatelessWidget {
           ),
           Divider(),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => UpdateProfilePage()));
+            },
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 5),
               child: Row(
                 children: [
                   Icon(
-                    Icons.location_on,
+                    Icons.edit,
                     color: Theme.of(context).primaryColor,
                   ),
                   SizedBox(
                     width: 15,
                   ),
-                  Text("Change location", style: TextStyle(fontSize: 16))
-                ],
-              ),
-            ),
-          ),
-          Divider(),
-          InkWell(
-            onTap: () {},
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: 5),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.info,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Text("Change billing info", style: TextStyle(fontSize: 16))
+                  Text("Edit profile", style: TextStyle(fontSize: 16))
                 ],
               ),
             ),

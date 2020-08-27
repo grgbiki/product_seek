@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:product_seek_mobile/database/database.dart';
 import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/network/network_config.dart';
@@ -11,6 +13,9 @@ class ProfileRepository {
   AppDatabase database;
 
   ProfileRepository({this.prefs, this.database});
+
+  var _isSuccessfulUpdate = StreamController<bool>.broadcast();
+  String _serverMessage = "";
 
   Future<UserModel> getUserInfo() {
     return database.userDao
@@ -30,5 +35,38 @@ class ProfileRepository {
       NetworkConfig.API_KEY_FEEDBACK: feedback,
       NetworkConfig.API_KEY_FEEDBACK_USER_ID: userId.toString()
     });
+  }
+
+  updateUser(int userId, String name, String email, String address,
+      String phone, String password) {
+    return NetworkUtil().put(
+        url: NetworkEndpoints.PROFILE_UPDATE_API + userId.toString(),
+        body: {
+          NetworkConfig.API_KEY_USER_NAME: name,
+          NetworkConfig.API_KEY_USER_EMAIL: email,
+          NetworkConfig.API_KEY_USER_PASSWORD: password,
+          NetworkConfig.API_KEY_USER_ADDRESS: address,
+          NetworkConfig.API_KEY_USER_PHONE_NUMBER: phone,
+        }).then((response) async {
+      if (response.toString().contains("access_token")) {
+        UserModel userModel = UserModel.fromJson(response["user"]);
+        userDetails = userModel;
+        if (prefs.getBool(IS_LOGGED_IN)) {
+          database.userDao.addUserData(userModel);
+        }
+        _isSuccessfulUpdate.add(true);
+      } else {
+        _serverMessage = response["message"];
+        _isSuccessfulUpdate.add(false);
+      }
+    });
+  }
+
+  getErrorMessage() {
+    return _serverMessage;
+  }
+
+  Stream<bool> getUpdateResponse() {
+    return _isSuccessfulUpdate.stream;
   }
 }
