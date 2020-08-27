@@ -70,7 +70,11 @@ class Authcontroller extends Controller
           $accessToken= $user->createToken('authToken')->accessToken;
           return response(['user'=>$user,'access_token'=>$accessToken]);
          }else{
-           return 'The given password is incorrect.';
+            $message=[
+              "message"=>"The given password is incorrect."
+            ];
+          
+           return $message;
          }
 
     }
