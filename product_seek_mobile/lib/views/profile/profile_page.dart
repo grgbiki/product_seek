@@ -71,11 +71,9 @@ class _ProfilePageState extends State<ProfilePage> {
           Container(
             width: MediaQuery.of(context).size.width,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                    height: _isLoggedIn
-                        ? MediaQuery.of(context).size.height / 6
-                        : MediaQuery.of(context).size.height / 4,
                     color: Theme.of(context).primaryColor,
                     child: Column(
                       children: <Widget>[

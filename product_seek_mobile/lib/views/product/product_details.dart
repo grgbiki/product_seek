@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
+import 'package:product_seek_mobile/models/store_model.dart';
 import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/models/wish_list_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
@@ -42,9 +43,10 @@ class _ItemDetailState extends State<ItemDetail> {
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
   String categoryName = "";
+  StoreModel storeInfo;
   String storeName = "";
   ProfileViewModel profileViewModel;
-  StoreViwModel storeViewModel;
+  StoreViewModel storeViewModel;
   CategoryViewModel categoryViewModel;
   WishlistViewModel wishlistViewModel;
   CartViewModel cartViewModel;
@@ -108,18 +110,19 @@ class _ItemDetailState extends State<ItemDetail> {
 
     profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
     wishlistViewModel = Provider.of<WishlistViewModel>(context, listen: false);
-    storeViewModel = Provider.of<StoreViwModel>(context, listen: false);
+    storeViewModel = Provider.of<StoreViewModel>(context, listen: false);
     categoryViewModel = Provider.of<CategoryViewModel>(context, listen: false);
     cartViewModel = Provider.of<CartViewModel>(context, listen: false);
 
-    if (storeName.isEmpty) {
+    if (storeInfo == null) {
       storeViewModel.getStoreInfoFromBackend(widget.product.storeId);
     }
     storeViewModel.getStoreInfo(widget.product.storeId).then((store) {
       if (store != null) {
-        if (storeName.isEmpty) {
+        if (storeInfo == null) {
           setState(() {
-            storeName = store.name;
+            storeInfo = store;
+            storeName = storeInfo.name;
           });
         }
       }
@@ -265,7 +268,12 @@ class _ItemDetailState extends State<ItemDetail> {
                 ),
                 InkWell(
                   onTap: () {
-                    toggleFavourite();
+                    if (globalIsLoggedIn) {
+                      toggleFavourite();
+                    } else {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    }
                   },
                   child: Container(
                       padding: EdgeInsets.all(8),
@@ -294,30 +302,37 @@ class _ItemDetailState extends State<ItemDetail> {
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      color: Colors.white,
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.store,
-                color: Theme.of(context).accentColor,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                  child: InkWell(
-                      onTap: () {},
-                      child: Text(storeName.isNotEmpty ? storeName : ""))),
-              FlatButton(
-                onPressed: () {},
-                child: Text("Follow"),
-              )
-            ],
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => StorePage(
+                            storeInfo: storeInfo,
+                          )));
+            },
+            child: Row(
+              children: <Widget>[
+                Icon(
+                  Icons.store,
+                  color: Theme.of(context).accentColor,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(child: Text(storeInfo != null ? storeName : "")),
+                OutlineButton(
+                  onPressed: () {},
+                  child: Text("Follow"),
+                )
+              ],
+            ),
           )
         ],
       ),
+      color: Colors.white,
     );
   }
 
@@ -365,8 +380,12 @@ class _ItemDetailState extends State<ItemDetail> {
               flex: 1,
               child: InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => StorePage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StorePage(
+                                storeInfo: storeInfo,
+                              )));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

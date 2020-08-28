@@ -63,6 +63,7 @@ class OrderPage extends StatelessWidget {
             children: <Widget>[
               Container(
                   height: MediaQuery.of(context).size.height / 10,
+                  width: MediaQuery.of(context).size.height / 10,
                   child: FittedBox(
                     child: CachedNetworkImage(
                       imageUrl: NetworkEndpoints.BASE_URL +
