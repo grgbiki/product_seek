@@ -19,7 +19,7 @@
 				<div class="card-header">
 					<h4>Stores</h4>
 				</div>
-				<div class="card-bodytable-responsive p-0">
+				<div class="card-body table-responsive p-0">
 					<table class="table table-hover text-nowrap">
             <thead>
               <tr>
@@ -27,6 +27,7 @@
                 <th>No of Products</th>
                 <th>Email</th>
                 <th>Contact</th>
+                <th>Followers</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -35,10 +36,11 @@
             		<td colspan="5">Sorry! no data found</td>
             	</tr>
             	<tr v-else v-for='pc in stores.data' :key='pc.id'>
-            		<td>{{ pc.name }}</td>
+            		<td>{{ pc.name | Trim_title(15) }}</td>
             		<td>{{ pc.product_store.length }}</td>
             		<td>{{ pc.email }}</td>
             		<td>{{ pc.contact }}</td>
+            		<td>{{ pc.user_follow.length }}</td>
             		<td>
             			<button class="btn btn-primary mr-2" @click='editStore(pc.id)'><i class="fas fa-edit mr-2"></i>Edit</button>
             			<button class="btn btn-danger" @click='trashStore(pc.id)'><i class="fas fa-trash mr-2"></i>Trash</button>
@@ -47,12 +49,13 @@
             </tbody>
              <tfoot>
 		            <tr>
-                	<th>Name</th>
-	                <th>No of Products</th>
-	                <th>Email</th>
-	                <th>Contact</th>
-	                <th>Action</th>
-	              </tr>
+                <th>Name</th>
+                <th>No of Products</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Followers</th>
+                <th>Action</th>
+              </tr>
 		          </tfoot>
           </table>
 				</div>
@@ -73,6 +76,22 @@
 			      </div>
 			      <form @submit.prevent="editmode? updateStore() : createStore()">
 				      <div class="modal-body">
+				      	<div class="form-group">
+				      		<div class="row justify-content-center">
+				      			<figure class="image-preview" v-if='form.store_image!=null'>
+			                <img :src="form.store_image" id='preview_image' alt="">
+			                <figcaption>
+			                  <a href="" class="reset_image" @click.prevent='resetImage'>Remove</a>
+			                </figcaption>
+			              </figure>
+				      		</div>
+			      			<div class="file-field text-center">
+		                <div class="file btn btn-primary">
+		                  <i class="fa fa-image mr-1"></i><span  v-if='!form.store_image'>Add store image</span><span  v-else>Change store images</span>
+		                  <input type="file"  @change='StoreImgSelected' multiple>
+		                </div>
+			            </div>
+				      	</div>
 				        <div class="form-group">
 				        	<label for="name">Store's name</label>
 			        		<input v-model="form.name" type="text" name="name" class="form-control" :class="{ 'is-invalid': form.errors.has('name') }" placeholder="Store's Name">
@@ -123,6 +142,7 @@
 				form:new Form({
 					id:'',
 					name:'',
+					store_image:null,
 					email:'',
 					contact:'',
 					address:'',
@@ -142,6 +162,28 @@
 				this.form.clear()
 				this.form.reset()
 				$('#storeModal').modal('show')
+			},
+			StoreImgSelected(event){
+				let selectedFile= event.target.files[0];
+				let reader= new FileReader();
+
+				if (selectedFile['size'] < 5242880){
+					reader.onloadend=(selectedFile)=>{
+						this.form.store_image=reader.result;
+					}
+					reader.readAsDataURL(selectedFile);
+				}else{
+					this.resetImage();
+          Swal.fire(
+            'Opps!!',
+            'File size exceeds 2MB.',
+            'error'
+          )
+				}
+			},
+
+			resetImage(){
+				this.form.store_image=null;
 			},
 			createStore(){
 				this.loading=true
@@ -236,3 +278,46 @@
 		}
 	}
 </script>
+<style scoped>
+.file {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer!important;
+}
+.file input {
+  position: absolute;
+  opacity: 0;
+  right: 0;
+  top: 0;
+  cursor: pointer!important
+}
+	 .image-preview {
+    margin:0 !important;
+  }
+  figure{
+  	position: relative;
+  }
+  .image-preview img{
+    width:250px;
+    padding:10px;
+    filter:brightness(50%)
+  }
+  .reset_image{
+    color: white;
+    visibility:hidden;
+    position: absolute;
+    bottom: 5%;
+    padding:1em;
+  }
+  
+  .image-preview:hover .reset_image{
+    visibility: visible;
+  }
+  .display-grid-justify-center{
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    width: 100%;
+  }
+  
+</style>
