@@ -46,7 +46,7 @@ class APIController extends Controller
 
   // get all the store
   public function stores(){
-  	return Store::latest()->get();
+  	return Store::latest()->with('userFollow')->get();
   }
   // end get all the store
 
