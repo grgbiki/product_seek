@@ -94,4 +94,6 @@ Route::group(['prefix'=>'/store/'],function(){
 	Route::post('/unfollow','API\FollowstoreController@user_unfollow');// follow store;
 
 });
+
+Route::get('user-followed-store/{user_id}','API\FollowstoreController@userFollowedStore');
 // user follow store
