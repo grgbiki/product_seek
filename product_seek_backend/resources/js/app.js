@@ -50,7 +50,7 @@ Vue.filter('reverse', function(value) {
 
 import moment from 'moment';
  Vue.filter('myDate',function(date){
-  return moment(date).format('MMMM DD YYYY , hh:mm a');
+  return moment(date).format('MMMM DD YYYY');
  });
 
  // pagination component
@@ -79,6 +79,7 @@ Vue.component('feedback',require('./components/backend/feedback/Feedback.vue').d
 
 // order component
 Vue.component('order',require('./components/backend/order/Order.vue').default);
+Vue.component('order-return',require('./components/backend/order/OrderReturn.vue').default);
 // order component end
 
 

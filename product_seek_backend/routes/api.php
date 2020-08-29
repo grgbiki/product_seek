@@ -79,9 +79,14 @@ Route::group(['prefix'=>'/order/'],function(){
 
 	Route::post('/add','API\Ordercontroller@store');// order request;
 
+
+	Route::put('/return-request/{order_id}','API\Ordercontroller@request_return');// order return  request;
+
 	Route::get('/cancle/{id}','API\Ordercontroller@cancle');//cancle order
 
 	Route::get('/user-orders/{user_id}','API\Ordercontroller@get_order');// orders by user id 
+
+	Route::get('/user-delivered-orders/{user_id}','API\Ordercontroller@get_delivered_order');//delivered orders
 
 });
 // end order api routes
