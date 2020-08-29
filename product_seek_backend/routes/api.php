@@ -85,3 +85,13 @@ Route::group(['prefix'=>'/order/'],function(){
 
 });
 // end order api routes
+
+// user follow store
+Route::group(['prefix'=>'/store/'],function(){
+
+	Route::post('/follow','API\FollowstoreController@user_follow');// follow store;
+
+	Route::post('/unfollow','API\FollowstoreController@user_unfollow');// follow store;
+
+});
+// user follow store
