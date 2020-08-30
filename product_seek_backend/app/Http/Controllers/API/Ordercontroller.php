@@ -32,12 +32,14 @@ class Ordercontroller extends Controller
 			$prod=$prod->findOrFail($p->id);
 
 			$order=Order::create([
-				'order_no' => $orderno,
-				'products' => serialize($prod),
-				'user_id'  => $request['user_id'],
-				'quantity' => $product->quantity,
-				'status'   => 'Processing',
-				'total'    => $product->total_price,
+				'order_no'       => $orderno,
+				'products'       => serialize($prod),
+				'user_id'        => $request['user_id'],
+				'quantity'       => $product->quantity,
+				'status'         => 'Processing',
+				'return_request' => false,
+				'returned'       => false,
+				'total'          => $product->total_price,
 			]);
 
 			$order->usersOrder()->sync($request->user_id);
@@ -73,6 +75,35 @@ class Ordercontroller extends Controller
 		return $orders;
 	}
   //end get order by user id
+
+	// request return
+  public function request_return(Request $request,$order_id){
+  	$this->validate($request,[
+  		'return_note'=>'required',
+  	]);
+
+  	$order=Order::findOrFail($order_id);
+
+  	$order->update([
+  		'return_note'=>$request['return_note'],
+  		'return_request'=>true,
+  	]);
+  }
+  // request return
+
+  //delivered orders
+public function get_delivered_order($user_id){
+		$orders = Order::latest()->where('user_id',$user_id);
+		$orders=$orders->where('status','Delivered')->get();
+		foreach($orders as $order){
+			$order->products=unserialize($order->products) ;
+			$order->products->product_image=unserialize($order->products->product_image);
+		}
+
+		return $orders;
+	}
+  //end delivered orders
+
 }
 
 // [

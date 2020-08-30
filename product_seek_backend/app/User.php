@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Wishlist;
 use App\Order;
+use App\Store;
 class User extends Authenticatable 
 {
   use HasApiTokens,Notifiable;
@@ -46,6 +47,10 @@ class User extends Authenticatable
 
   public function usersOrder(){
     return $this->belongsToMany(Order::class);
+  }
+
+  public function userFollow(){
+   return $this->belongsToMany(Store::class);
   }
 
 }

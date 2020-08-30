@@ -81,6 +81,14 @@
             </p>
           </a>
         </li>
+         <li class="nav-item has-treeview">
+          <a href="{{ route('admin.order_return') }}" class="nav-link">
+            <i class="nav-icon fas fa-undo"></i>
+            <p>
+              Orders returned
+            </p>
+          </a>
+        </li>
         <li class="nav-item has-treeview">
           <a href="{{ route('admin.customers') }}" class="nav-link">
             <i class="nav-icon fas fa-user-friends"></i>

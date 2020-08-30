@@ -19,6 +19,12 @@ class APIController extends Controller
   		$product->product_image=unserialize($product->product_image);
   	}
 
+    foreach ($products as $product){
+      foreach($product->productStore as $store){
+        $store->followers=unserialize($store->followers);
+      }
+    }
+
   	return $products;
   }
   // end api to get all the products
@@ -38,15 +44,21 @@ class APIController extends Controller
 
  // api to get all the products store by id
   public function show_store($id){
-  	$store= Store::latest()->with('userFollow');
-    return $store->findOrFail($id);
+  	$store= Store::latest();
+     $store->findOrFail($id);
+     $store->followers=unserialize($store->followers);
+     return $store;
   }
   // end api to get all the products store by id
 
 
-  // get all the store
+  // get all the store9
   public function stores(){
-  	return Store::latest()->with('userFollow')->get();
+  	$stores= Store::latest()->get();
+    foreach($stores as $store){
+      $store->followers=unserialize($store->followers);
+    }
+    return $stores;
   }
   // end get all the store
 
@@ -55,6 +67,11 @@ class APIController extends Controller
   public function filter_by_cat($id){
   	$cat=Productcategory::findOrFail($id);
  		$products= Product::latest()->with('productStore','productCategory')->get();
+      foreach ($products as $product){
+      foreach($product->productStore as $store){
+        $store->followers=unserialize($store->followers);
+      }
+    }
  		
  		//filtercategory
  		$products=$this->filter_product_cat($products,$cat->id);
@@ -93,6 +110,12 @@ class APIController extends Controller
    public function filter_by_store($id){
   	$store=Store::findOrFail($id);
  		$products= Product::latest()->with('productStore','productCategory')->get();
+
+    foreach ($products as $product){
+      foreach($product->productStore as $store){
+        $store->followers=unserialize($store->followers);
+      }
+    }
  		
  		//filtercategory
  		$products=$this->filter_product_store($products,$store->id);

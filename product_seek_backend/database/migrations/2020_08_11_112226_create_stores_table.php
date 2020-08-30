@@ -20,6 +20,7 @@ class CreateStoresTable extends Migration
           $table->string('email');
           $table->string('contact');
           $table->string('address');
+          $table->LongText('followers')->nullable();
           $table->string('google_maps_url');
           $table->SoftDeletes();
           $table->timestamps();

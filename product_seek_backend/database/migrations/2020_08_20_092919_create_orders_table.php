@@ -19,6 +19,9 @@ class CreateOrdersTable extends Migration
           $table->longText('products');
           $table->bigInteger('user_id');
           $table->string('status');
+          $table->boolean('return_request');
+           $table->boolean('returned');
+          $table->longText('return_note')->nullable();
           $table->float('quantity');
           $table->float('total');
           $table->timestamps();
