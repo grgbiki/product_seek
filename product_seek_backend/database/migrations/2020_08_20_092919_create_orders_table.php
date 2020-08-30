@@ -20,7 +20,8 @@ class CreateOrdersTable extends Migration
           $table->bigInteger('user_id');
           $table->string('status');
           $table->boolean('return_request');
-           $table->boolean('returned');
+          $table->boolean('returned');
+          $table->date('delivered_date')->nullable();
           $table->longText('return_note')->nullable();
           $table->float('quantity');
           $table->float('total');
