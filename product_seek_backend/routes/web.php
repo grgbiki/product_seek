@@ -156,6 +156,14 @@ Route::middleware(['auth','verified'])->prefix('/admin')->group(function(){
 
 		Route::get('/',function(){return view('component.backend.order.index');})->name('admin.order');// order page 
 
+		Route::get('/returned',function(){return view('component.backend.order.order-return.index');})->name('admin.order_return');// order returned page
+
+		Route::get('/returned-requested-orders','Admin\OrderController@requested_orders');//paginated return requested orders
+
+		Route::get('/approve-return/{id}','Admin\OrderController@approve_return');//approve order return
+
+		Route::get('/disapprove-return/{id}','Admin\OrderController@disapprove_return');//disapprove order return
+
 		Route::get('/paginated_orders','Admin\OrderController@paginated_orders');// get order
 
 		Route::get('/show/{id}','Admin\OrderController@show');// get order by id

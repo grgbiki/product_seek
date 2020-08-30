@@ -44,4 +44,41 @@ class OrderController extends Controller
 		]);
 	}
   // end update order
+
+
+
+  //return requested orders
+  public function requested_orders(){
+    $orders = Order::latest()->with('usersOrder')->where('return_request',true)->paginate(10);
+
+    foreach($orders as $order){
+      $order->products=unserialize($order->products);
+      $order->products->product_image=unserialize($order->products->product_image);
+    }
+
+    return $orders;
+  }
+  //end return requested orders
+
+  // approve return  
+  public function approve_return($id){
+    $order=Order::findOrFail($id);
+
+    $order->update([
+      'status'=>'Returned',
+      'returned'=>true,
+    ]);
+  }
+  // approve return
+
+   // approve return  
+  public function disapprove_return($id){
+    $order=Order::findOrFail($id);
+
+    $order->update([
+      'status'=>'Processing',
+      'returned'=>false,
+    ]);
+  }
+  // approve return
 }
