@@ -18,7 +18,7 @@
                 <th>Order number</th>
                 <th>Product name</th>
                 <th>Customer name</th>
-                <th>Order date</th>
+                <th>Delivered date</th>
                 <th>Total</th>
                 <th>Status</th>
                 <th>Return note</th>
@@ -48,7 +48,7 @@
           			<td>{{ rro.order_no }}</td>
           			<td>{{ rro.products.title }}</td>
           			<td><span v-for='c in rro.users_order' :key='c.id'>{{ c.name }}</span></td>
-          			<td>{{ rro.created_at | myDate }}</td>
+          			<td>{{ rro.delivered_date | myDate }}</td>
           			<td>$ {{ rro.total }}</td>
           			<td>
           				<span v-if='rro.returned' style="color:green;">Approved</span>
@@ -88,6 +88,9 @@
           	</tbody>
           </table>
         </div>
+         <div class="card-footer">
+					<pagination :data="orders" @pagination-change-page="getResults"></pagination>
+				</div>
       </div>
     </div>
 
@@ -137,6 +140,15 @@
 					this.loading=false
 				});
 			},
+			getResults(page = 1) {
+        this.loading=true;
+        axios.get(this.admin_url+'/orders/returned-requested-orders/?page=' + page)
+        .then(response => {
+            this.orders = response.data;
+            this.loading=false;
+        });
+      },
+
 			disapproveReturn(id){
 				this.loading=true
 				axios.get(this.admin_url+'/orders/disapprove-return/'+id).then(()=>{
