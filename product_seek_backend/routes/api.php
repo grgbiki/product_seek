@@ -88,6 +88,8 @@ Route::group(['prefix'=>'/order/'],function(){
 
 	Route::get('/user-delivered-orders/{user_id}','API\Ordercontroller@get_delivered_order');//delivered orders
 
+	Route::get('/user-returned-orders/{user_id}','API\Ordercontroller@get_returned_order');//delivered orders
+
 });
 // end order api routes
 

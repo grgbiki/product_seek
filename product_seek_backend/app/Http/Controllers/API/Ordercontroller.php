@@ -93,7 +93,7 @@ class Ordercontroller extends Controller
   // request return
 
   //delivered orders
-public function get_delivered_order($user_id){
+	public function get_delivered_order($user_id){
 		$orders = Order::latest()->where('user_id',$user_id);
 		$orders=$orders->where('status','Delivered')->get();
 
@@ -120,6 +120,17 @@ public function get_delivered_order($user_id){
 
   	return false;
   }
+
+	public function get_returned_order($user_id){
+		$orders = Order::latest()->where('user_id',$user_id);
+		$orders=$orders->where('status','Returned')->get();
+		foreach($orders as $order){
+			$order->products=unserialize($order->products) ;
+			$order->products->product_image=unserialize($order->products->product_image);
+		}
+
+		return $orders;
+	}
 
 }
 
