@@ -42,6 +42,16 @@ class OrderController extends Controller
 		$order->update([
 			'status'=>$request['status']
 		]);
+    $current_date=date("Y/m/d");
+    if($request['status']=='Delivered'){
+      $order->update([
+        'delivered_date'=>$current_date,
+      ]);
+    }else{
+      $order->update([
+        'delivered_date'=>null,
+      ]);
+    }
 	}
   // end update order
 

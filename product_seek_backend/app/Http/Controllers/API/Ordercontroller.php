@@ -66,7 +66,8 @@ class Ordercontroller extends Controller
 
   // get orders by user id
 	public function get_order($user_id){
-		$orders = Order::latest()->where('user_id',$user_id)->get();
+		$orders = Order::latest()->where('user_id',$user_id);
+		$orders=$orders->where('delivered_date',null)->get();
 		foreach($orders as $order){
 			$order->products=unserialize($order->products) ;
 			$order->products->product_image=unserialize($order->products->product_image);
@@ -95,14 +96,30 @@ class Ordercontroller extends Controller
 public function get_delivered_order($user_id){
 		$orders = Order::latest()->where('user_id',$user_id);
 		$orders=$orders->where('status','Delivered')->get();
+
 		foreach($orders as $order){
 			$order->products=unserialize($order->products) ;
 			$order->products->product_image=unserialize($order->products->product_image);
+
+			$delivered_date=$order->delivered_date;
+			$returnable=$this->returnableCheck($delivered_date);
+			$order->returnable=$returnable;
 		}
 
 		return $orders;
 	}
   //end delivered orders
+
+  public function returnableCheck($delivered_date){
+  	$current_date=date("Y/m/d");
+  	$returnable_valid_date=date('Y/m/d', strtotime($delivered_date. ' + 7 days'));
+
+  	if($current_date<=$returnable_valid_date){
+  		return true;
+  	}
+
+  	return false;
+  }
 
 }
 

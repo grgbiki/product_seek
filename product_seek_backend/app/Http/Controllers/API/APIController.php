@@ -45,7 +45,7 @@ class APIController extends Controller
  // api to get all the products store by id
   public function show_store($id){
   	$store= Store::latest();
-     $store->findOrFail($id);
+     $store= $store->findOrFail($id);
      $store->followers=unserialize($store->followers);
      return $store;
   }
