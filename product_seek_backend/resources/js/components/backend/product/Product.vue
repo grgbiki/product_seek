@@ -126,12 +126,24 @@
 							     	</div>
 						      </div>
 				        </div>
+				         <div class="col-md-12">
+				         	<input type="checkbox" v-model='hasWarrenty'>
+				        	<label for="warrenty">Does this product has Warrenty??</label>
+				        </div>
+				        <div class="form-group">
+					        <div class="col-md-12" v-if='hasWarrenty'>
+					        	<label for="warrenty">Warrenty</label>
+					        	<input v-model="form.warrenty" type="text" name="warrenty" class="form-control" :class="{ 'is-invalid': form.errors.has('warrenty') }" placeholder="warrenty">
+							      <has-error :form="form" field="warrenty"></has-error>
+					        </div>
+				        </div>
 
 				        <div class="col-md-12">
 				        	<label for="description">Description</label>
 				        	<textarea name="description" class='form-control' rows="10" v-model='form.description':class="{ 'is-invalid': form.errors.has('description') }"></textarea>
 				        	<has-error :form="form" field="description"></has-error>
 				        </div>
+				       
 				      </div>
 			      </div>
 			      <div class="modal-footer">
@@ -170,6 +182,7 @@
 				products:{},
 				productsLength:'',
 				editMode:false,
+				hasWarrenty:false,
 				form: new Form({
 					id:'',
 					title:'',
@@ -177,6 +190,7 @@
 					description:'',
 					product_image:[],
 					store_id:'',
+					warrenty:'',
 					category_id:'',
 				}),
 				current_product_images:[],
@@ -271,6 +285,12 @@
 				this.form.get(this.admin_url+'/product/show/'+id).then(function(response){
 					vm.form.fill(response.data)
 					let product=response.data
+					if(vm.form.warrenty!='no warrenty'){
+						vm.hasWarrenty=true;
+					}else{
+						vm.form.warrenty='';
+					}
+
 					vm.form.category_id=vm.getIdarray(product.product_category)
 					vm.form.store_id=vm.getIdarray(product.product_store)
 					vm.current_product_images=response.data.product_image;

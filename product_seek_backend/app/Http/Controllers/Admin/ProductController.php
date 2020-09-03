@@ -41,12 +41,17 @@ class ProductController extends Controller
       $request->merge(['product_image'=>serialize($noImg)]);
   	}
 
+    if($request->warrenty==''){
+      $request->merge(['warrenty'=>'no warrenty']);
+    }
+
   	$product=Product::create([
 
   		'title'=>$request['title'],
   		'price'=>$request['price'],
   		'product_image'=>$request['product_image'],
   		'description'=>$request['description'],
+      'warrenty'=> $request['warrenty'],
 
   	]);
 
@@ -151,11 +156,16 @@ class ProductController extends Controller
       }
     }
     //incase of no image in 
+
+    if($request->warrenty==''){
+      $request->merge(['warrenty'=>'no warrenty']);
+    }
     $current_product->update([
       'title'=>$request['title'],
       'price'=>$request['price'],
       'product_image'=>$request['product_image'],
       'description'=>$request['description'],
+      'warrenty'=> $request['warrenty'],
     ]);
     return $request->product_image;
   }
