@@ -58,7 +58,7 @@ class Ordercontroller extends Controller
 		$order=Order::findOrFail($id);
 
 		$order->update([
-			'status'=>'cancled'
+			'status'=>'Canceled'
 		]);
 	}
   // end update order
