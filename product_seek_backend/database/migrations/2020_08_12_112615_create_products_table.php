@@ -18,6 +18,7 @@ class CreateProductsTable extends Migration
           $table->string('title');
           $table->float('price');
           $table->longText('description')->nullable();
+          $table->string('warrenty');
           $table->text('product_image')->nullable();
           $table->SoftDeletes();
           $table->timestamps();

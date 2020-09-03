@@ -4,67 +4,78 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Product Seek</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
         <!-- Styles -->
         <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+            .div-one {
+  background:red;
+  width: 100vw;
+  height: 100vh;
+   background: url('/images/front-1.jpg');
+  width: 100vw;
+  height: 100vh;
+  filter: brightness(70%);
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-position:center;
+}
 
-            .full-height {
-                height: 100vh;
-            }
+.div-two {
+  -webkit-clip-path: polygon(100vw 0, 0% 100%, 100vw 100vh);
+  clip-path: polygon(100vw 0, 0% 100vh, 100vw 100vh);
+  background: url('/images/front-1.jpg');
+  width: 100vw;
+  height: 100vh;
+  filter: brightness(70%);
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-position:bottom;
+}
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
+body {
+  margin: 0;
+}
+div {
+  position: absolute;
+}
 
-            .position-ref {
-                position: relative;
-            }
+/* Decoration */
 
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
+.overlay {
+  width: 100vw;
+  height: 100vh;
+  background: rgba( 0, 0, 0, 0.3)
+}
 
-            .content {
-                text-align: center;
-            }
+.box {
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform:translate(-50%, -50%); 
+  text-align: center; color: white;
+}
 
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
+.box h1 {
+  font-size: 11vh; 
+  padding: 0 1em; 
+  font-family: Quicksand;
+}
+.db-a{
+  color: white;
+padding: 0.5em 1em;
+font-size: 20px;
+background: transparent;
+text-decoration: none;
+border: 2px solid white;
+}
         </style>
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
+        {{-- <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
@@ -95,6 +106,46 @@
                     <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
             </div>
+        </div> --}}
+
+        <div class="div-one"></div>
+
+        <div class="div-two" ></div>
+
+        <!-- Decoration-->
+
+        <div class="overlay"></div>
+
+        <div class="box">
+          @auth
+            <h1>Welcome to ProductSeeker {{ Auth::user()->name }}</h1>
+             @if(Auth::user()->role=='admin')
+              <a class="db-a "  href="{{ url('/admin') }}">Administration</a>
+               <a class="db-a "   href="{{ route('logout') }}"
+                onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();">
+                <i class="nav-icon fas fa-power-off"></i>
+                  Logout
+              </a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+                @csrf
+              </form>
+              @else
+              <a class="db-a "   href="{{ route('logout') }}"
+                onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();">
+                <i class="nav-icon fas fa-power-off"></i>
+                  Logout
+              </a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+                @csrf
+              </form>
+              @endif
+          @else
+          <h1>Welcome to Product Seek</h1>
+          <a class="db-a "  href="{{ route('login') }}">Login</a>
+          @endauth
         </div>
+
     </body>
 </html>

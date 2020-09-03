@@ -2677,6 +2677,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['admin_url'],
   data: function data() {
@@ -2727,8 +2730,18 @@ __webpack_require__.r(__webpack_exports__);
         _this2.loading = false;
       });
     },
-    disapproveReturn: function disapproveReturn(id) {
+    getResults: function getResults() {
       var _this3 = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.loading = true;
+      axios.get(this.admin_url + '/orders/returned-requested-orders/?page=' + page).then(function (response) {
+        _this3.orders = response.data;
+        _this3.loading = false;
+      });
+    },
+    disapproveReturn: function disapproveReturn(id) {
+      var _this4 = this;
 
       this.loading = true;
       axios.get(this.admin_url + '/orders/disapprove-return/' + id).then(function () {
@@ -2737,13 +2750,13 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Order returned onhold'
         });
 
-        _this3.loadRRO();
+        _this4.loadRRO();
       })["catch"](function (response) {
         if (response.message == 'Request failed with status code 401') {
           location.reload();
         }
 
-        _this3.loading = false;
+        _this4.loading = false;
       });
     }
   },
@@ -2926,6 +2939,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['admin_url'],
   data: function data() {
@@ -2934,6 +2959,7 @@ __webpack_require__.r(__webpack_exports__);
       products: {},
       productsLength: '',
       editMode: false,
+      hasWarrenty: false,
       form: new Form({
         id: '',
         title: '',
@@ -2941,6 +2967,7 @@ __webpack_require__.r(__webpack_exports__);
         description: '',
         product_image: [],
         store_id: '',
+        warrenty: '',
         category_id: ''
       }),
       current_product_images: [],
@@ -3041,6 +3068,13 @@ __webpack_require__.r(__webpack_exports__);
       this.form.get(this.admin_url + '/product/show/' + id).then(function (response) {
         vm.form.fill(response.data);
         var product = response.data;
+
+        if (vm.form.warrenty != 'no warrenty') {
+          vm.hasWarrenty = true;
+        } else {
+          vm.form.warrenty = '';
+        }
+
         vm.form.category_id = vm.getIdarray(product.product_category);
         vm.form.store_id = vm.getIdarray(product.product_store);
         vm.current_product_images = response.data.product_image;
@@ -67497,7 +67531,9 @@ var render = function() {
                             ),
                             _vm._v(" "),
                             _c("td", [
-                              _vm._v(_vm._s(_vm._f("myDate")(rro.created_at)))
+                              _vm._v(
+                                _vm._s(_vm._f("myDate")(rro.delivered_date))
+                              )
                             ]),
                             _vm._v(" "),
                             _c("td", [_vm._v("$ " + _vm._s(rro.total))]),
@@ -67672,7 +67708,19 @@ var render = function() {
                   2
                 )
           ])
-        ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "card-footer" },
+          [
+            _c("pagination", {
+              attrs: { data: _vm.orders },
+              on: { "pagination-change-page": _vm.getResults }
+            })
+          ],
+          1
+        )
       ])
     ])
   ])
@@ -67706,7 +67754,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Customer name")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Order date")]),
+        _c("th", [_vm._v("Delivered date")]),
         _vm._v(" "),
         _c("th", [_vm._v("Total")]),
         _vm._v(" "),
@@ -68294,6 +68342,105 @@ var render = function() {
                               ])
                             ])
                           ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-12" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.hasWarrenty,
+                                expression: "hasWarrenty"
+                              }
+                            ],
+                            attrs: { type: "checkbox" },
+                            domProps: {
+                              checked: Array.isArray(_vm.hasWarrenty)
+                                ? _vm._i(_vm.hasWarrenty, null) > -1
+                                : _vm.hasWarrenty
+                            },
+                            on: {
+                              change: function($event) {
+                                var $$a = _vm.hasWarrenty,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 &&
+                                      (_vm.hasWarrenty = $$a.concat([$$v]))
+                                  } else {
+                                    $$i > -1 &&
+                                      (_vm.hasWarrenty = $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1)))
+                                  }
+                                } else {
+                                  _vm.hasWarrenty = $$c
+                                }
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("label", { attrs: { for: "warrenty" } }, [
+                            _vm._v("Does this product has Warrenty??")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _vm.hasWarrenty
+                            ? _c(
+                                "div",
+                                { staticClass: "col-md-12" },
+                                [
+                                  _c("label", { attrs: { for: "warrenty" } }, [
+                                    _vm._v("Warrenty")
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.form.warrenty,
+                                        expression: "form.warrenty"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    class: {
+                                      "is-invalid": _vm.form.errors.has(
+                                        "warrenty"
+                                      )
+                                    },
+                                    attrs: {
+                                      type: "text",
+                                      name: "warrenty",
+                                      placeholder: "warrenty"
+                                    },
+                                    domProps: { value: _vm.form.warrenty },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.form,
+                                          "warrenty",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("has-error", {
+                                    attrs: { form: _vm.form, field: "warrenty" }
+                                  })
+                                ],
+                                1
+                              )
+                            : _vm._e()
                         ]),
                         _vm._v(" "),
                         _c(
