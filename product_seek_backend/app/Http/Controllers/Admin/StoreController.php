@@ -40,6 +40,7 @@ class StoreController extends Controller
 			'contact'=>$request['contact'],
 			'store_image'=>$image,
 			'address'=>$request['address'],
+			'followers'=>serialize(array()),
 			'google_maps_url'=>$request['google_maps_url'],
 		]);
   }
