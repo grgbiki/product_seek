@@ -27,13 +27,11 @@ class Ordercontroller extends Controller
 
 			$p=$product->product;
 
-			$prod=Product::latest()->with('productCategory','productStore');
-
-			$prod=$prod->findOrFail($p->id);
+			$prod=$p->id;
 
 			$order=Order::create([
 				'order_no'       => $orderno,
-				'products'       => serialize($prod),
+				'products'       => $prod,
 				'user_id'        => $request['user_id'],
 				'quantity'       => $product->quantity,
 				'status'         => 'Processing',
@@ -43,8 +41,6 @@ class Ordercontroller extends Controller
 			]);
 
 			$order->usersOrder()->sync($request->user_id);
-
-			$p->product_image=json_decode($p->product_image);
 		}
 
 
@@ -69,7 +65,9 @@ class Ordercontroller extends Controller
 		$orders = Order::latest()->where('user_id',$user_id);
 		$orders=$orders->where('delivered_date',null)->get();
 		foreach($orders as $order){
-			$order->products=unserialize($order->products) ;
+			$product=Product::Latest()->with('productCategory','productStore','productReview');
+			$product=$product->findOrFail($order->products);
+			$order->products=$product;
 			$order->products->product_image=unserialize($order->products->product_image);
 		}
 
@@ -98,7 +96,9 @@ class Ordercontroller extends Controller
 		$orders=$orders->where('status','Delivered')->get();
 
 		foreach($orders as $order){
-			$order->products=unserialize($order->products) ;
+			$product=Product::Latest()->with('productCategory','productStore','productReview');
+			$product=$product->findOrFail($order->products);
+			$order->products=$product;
 			$order->products->product_image=unserialize($order->products->product_image);
 
 			$delivered_date=$order->delivered_date;
@@ -125,7 +125,9 @@ class Ordercontroller extends Controller
 		$orders = Order::latest()->where('user_id',$user_id);
 		$orders=$orders->where('status','Returned')->get();
 		foreach($orders as $order){
-			$order->products=unserialize($order->products) ;
+			$product=Product::Latest()->with('productCategory','productStore','productReview');
+			$product=$product->findOrFail($order->products);
+			$order->products=$product;
 			$order->products->product_image=unserialize($order->products->product_image);
 		}
 

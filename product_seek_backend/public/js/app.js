@@ -2951,6 +2951,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['admin_url'],
   data: function data() {
@@ -2972,7 +3000,9 @@ __webpack_require__.r(__webpack_exports__);
       }),
       current_product_images: [],
       categories: [],
-      stores: []
+      stores: [],
+      currentUser: [],
+      currentReview: []
     };
   },
   methods: {
@@ -3131,13 +3161,47 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Product moved to trash successfully'
         });
         _this9.loading = false;
+      })["catch"](function (response) {
+        if (response.message == 'Request failed with status code 401') {
+          location.reload();
+        }
+
+        _this9.loading = false;
       });
     },
     openTrash: function openTrash() {
       $('#trashproduct').modal('show');
+    },
+    showReview: function showReview(review) {
+      this.currentReview = review;
+      $('#review-modal').modal('show');
+    },
+    showReviewuser: function showReviewuser(user_id) {
+      var user = {};
+      this.currentUser.forEach(function (u) {
+        if (u.id == user_id) {
+          user = u;
+        }
+      });
+      return user.name;
+    },
+    getUser: function getUser() {
+      var _this10 = this;
+
+      var that = this;
+      axios.get(this.admin_url + '/user-profile/all-user/').then(function (res) {
+        that.currentUser = res.data;
+      })["catch"](function (response) {
+        if (response.message == 'Request failed with status code 401') {
+          location.reload();
+        }
+
+        _this10.loading = false;
+      });
     }
   },
   created: function created() {
+    this.getUser();
     this.loadCategory();
     this.loadStore();
     this.loadProducts();
@@ -8342,7 +8406,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".p-image[data-v-32daf7b9] {\n  margin: 5px;\n}\n.p-image figure[data-v-32daf7b9] {\n  position: relative;\n  height: 110px;\n  width: 110px;\n  margin-bottom: 0;\n}\n.p-image figure img[data-v-32daf7b9] {\n  height: 100%;\n  width: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n}\n.p-image figure figcaption[data-v-32daf7b9] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  cursor: pointer;\n}\n.p-image figure figcaption i[data-v-32daf7b9] {\n  background: white;\n  padding: 3px;\n  border: 1px solid #bcbcbc;\n}\n.file[data-v-32daf7b9] {\n  position: relative;\n  overflow: hidden;\n  cursor: pointer !important;\n}\n.file input[data-v-32daf7b9] {\n  position: absolute;\n  opacity: 0;\n  right: 0;\n  top: 0;\n  cursor: pointer !important;\n}", ""]);
+exports.push([module.i, ".p-image[data-v-32daf7b9] {\n  margin: 5px;\n}\n.p-image figure[data-v-32daf7b9] {\n  position: relative;\n  height: 110px;\n  width: 110px;\n  margin-bottom: 0;\n}\n.p-image figure img[data-v-32daf7b9] {\n  height: 100%;\n  width: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n}\n.p-image figure figcaption[data-v-32daf7b9] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  cursor: pointer;\n}\n.p-image figure figcaption i[data-v-32daf7b9] {\n  background: white;\n  padding: 3px;\n  border: 1px solid #bcbcbc;\n}\n.file[data-v-32daf7b9] {\n  position: relative;\n  overflow: hidden;\n  cursor: pointer !important;\n}\n.file input[data-v-32daf7b9] {\n  position: absolute;\n  opacity: 0;\n  right: 0;\n  top: 0;\n  cursor: pointer !important;\n}\n.review[data-v-32daf7b9] {\n  list-style: none;\n  padding: 0;\n}\n.review li[data-v-32daf7b9] {\n  padding: 0.5em;\n  border-bottom: 1px solid #bcbcbc;\n}\n.review li span[data-v-32daf7b9] {\n  font-weight: bold;\n}", ""]);
 
 // exports
 
@@ -67928,6 +67992,34 @@ var render = function() {
                               ]
                             ),
                             _vm._v(" "),
+                            !p.product_review.length
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-secondary mr-1",
+                                    attrs: { disabled: "" }
+                                  },
+                                  [
+                                    _c("i", { staticClass: "fas fa-eye mr-1" }),
+                                    _vm._v("Reviews")
+                                  ]
+                                )
+                              : _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-success mr-1",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.showReview(p.product_review)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("i", { staticClass: "fas fa-eye mr-1" }),
+                                    _vm._v("Reviews")
+                                  ]
+                                ),
+                            _vm._v(" "),
                             _c(
                               "button",
                               {
@@ -68525,7 +68617,49 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _vm._m(4)
+      _vm._m(4),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "modal fade",
+          attrs: {
+            id: "review-modal",
+            tabindex: "-1",
+            role: "dialog",
+            "aria-labelledby": "exampleModalLongTitle",
+            "aria-hidden": "true"
+          }
+        },
+        [
+          _c("div", { staticClass: "modal-dialog" }, [
+            _vm.currentUser || _vm.currentReview
+              ? _c("div", { staticClass: "modal-content" }, [
+                  _vm._m(5),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-body" }, [
+                    _c(
+                      "ul",
+                      { staticClass: "review" },
+                      _vm._l(_vm.currentReview, function(r) {
+                        return _c("li", { key: r.id }, [
+                          _c("p", [_vm._v(_vm._s(r.review))]),
+                          _vm._v(" "),
+                          _c("span", [
+                            _vm._v("- " + _vm._s(_vm.showReviewuser(r.user_id)))
+                          ])
+                        ])
+                      }),
+                      0
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(6)
+                ])
+              : _vm._e()
+          ])
+        ]
+      )
     ],
     1
   )
@@ -68636,6 +68770,46 @@ var staticRenderFns = [
         )
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "staticBackdropLabel" } },
+        [_vm._v("Reviews")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      )
+    ])
   }
 ]
 render._withStripped = true

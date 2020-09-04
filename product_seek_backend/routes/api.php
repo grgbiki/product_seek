@@ -104,3 +104,6 @@ Route::group(['prefix'=>'/store/'],function(){
 
 Route::get('user-followed-store/{user_id}','API\FollowstoreController@userFollowedStore');
 // user follow store
+
+
+Route::post('/review/','API\ReviewController@addReview');

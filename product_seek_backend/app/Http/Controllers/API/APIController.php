@@ -13,7 +13,7 @@ class APIController extends Controller
 
 	// api to get all the products
   public function products(){
-  	$products= Product::latest()->with('productCategory','productStore')->get();
+  	$products= Product::latest()->with('productCategory','productStore','productReview')->get();
 
   	foreach ($products as $product){
   		$product->product_image=unserialize($product->product_image);
@@ -66,7 +66,7 @@ class APIController extends Controller
   // filter by cat
   public function filter_by_cat($id){
   	$cat=Productcategory::findOrFail($id);
- 		$products= Product::latest()->with('productStore','productCategory')->get();
+ 		$products= Product::latest()->with('productStore','productCategory','productReview')->get();
       foreach ($products as $product){
       foreach($product->productStore as $store){
         $store->followers=unserialize($store->followers);
@@ -109,7 +109,7 @@ class APIController extends Controller
   // filter by store
    public function filter_by_store($id){
   	$store=Store::findOrFail($id);
- 		$products= Product::latest()->with('productStore','productCategory')->get();
+ 		$products= Product::latest()->with('productStore','productCategory','productReview')->get();
 
     foreach ($products as $product){
       foreach($product->productStore as $store){
@@ -153,7 +153,7 @@ class APIController extends Controller
 
 	// search product
 	public function product_search($search_term){
-		$products = Product::where('title', 'LIKE', "%{$search_term}%")->with('productCategory','productStore')->get();
+		$products = Product::where('title', 'LIKE', "%{$search_term}%")->with('productCategory','productStore','productReview')->get();
     foreach ($products as $product){
       $product->product_image=unserialize($product->product_image);
     }

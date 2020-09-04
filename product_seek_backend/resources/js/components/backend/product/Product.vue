@@ -38,6 +38,8 @@
             		<td>$ {{ p.price }}</td>
             		<td>
             			<button class="btn btn-primary mr-1" @click='editProduct(p.id)'><i class="fas fa-edit mr-2"></i>Edit</button>
+            			<button class="btn btn-secondary mr-1" disabled v-if='!p.product_review.length'> <i class='fas fa-eye mr-1'></i>Reviews</button>
+            			<button class="btn btn-success mr-1" v-else @click='showReview(p.product_review)'> <i class='fas fa-eye mr-1'></i>Reviews</button>
             			<button class="btn btn-danger" @click='trashProducts(p.id)'><i class="fas fa-trash mr-1"></i>Trash</button>
             		</td>
             	</tr>
@@ -171,6 +173,32 @@
 		  </div>
 		</div>
 		<!-- trashed products  model-->
+
+		<div class="modal fade" id="review-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content" v-if='currentUser  || currentReview'>
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="staticBackdropLabel">Reviews</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <ul class="review">
+		        	<li v-for='r in currentReview' :key='r.id'>
+		        		<p>{{ r.review }}</p>
+		        		<span>- {{ showReviewuser(r.user_id) }}</span>
+		        	</li>
+		        </ul>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+
 	</div>
 </template>
 <script>
@@ -195,7 +223,9 @@
 				}),
 				current_product_images:[],
 				categories:[],
-				stores:[]
+				stores:[],
+				currentUser:[],
+				currentReview:[],
 			}
 		},
 		methods:{
@@ -340,14 +370,48 @@
             title: 'Product moved to trash successfully'
           })
 					this.loading=false
+				}).catch((response)=>{
+					if(response.message=='Request failed with status code 401'){
+						location.reload()
+					}
+					this.loading=false
 				});
 			},
 			openTrash(){
 				$('#trashproduct').modal('show')
+			},
+
+			showReview(review){
+				this.currentReview=review
+				$('#review-modal').modal('show')
+			},
+
+			showReviewuser(user_id){
+				let user={};
+				this.currentUser.forEach(u=>{
+					if(u.id==user_id){
+						user=u;
+					}
+				});
+
+				return user.name;
+			},
+
+			getUser(){
+				let that=this
+				axios.get(this.admin_url+'/user-profile/all-user/').then(function(res){
+					that.currentUser=res.data
+				}).catch((response)=>{
+					if(response.message=='Request failed with status code 401'){
+						location.reload()
+					}
+					this.loading=false
+				});
 			}
 
 		},
 		created(){
+			this.getUser()
 			this.loadCategory()
 			this.loadStore()
 			this.loadProducts()
@@ -392,6 +456,17 @@
   right: 0;
   top: 0;
   cursor: pointer!important
+}
+.review{
+	list-style: none;
+	padding:0;
+	li{
+		padding: 0.5em;
+		span{
+			font-weight: bold;
+		}
+		border-bottom: 1px solid #bcbcbc;
+	}
 }
 
 </style>
