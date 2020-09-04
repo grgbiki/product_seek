@@ -24,9 +24,12 @@ Route::post('/forgot_password', 'API\Authcontroller@forgot_password');
 //  Route::post('change_password', 'API\Authcontroller@change_password');
 // });
 
+
 Route::post('/register','API\Authcontroller@register');//api route for register
 
 Route::put('/update/{id}','API\Authcontroller@update');//api route for update
+
+Route::put('/change-password/{id}','API\Authcontroller@changePassword');//api route for password change
 
 Route::post('/login','API\Authcontroller@login');//api route for login
 

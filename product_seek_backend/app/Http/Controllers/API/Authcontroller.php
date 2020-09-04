@@ -79,7 +79,7 @@ class Authcontroller extends Controller
 
     }
 
-    public function forgot_password(Request $request)
+public function forgot_password(Request $request)
 {
     $input = $request->all();
     $rules = array(
@@ -141,4 +141,28 @@ class Authcontroller extends Controller
 //     }
 //     return \Response::json($arr);
 // }
+
+  public function changePassword(Request $request,$id){
+    $this->validate($request,[  
+      'old_password'=>'required',
+      'new_password'=>['required','confirmed'],
+    ]);
+
+       $user=User::findOrFail($id);
+      
+         if(Hash::check($request->old_password, $user->password)){
+           $user->update(
+            [
+              'password'=>Hash::make($request['new_password'])
+            ]);
+          $accessToken= $user->createToken('authToken')->accessToken;
+          return response(['user'=>$user,'access_token'=>$accessToken]);
+         }else{
+            $message=[
+              "message"=>"The given old password is incorrect."
+            ];
+          
+           return $message;
+         }
+  }
 }
