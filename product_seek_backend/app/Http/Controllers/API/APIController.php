@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\Productcategory;
 use App\Store;
-
+use App\User;
 class APIController extends Controller
 {
 
 	// api to get all the products
   public function products(){
-  	$products= Product::latest()->with('productCategory','productStore','productReview')->get();
+  	$products= Product::latest()->with('productCategory','productStore')->get();
 
   	foreach ($products as $product){
   		$product->product_image=unserialize($product->product_image);
@@ -66,7 +66,7 @@ class APIController extends Controller
   // filter by cat
   public function filter_by_cat($id){
   	$cat=Productcategory::findOrFail($id);
- 		$products= Product::latest()->with('productStore','productCategory','productReview')->get();
+ 		$products= Product::latest()->with('productStore','productCategory')->get();
       foreach ($products as $product){
       foreach($product->productStore as $store){
         $store->followers=unserialize($store->followers);
@@ -109,7 +109,7 @@ class APIController extends Controller
   // filter by store
    public function filter_by_store($id){
   	$store=Store::findOrFail($id);
- 		$products= Product::latest()->with('productStore','productCategory','productReview')->get();
+ 		$products= Product::latest()->with('productStore','productCategory')->get();
 
     foreach ($products as $product){
       foreach($product->productStore as $store){
@@ -160,6 +160,19 @@ class APIController extends Controller
 		return $products;
 	}
 	// end search product
+
+  public function product_review($product_id){
+    $product=Product::latest()->with('productReview');
+    $product=$product->findOrFail($product_id);
+    $reviews=$product->productReview;
+
+    foreach($reviews as $r){
+      $user=User::findOrFail($r->user_id);
+      $r->username=$user->name;
+    }
+
+    return $reviews;
+  }
 
   
 }

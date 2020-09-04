@@ -26,4 +26,22 @@ class ReviewController extends Controller
   	$review->productReview()->sync($request['product_id']);
    	
   }
+
+  public function delete_review($review_id){
+  	$review=Review::findOrFail($review_id);
+  	$review->delete();
+  	$review->productReview()->detach();
+  }
+
+  public function update_review(Request $request,$review_id){
+  	$this->validate($request,[
+  		'review'=>'required',
+  	]);
+
+
+  	$review=Review::findOrFail($review_id);
+  	$review->update([
+  		'review'=>$request['review'],
+  	]);
+   }
 }
