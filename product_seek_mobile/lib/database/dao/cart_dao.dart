@@ -18,4 +18,7 @@ abstract class CartDao {
 
   @Query('DELETE FROM CartItemModel')
   Future<void> remoteItems();
+
+  @delete
+  Future<void> remoteItem(CartItemModel cartItem);
 }

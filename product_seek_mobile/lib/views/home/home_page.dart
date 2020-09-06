@@ -41,11 +41,19 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: <Widget>[
             Expanded(
-                child: StreamBuilder(
-                    stream: productViewModel.getLocalProducts(),
+                child: FutureBuilder(
+                    future: productViewModel.getProducts(),
                     builder:
                         (context, AsyncSnapshot<List<ProductModel>> snapshot) {
-                      if (snapshot.hasData) {
+                      if (!snapshot.hasData) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Center(child: CircularProgressIndicator()),
+                          ],
+                        );
+                      } else if (snapshot.data.length > 0)
                         return GridView.builder(
                             itemCount: snapshot.data.length,
                             gridDelegate:
@@ -60,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                               var product = snapshot.data[index];
                               return _buildStoreItem(product);
                             });
-                      } else {
+                      else {
                         return Center(child: Text("No products found"));
                       }
                     }))

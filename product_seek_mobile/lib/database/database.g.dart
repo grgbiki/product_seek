@@ -92,7 +92,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ProductModel` (`id` INTEGER, `title` TEXT, `images` TEXT, `price` REAL, `description` TEXT, `category_id` INTEGER, `store_id` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `StoreModel` (`id` INTEGER, `name` TEXT, `email` TEXT, `contact` TEXT, `address` TEXT, `mapUrl` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `StoreModel` (`id` INTEGER, `name` TEXT, `email` TEXT, `contact` TEXT, `address` TEXT, `followers` TEXT, `mapUrl` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `CategoryModel` (`id` INTEGER, `name` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
@@ -359,6 +359,7 @@ class _$StoreDao extends StoreDao {
                   'email': item.email,
                   'contact': item.contact,
                   'address': item.address,
+                  'followers': item.followers,
                   'mapUrl': item.mapUrl
                 },
             changeListener);
@@ -375,6 +376,7 @@ class _$StoreDao extends StoreDao {
       row['email'] as String,
       row['contact'] as String,
       row['address'] as String,
+      row['followers'] as String,
       row['mapUrl'] as String);
 
   final InsertionAdapter<StoreModel> _storeModelInsertionAdapter;
@@ -423,6 +425,18 @@ class _$CartDao extends CartDao {
                   'total_price': item.totalPrice,
                   'status': item.status
                 },
+            changeListener),
+        _cartItemModelDeletionAdapter = DeletionAdapter(
+            database,
+            'CartItemModel',
+            ['id'],
+            (CartItemModel item) => <String, dynamic>{
+                  'id': item.id,
+                  'product': item.product,
+                  'quantity': item.quantity,
+                  'total_price': item.totalPrice,
+                  'status': item.status
+                },
             changeListener);
 
   final sqflite.DatabaseExecutor database;
@@ -442,6 +456,8 @@ class _$CartDao extends CartDao {
   final InsertionAdapter<CartItemModel> _cartItemModelInsertionAdapter;
 
   final UpdateAdapter<CartItemModel> _cartItemModelUpdateAdapter;
+
+  final DeletionAdapter<CartItemModel> _cartItemModelDeletionAdapter;
 
   @override
   Stream<List<CartItemModel>> getCartItems() {
@@ -474,5 +490,10 @@ class _$CartDao extends CartDao {
   @override
   Future<void> updateItem(CartItemModel item) async {
     await _cartItemModelUpdateAdapter.update(item, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> remoteItem(CartItemModel cartItem) async {
+    await _cartItemModelDeletionAdapter.delete(cartItem);
   }
 }

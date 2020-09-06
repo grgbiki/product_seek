@@ -185,7 +185,21 @@ class _CartPageState extends State<CartPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(product.title),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(product.title),
+                          InkWell(
+                            onTap: () {
+                              promptDeleteMessage(item, cartViewModel);
+                            },
+                            child: Icon(
+                              Icons.delete,
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                        ],
+                      ),
                       Align(
                         alignment: Alignment.centerRight,
                         child: Container(
@@ -237,5 +251,30 @@ class _CartPageState extends State<CartPage> {
         ],
       ),
     );
+  }
+
+  promptDeleteMessage(CartItemModel item, CartViewModel cartViewModel) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Are you sure you want to remove this item from cart?"),
+            actions: [
+              FlatButton(
+                onPressed: () {
+                  cartViewModel.removeItemToCart(item);
+                  Navigator.pop(context);
+                },
+                child: Text("Yes"),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("No"),
+              ),
+            ],
+          );
+        });
   }
 }

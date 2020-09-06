@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
 import 'package:product_seek_mobile/models/store_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
+import 'package:product_seek_mobile/resources/app_constants.dart';
 import 'package:product_seek_mobile/viewmodels/store_view_model.dart';
 import 'package:product_seek_mobile/views/home/custom_search.dart';
+import 'package:product_seek_mobile/views/login/login_page.dart';
 import 'package:product_seek_mobile/views/product/product_details.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +22,58 @@ class StorePage extends StatefulWidget {
 }
 
 class _StorePageState extends State<StorePage> {
+  bool _isFollowed = false;
+  String _followButtonText = "Follow";
+  String _followers = "0";
+  StoreViewModel storeViewModel;
+  StoreModel storeInfo;
+
+  toggleFollow() {
+    setState(() {
+      _isFollowed = !_isFollowed;
+      if (_isFollowed) {
+        storeViewModel
+            .followStore(userDetails.id, storeInfo.id)
+            .then((value) => fetchStroeInfo());
+        _followButtonText = "Following";
+      } else {
+        _followButtonText = "Follow";
+        storeViewModel
+            .unfollowStore(userDetails.id, storeInfo.id)
+            .then((value) => fetchStroeInfo());
+      }
+    });
+  }
+
+  fetchStroeInfo() {
+    storeViewModel.getStoreInfo(widget.storeInfo.id).then((store) {
+      if (store != null) {
+        setState(() {
+          storeInfo = store;
+          setState(() {
+            _followers = jsonDecode(storeInfo.followers).length.toString();
+          });
+          jsonDecode(storeInfo.followers).forEach((item) {
+            if (item == userDetails.id.toString()) {
+              if (!_isFollowed)
+                setState(() {
+                  _isFollowed = true;
+                  _followButtonText = "Following";
+                });
+            }
+          });
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    storeViewModel = Provider.of<StoreViewModel>(context, listen: false);
+    fetchStroeInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     final storeViewModel = Provider.of<StoreViewModel>(context);
@@ -77,15 +131,24 @@ class _StorePageState extends State<StorePage> {
                         Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "0 Followers",
+                              _followers + " Followers",
                             )),
                       ],
                     ),
                   )),
                   OutlineButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (globalIsLoggedIn) {
+                        toggleFollow();
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()));
+                      }
+                    },
                     child: Text(
-                      "Follow",
+                      _followButtonText,
                       style: TextStyle(fontSize: 18),
                     ),
                   )

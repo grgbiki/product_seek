@@ -181,15 +181,6 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                         child:
                                             Text("Item ordered successfully")),
                                     behavior: SnackBarBehavior.floating,
-                                    action: SnackBarAction(
-                                        label: 'My Orders',
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OrderPage()));
-                                        }),
                                   ));
                                   Navigator.of(context)
                                       .popUntil((route) => route.isFirst);

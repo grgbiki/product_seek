@@ -62,7 +62,7 @@ class _WishlistPageState extends State<WishlistPage> {
                     } else {
                       print("Data Length of snapshot" +
                           snapshot.data.length.toString());
-                      return Center(child: Text("No products found."));
+                      return Center(child: Text("No favourites"));
                     }
                   }),
             ),

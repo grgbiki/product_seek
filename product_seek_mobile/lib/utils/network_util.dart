@@ -24,7 +24,11 @@ class NetworkUtil {
           throw new Exception("Error while fetching data");
         } else {
           final String res = response.body;
-          return _decoder.convert(res);
+          if (res.isNotEmpty) {
+            return _decoder.convert(res);
+          } else {
+            return true;
+          }
         }
       });
     } on TimeoutException catch (tE) {

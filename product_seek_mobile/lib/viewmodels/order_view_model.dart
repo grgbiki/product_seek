@@ -16,4 +16,13 @@ class OrderViewModel extends ChangeNotifier {
   }
 
   Future<List<OrderModel>> getOrders(int id) => orderRepo.getOrders(id);
+  Future<List<OrderModel>> getDeliveredOrders(int id) =>
+      orderRepo.getDeliveredOrders(id);
+
+  Future<List<OrderModel>> getReturnedOrder(int id) =>
+      orderRepo.getReturnedOrder(id);
+
+  Future<bool> cancelOrder(int orderId) => orderRepo.cancelOrder(orderId);
+  Future<void> returnOrder(int orderId, String returnNote) =>
+      orderRepo.returnOrder(orderId, returnNote);
 }
