@@ -11,12 +11,16 @@ class ProductRepository {
   ProductRepository({this.prefs, this.database});
 
   getProducts() {
-    NetworkUtil().get(url: NetworkEndpoints.PRODUCT_API).then((response) async {
+    return NetworkUtil()
+        .get(url: NetworkEndpoints.PRODUCT_API)
+        .then((response) async {
       if (response != null) {
         List<ProductModel> productModels;
         productModels =
             (response as List).map((i) => ProductModel.fromJson(i)).toList();
+
         await database.productDao.addProducts(productModels);
+        return productModels;
       } else {
         print("Could not fetch product data");
       }

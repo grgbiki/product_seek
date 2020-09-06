@@ -5,6 +5,9 @@ import 'package:product_seek_mobile/resources/app_constants.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:product_seek_mobile/views/login/login_page.dart';
 import 'package:product_seek_mobile/views/order/order_page.dart';
+import 'package:product_seek_mobile/views/order/returned_page.dart';
+import 'package:product_seek_mobile/views/order/review_page.dart';
+import 'package:product_seek_mobile/views/product/followed_store_page.dart';
 import 'package:product_seek_mobile/views/profile/settings_page.dart';
 import 'package:product_seek_mobile/views/wishlist/wishlist_page.dart';
 import 'package:provider/provider.dart';
@@ -71,11 +74,9 @@ class _ProfilePageState extends State<ProfilePage> {
           Container(
             width: MediaQuery.of(context).size.width,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                    height: _isLoggedIn
-                        ? MediaQuery.of(context).size.height / 6
-                        : MediaQuery.of(context).size.height / 4,
                     color: Theme.of(context).primaryColor,
                     child: Column(
                       children: <Widget>[
@@ -151,6 +152,12 @@ class _ProfilePageState extends State<ProfilePage> {
             child: InkWell(
               onTap: () {
                 if (_isLoggedIn) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WishlistPage(
+                                userInfo: userInfo,
+                              )));
                 } else {
                   Navigator.push(
                       context,
@@ -163,8 +170,38 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Container(
                 child: Column(
                   children: <Widget>[
-                    Icon(Icons.rate_review),
-                    Text("My Reviews")
+                    SvgPicture.asset(
+                      "assets/icons/heart.svg",
+                      width: 20,
+                    ),
+                    Text("Favourites")
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                if (_isLoggedIn) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FollowedStorePage()));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LoginPage(
+                                loginCallback: loginCallBack,
+                              )));
+                }
+              },
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.store),
+                    Text("Followed Stores")
                   ],
                 ),
               ),
@@ -288,38 +325,6 @@ class _ProfilePageState extends State<ProfilePage> {
             child: InkWell(
               onTap: () {
                 if (_isLoggedIn) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => WishlistPage(
-                                userInfo: userInfo,
-                              )));
-                } else {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LoginPage(
-                                loginCallback: loginCallBack,
-                              )));
-                }
-              },
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    SvgPicture.asset(
-                      "assets/icons/heart.svg",
-                      width: 20,
-                    ),
-                    Text("Favourites")
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: InkWell(
-              onTap: () {
-                if (_isLoggedIn) {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => OrderPage()));
                 } else {
@@ -342,6 +347,33 @@ class _ProfilePageState extends State<ProfilePage> {
             child: InkWell(
               onTap: () {
                 if (_isLoggedIn) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ReviewPage()));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LoginPage(
+                                loginCallback: loginCallBack,
+                              )));
+                }
+              },
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.rate_review),
+                    Text("My Reviews")
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                if (_isLoggedIn) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ReturnedPage()));
                 } else {
                   Navigator.push(
                       context,

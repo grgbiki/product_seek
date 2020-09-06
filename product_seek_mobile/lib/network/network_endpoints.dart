@@ -13,7 +13,12 @@ class NetworkEndpoints {
   static const String PRODUCT_SEARCH_API = _BASE_API + "/products/search/";
 
   static const String CATEGORY_INFO = _BASE_API + "/categories/show/";
+
   static const String STORE_INFO = _BASE_API + "/stores/show/";
+  static const String STORE_PRODUCTS = _BASE_API + "/products/store/";
+  static const String FOLLOW_STORE = _BASE_API + "/store/follow";
+  static const String UNFOLLOW_STORE = _BASE_API + "/store/unfollow";
+  static const String FOLLOWED_STORE = _BASE_API + "/user-followed-store/";
 
   static const String FEEDBACK_API = _BASE_API + "/feedback/create";
 
@@ -23,5 +28,11 @@ class NetworkEndpoints {
 
   static const String ADD_ORDERS_API = _BASE_API + "/order/add";
   static const String CANCEL_ORDERS_API = _BASE_API + "/order/cancle/";
+  static const String RETURN_ORDERS_API = _BASE_API + "/order/return-request/";
   static const String USER_ORDERS_API = _BASE_API + "/order/user-orders/";
+  static const String USER_DELIVERED_ORDERS_API =
+      _BASE_API + "/order/user-delivered-orders/";
+
+  static const String USER_RETURNED_ORDERS_API =
+      _BASE_API + "/order/user-returned-orders/";
 }

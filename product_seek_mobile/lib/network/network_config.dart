@@ -27,6 +27,7 @@ class NetworkConfig {
   static const String API_KEY_STORE_EMAIL = "email";
   static const String API_KEY_STORE_CONTACT = "contact";
   static const String API_KEY_STORE_ADDRESS = "address";
+  static const String API_KEY_STORE_FOLLOWERS = "followers";
   static const String API_KEY_STORE_MAP_URL = "google_maps_url";
 
   static const String API_KEY_CATEGORY_ID = "id";
@@ -46,4 +47,6 @@ class NetworkConfig {
   static const String API_KEY_ORDER_STATUS = "status";
   static const String API_KEY_ORDER_TOTAL = "total";
   static const String API_KEY_ORDER_QUANTITY = "quantity";
+  static const String API_KEY_RETURN_ORDER_BODY = "return_note";
+  static const String API_KEY_ORDER_RETURNABLE = "returnable";
 }

@@ -58,7 +58,7 @@ void main() async {
       categoryRepo: CategoryRepository(prefs: preferences, database: database));
   categoryViewModel.init();
 
-  final storeViewModel = StoreViwModel(
+  final storeViewModel = StoreViewModel(
       storeRepo: StoreRepository(prefs: preferences, database: database));
   storeViewModel.init();
 
@@ -79,7 +79,7 @@ void main() async {
       ChangeNotifierProvider<CartViewModel>.value(value: cartViewModel),
       ChangeNotifierProvider<CheckoutViewModel>.value(value: checkoutViewModel),
       ChangeNotifierProvider<CategoryViewModel>.value(value: categoryViewModel),
-      ChangeNotifierProvider<StoreViwModel>.value(value: storeViewModel),
+      ChangeNotifierProvider<StoreViewModel>.value(value: storeViewModel),
       ChangeNotifierProvider<WishlistViewModel>.value(value: wishlistViewModel),
       ChangeNotifierProvider<OrderViewModel>.value(value: orderViewModel),
     ],

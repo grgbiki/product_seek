@@ -10,40 +10,27 @@ import 'package:product_seek_mobile/viewmodels/order_view_model.dart';
 import 'package:product_seek_mobile/views/order/order_detail.dart';
 import 'package:provider/provider.dart';
 
-class OrderPage extends StatefulWidget {
-  OrderPage({Key key}) : super(key: key);
+class ReturnedPage extends StatefulWidget {
+  ReturnedPage({Key key}) : super(key: key);
 
   @override
-  _OrderPageState createState() => _OrderPageState();
+  _ReturnedPageState createState() => _ReturnedPageState();
 }
 
-class _OrderPageState extends State<OrderPage> {
-  OrderViewModel orderViewModel;
-  Future<List<OrderModel>> orderFuture;
-
-  Future<List<OrderModel>> refreshFurure() {
-    return orderViewModel.getOrders(userDetails.id);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    orderViewModel = Provider.of<OrderViewModel>(context, listen: false);
-    orderFuture = refreshFurure();
-  }
-
+class _ReturnedPageState extends State<ReturnedPage> {
   @override
   Widget build(BuildContext context) {
+    final orderViewModel = Provider.of<OrderViewModel>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Orders"),
+        title: Text("Returned Product"),
       ),
       body: Container(
         child: Column(
           children: [
             Expanded(
               child: FutureBuilder(
-                future: orderFuture,
+                future: orderViewModel.getReturnedOrder(userDetails.id),
                 builder: (context, AsyncSnapshot<List<OrderModel>> snapshot) {
                   if (!snapshot.hasData) {
                     return Column(
@@ -83,11 +70,7 @@ class _OrderPageState extends State<OrderPage> {
             MaterialPageRoute(
                 builder: (context) => OrderDetail(
                       orderItem: item,
-                    ))).then((value) {
-          setState(() {
-            orderFuture = refreshFurure();
-          });
-        });
+                    )));
       },
       child: Container(
         color: Colors.white,

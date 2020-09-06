@@ -7,7 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
-import 'package:product_seek_mobile/models/user_model.dart';
+import 'package:product_seek_mobile/models/store_model.dart';
 import 'package:product_seek_mobile/models/wish_list_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/resources/app_constants.dart';
@@ -17,6 +17,7 @@ import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/store_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/wishlist_view_model.dart';
 import 'package:product_seek_mobile/views/cart/cart_page.dart';
+import 'package:product_seek_mobile/views/chat/chat_page.dart';
 import 'package:product_seek_mobile/views/checkout/checkout_page.dart';
 import 'package:product_seek_mobile/views/login/login_page.dart';
 import 'package:product_seek_mobile/views/product/store_page.dart';
@@ -33,18 +34,19 @@ class ItemDetail extends StatefulWidget {
 
 class _ItemDetailState extends State<ItemDetail> {
   List<String> images = new List<String>();
-  bool _isLoggedIn = false;
-  UserModel userInfo;
 
   bool _isFavourite = false;
+  bool _isFollowed = false;
+  String _followButtonText = "Follow";
   String heartPath = "assets/icons/heart_outline.svg";
 
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
   String categoryName = "";
+  StoreModel storeInfo;
   String storeName = "";
   ProfileViewModel profileViewModel;
-  StoreViwModel storeViewModel;
+  StoreViewModel storeViewModel;
   CategoryViewModel categoryViewModel;
   WishlistViewModel wishlistViewModel;
   CartViewModel cartViewModel;
@@ -52,11 +54,28 @@ class _ItemDetailState extends State<ItemDetail> {
 
   WishlistModel currentWishListModel;
 
+  toggleFollow() {
+    setState(() {
+      _isFollowed = !_isFollowed;
+      if (_isFollowed) {
+        storeViewModel
+            .followStore(userDetails.id, storeInfo.id)
+            .then((value) => fetchStroeInfo());
+        _followButtonText = "Following";
+      } else {
+        _followButtonText = "Follow";
+        storeViewModel
+            .unfollowStore(userDetails.id, storeInfo.id)
+            .then((value) => fetchStroeInfo());
+      }
+    });
+  }
+
   toggleFavourite() {
     setState(() {
       _isFavourite = !_isFavourite;
       if (_isFavourite) {
-        wishlistViewModel.addWishList(widget.product.id, userInfo.id);
+        wishlistViewModel.addWishList(widget.product.id, userDetails.id);
       } else
         wishlistViewModel.removeWishList(currentWishListModel);
       refreshWishlist();
@@ -64,41 +83,54 @@ class _ItemDetailState extends State<ItemDetail> {
   }
 
   refreshWishlist() async {
-    if (_isLoggedIn) {
-      await wishlistViewModel.getWishlist(userInfo.id).then((datas) {
+    if (globalIsLoggedIn) {
+      await wishlistViewModel.getWishlist(userDetails.id).then((datas) {
         wishlists = datas;
+        var wishItem = wishlists.singleWhere(
+            (it) => it.product.id == widget.product.id,
+            orElse: () => null);
+
+        if (wishItem != null) {
+          setState(() {
+            currentWishListModel = wishItem;
+            _isFavourite = true;
+            heartPath = "assets/icons/heart.svg";
+          });
+        } else {
+          setState(() {
+            _isFavourite = false;
+            heartPath = "assets/icons/heart_outline.svg";
+          });
+        }
       });
     }
+  }
 
-    var wishItem = wishlists.singleWhere(
-        (it) => it.product.id == widget.product.id,
-        orElse: () => null);
+  fetchStroeInfo() {
+    storeViewModel.getStoreInfo(widget.product.storeId).then((store) {
+      if (store != null) {
+        setState(() {
+          storeInfo = store;
+          storeName = storeInfo.name;
 
-    if (wishItem != null) {
-      setState(() {
-        currentWishListModel = wishItem;
-        _isFavourite = true;
-        heartPath = "assets/icons/heart.svg";
-      });
-    } else {
-      setState(() {
-        _isFavourite = false;
-        heartPath = "assets/icons/heart_outline.svg";
-      });
-    }
+          jsonDecode(storeInfo.followers).forEach((item) {
+            if (item == userDetails.id.toString()) {
+              if (!_isFollowed)
+                setState(() {
+                  _isFollowed = true;
+                  _followButtonText = "Following";
+                });
+            }
+          });
+        });
+      }
+    });
   }
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      if (globalIsLoggedIn) {
-        if (userDetails != null) {
-          _isLoggedIn = true;
-          userInfo = userDetails;
-        }
-      }
-
       _isFavourite = false;
       heartPath = "assets/icons/heart_outline.svg";
       jsonDecode(widget.product.images).forEach((item) {
@@ -108,26 +140,11 @@ class _ItemDetailState extends State<ItemDetail> {
 
     profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
     wishlistViewModel = Provider.of<WishlistViewModel>(context, listen: false);
-    storeViewModel = Provider.of<StoreViwModel>(context, listen: false);
+    storeViewModel = Provider.of<StoreViewModel>(context, listen: false);
     categoryViewModel = Provider.of<CategoryViewModel>(context, listen: false);
     cartViewModel = Provider.of<CartViewModel>(context, listen: false);
 
-    if (storeName.isEmpty) {
-      storeViewModel.getStoreInfoFromBackend(widget.product.storeId);
-    }
-    storeViewModel.getStoreInfo(widget.product.storeId).then((store) {
-      if (store != null) {
-        if (storeName.isEmpty) {
-          setState(() {
-            storeName = store.name;
-          });
-        }
-      }
-    });
-
-    if (categoryName.isEmpty) {
-      categoryViewModel.getCategoryInfoBackend(widget.product.categoryId);
-    }
+    fetchStroeInfo();
     categoryViewModel
         .getCategoryInfo(widget.product.categoryId)
         .listen((category) {
@@ -265,7 +282,12 @@ class _ItemDetailState extends State<ItemDetail> {
                 ),
                 InkWell(
                   onTap: () {
-                    toggleFavourite();
+                    if (globalIsLoggedIn) {
+                      toggleFavourite();
+                    } else {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    }
                   },
                   child: Container(
                       padding: EdgeInsets.all(8),
@@ -294,30 +316,44 @@ class _ItemDetailState extends State<ItemDetail> {
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      color: Colors.white,
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.store,
-                color: Theme.of(context).accentColor,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                  child: InkWell(
-                      onTap: () {},
-                      child: Text(storeName.isNotEmpty ? storeName : ""))),
-              FlatButton(
-                onPressed: () {},
-                child: Text("Follow"),
-              )
-            ],
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => StorePage(
+                            storeInfo: storeInfo,
+                          )));
+            },
+            child: Row(
+              children: <Widget>[
+                Icon(
+                  Icons.store,
+                  color: Theme.of(context).accentColor,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(child: Text(storeInfo != null ? storeName : "")),
+                OutlineButton(
+                  onPressed: () {
+                    if (globalIsLoggedIn) {
+                      toggleFollow();
+                    } else {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    }
+                  },
+                  child: Text(_followButtonText),
+                )
+              ],
+            ),
           )
         ],
       ),
+      color: Colors.white,
     );
   }
 
@@ -365,8 +401,12 @@ class _ItemDetailState extends State<ItemDetail> {
               flex: 1,
               child: InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => StorePage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StorePage(
+                                storeInfo: storeInfo,
+                              )));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -389,7 +429,15 @@ class _ItemDetailState extends State<ItemDetail> {
             Expanded(
               flex: 1,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChatPage(
+                                storeInfo: storeInfo,
+                                productModel: widget.product,
+                              )));
+                },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -410,7 +458,7 @@ class _ItemDetailState extends State<ItemDetail> {
                 child: RaisedButton(
                   color: Theme.of(context).accentColor,
                   onPressed: () {
-                    if (_isLoggedIn) {
+                    if (globalIsLoggedIn) {
                       var product = jsonEncode(widget.product);
                       Navigator.push(
                           context,
@@ -429,7 +477,7 @@ class _ItemDetailState extends State<ItemDetail> {
                                               "pending")
                                         ],
                                         0,
-                                        userInfo.id),
+                                        userDetails.id),
                                     isFromCart: false,
                                   )));
                     } else {
@@ -452,7 +500,7 @@ class _ItemDetailState extends State<ItemDetail> {
                 child: RaisedButton(
                   color: Theme.of(context).primaryColor,
                   onPressed: () {
-                    if (_isLoggedIn) {
+                    if (globalIsLoggedIn) {
                       cartViewModel.addItemToCart(new CartItemModel(
                           null,
                           jsonEncode(widget.product.toJson()),

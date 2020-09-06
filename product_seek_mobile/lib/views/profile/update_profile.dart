@@ -26,7 +26,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _name.text = userDetails.name;
     _email.text = userDetails.email;

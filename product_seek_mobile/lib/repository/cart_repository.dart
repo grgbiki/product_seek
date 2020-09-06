@@ -12,6 +12,10 @@ class CartRepository {
     database.cartDao.addItemToCart(cartItem);
   }
 
+  removeItemToCart(CartItemModel cartItem) {
+    database.cartDao.remoteItem(cartItem);
+  }
+
   Future<void> changeQuantity(CartItemModel cartItem) =>
       database.cartDao.updateItem(cartItem);
 
