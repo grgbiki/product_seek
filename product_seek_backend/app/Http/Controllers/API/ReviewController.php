@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Review;
-
+use App\Product;
 class ReviewController extends Controller
 {
    
@@ -43,5 +43,25 @@ class ReviewController extends Controller
   	$review->update([
   		'review'=>$request['review'],
   	]);
+   }
+
+   public function get_review_product_user(Request $request){
+
+      $product_id=$request->product_id;
+
+      $product=Product::latest()->with('productReview');
+      $product=$product->findOrFail($product_id);
+      $product_reviews=$product->productReview;
+
+      $filtered_reviews=[];
+
+      foreach($product_reviews as $r){
+        if($r->user_id==$request->user_id){
+          array_push($filtered_reviews,$r);
+        }
+      }
+
+
+      return $filtered_reviews;
    }
 }
