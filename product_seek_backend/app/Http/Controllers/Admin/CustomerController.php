@@ -35,6 +35,13 @@ class CustomerController extends Controller
   }
   //user profile get curent user
 
+
+  // all user
+  public function all_user(){
+    return User::latest()->get();
+  }
+  // all user
+
   // update user profile
   public function update(Request $request,$id){
   	$this->validate($request,[

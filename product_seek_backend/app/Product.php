@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Productcategory;
 use App\Store;
+use App\Review;
 
 class Product extends Model
 {
@@ -22,4 +23,8 @@ class Product extends Model
 	public function productStore(){
 		return $this->belongsToMany(Store::class);
 	}
+
+	 public function productReview(){
+  	return $this->belongsToMany(Review::class);
+  }
 }

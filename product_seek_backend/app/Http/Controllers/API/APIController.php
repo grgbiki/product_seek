@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\Productcategory;
 use App\Store;
-
+use App\User;
 class APIController extends Controller
 {
 
@@ -153,13 +153,26 @@ class APIController extends Controller
 
 	// search product
 	public function product_search($search_term){
-		$products = Product::where('title', 'LIKE', "%{$search_term}%")->with('productCategory','productStore')->get();
+		$products = Product::where('title', 'LIKE', "%{$search_term}%")->with('productCategory','productStore','productReview')->get();
     foreach ($products as $product){
       $product->product_image=unserialize($product->product_image);
     }
 		return $products;
 	}
 	// end search product
+
+  public function product_review($product_id){
+    $product=Product::latest()->with('productReview');
+    $product=$product->findOrFail($product_id);
+    $reviews=$product->productReview;
+
+    foreach($reviews as $r){
+      $user=User::findOrFail($r->user_id);
+      $r->username=$user->name;
+    }
+
+    return $reviews;
+  }
 
   
 }

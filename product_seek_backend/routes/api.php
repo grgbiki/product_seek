@@ -24,9 +24,12 @@ Route::post('/forgot_password', 'API\Authcontroller@forgot_password');
 //  Route::post('change_password', 'API\Authcontroller@change_password');
 // });
 
+
 Route::post('/register','API\Authcontroller@register');//api route for register
 
 Route::put('/update/{id}','API\Authcontroller@update');//api route for update
+
+Route::put('/change-password/{id}','API\Authcontroller@changePassword');//api route for password change
 
 Route::post('/login','API\Authcontroller@login');//api route for login
 
@@ -104,3 +107,9 @@ Route::group(['prefix'=>'/store/'],function(){
 
 Route::get('user-followed-store/{user_id}','API\FollowstoreController@userFollowedStore');
 // user follow store
+
+
+Route::post('/review/','API\ReviewController@addReview');
+Route::get('/product-review/{product_id}','API\APIController@product_review');
+Route::get('/review/delete/{review_id}','API\ReviewController@delete_review');
+Route::put('/review/update/{review_id}','API\ReviewController@update_review');

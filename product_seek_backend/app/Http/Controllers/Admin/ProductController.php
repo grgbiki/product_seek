@@ -13,7 +13,7 @@ class ProductController extends Controller
 
 	// paginated products
 	public function paginated_products(){
-		return Product::latest()->with('productCategory','productStore')->paginate(10);
+		return Product::latest()->with('productCategory','productStore','productReview')->paginate(10);
 	}
 
 	// end paginated products
@@ -87,9 +87,9 @@ class ProductController extends Controller
 
   //edit 
   public function show($id){
-		$product =  Product::latest()->with('productCategory','productStore');
+		$product =  Product::latest()->with('productCategory','productStore','productReview');
 		$current_product=$product->findOrFail($id);
-		if($current_product->product_image!='no-laptop-image.jpg'){
+		if($current_product->product_image!='no-image.jpg'){
       $current_product->product_image=unserialize($current_product->product_image);
     }
 		return $current_product;

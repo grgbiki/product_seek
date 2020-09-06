@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Order;
-
+use App\Product;
 class OrderController extends Controller
 {
   // paginated orders
@@ -13,7 +13,9 @@ class OrderController extends Controller
   	$orders = Order::latest()->with('usersOrder')->paginate(10);
 
   	foreach($orders as $order){
-  		$order->products=unserialize($order->products);
+  		$product=Product::Latest()->with('productCategory','productStore','productReview');
+      $product=$product->findOrFail($order->products);
+      $order->products=$product;
       $order->products->product_image=unserialize($order->products->product_image);
   	}
 
@@ -24,14 +26,16 @@ class OrderController extends Controller
 
   // show particular order
   public function show($id){
-  	$orders = Order::latest()->with('usersOrder');
+  	$order = Order::latest()->with('usersOrder');
 
-  	$orders = $orders->findOrFail($id);
+  	$order = $order->findOrFail($id);
   	
-  	$orders->products=unserialize($orders->products) ;
-    $orders->products->product_image=unserialize($orders->products->product_image);
+  	$product=Product::Latest()->with('productCategory','productStore','productReview');
+    $product=$product->findOrFail($order->products);
+    $order->products=$product;
+    $order->products->product_image=unserialize($order->products->product_image);
 
-  	return  $orders ;
+  	return  $order ;
   }
   // end show particular order
 
@@ -62,7 +66,9 @@ class OrderController extends Controller
     $orders = Order::latest()->with('usersOrder')->where('return_request',true)->paginate(10);
 
     foreach($orders as $order){
-      $order->products=unserialize($order->products);
+      $product=Product::Latest()->with('productCategory','productStore','productReview');
+      $product=$product->findOrFail($order->products);
+      $order->products=$product;
       $order->products->product_image=unserialize($order->products->product_image);
     }
 

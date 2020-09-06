@@ -193,6 +193,10 @@ Route::middleware(['auth','verified'])->prefix('/admin')->group(function(){
 		Route::get('/show/{id}','Admin\CustomerController@show');
 		//get paginated customers
 
+		//all customers
+		Route::get('/all-user/','Admin\CustomerController@all_user');
+		//get all customer
+
 		// update user from user profile
 		Route::put('/update/{id}','Admin\CustomerController@update');
 		// end update user from user profile
