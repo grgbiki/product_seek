@@ -62,6 +62,29 @@ class ProfileRepository {
     });
   }
 
+  Future<bool> updateUserPassword(int userId, String oldPassword,
+          String newPassword, String newPasswordConfirmed) =>
+      NetworkUtil().put(
+          url: NetworkEndpoints.PASSWORD_UPDATE_API + userId.toString(),
+          body: {
+            NetworkConfig.API_KEY_USER_OLD_PASSWORD: oldPassword,
+            NetworkConfig.API_KEY_USER_NEW_PASSWORD: newPassword,
+            NetworkConfig.API_KEY_USER_NEW_PASSWORD_CONFIRMATION:
+                newPasswordConfirmed,
+          }).then((response) {
+        if (response.toString().contains("access_token")) {
+          UserModel userModel = UserModel.fromJson(response["user"]);
+          userDetails = userModel;
+          if (prefs.getBool(IS_LOGGED_IN)) {
+            database.userDao.addUserData(userModel);
+          }
+          return true;
+        } else {
+          _serverMessage = response["message"];
+          return false;
+        }
+      });
+
   getErrorMessage() {
     return _serverMessage;
   }

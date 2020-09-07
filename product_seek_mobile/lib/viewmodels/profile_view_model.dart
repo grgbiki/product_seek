@@ -32,6 +32,11 @@ class ProfileViewModel extends ChangeNotifier {
     await _refreshAllStates();
   }
 
+  Future<bool> updateUserPassword(int userId, String oldPassword,
+          String newPassword, String newPasswordConfirmed) =>
+      profileRepo.updateUserPassword(
+          userId, oldPassword, newPassword, newPasswordConfirmed);
+
   void _listenUpdateResponse() {
     profileRepo.getUpdateResponse().listen((isSuccessfulLogin) {
       if (isSuccessfulLogin) {

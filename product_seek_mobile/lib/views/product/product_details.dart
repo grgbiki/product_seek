@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:product_seek_mobile/models/cart_model.dart';
 import 'package:product_seek_mobile/models/checkout_model.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
+import 'package:product_seek_mobile/models/review_model.dart';
 import 'package:product_seek_mobile/models/store_model.dart';
 import 'package:product_seek_mobile/models/wish_list_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
@@ -17,7 +18,6 @@ import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/store_view_model.dart';
 import 'package:product_seek_mobile/viewmodels/wishlist_view_model.dart';
 import 'package:product_seek_mobile/views/cart/cart_page.dart';
-import 'package:product_seek_mobile/views/chat/chat_page.dart';
 import 'package:product_seek_mobile/views/checkout/checkout_page.dart';
 import 'package:product_seek_mobile/views/login/login_page.dart';
 import 'package:product_seek_mobile/views/product/store_page.dart';
@@ -75,10 +75,15 @@ class _ItemDetailState extends State<ItemDetail> {
     setState(() {
       _isFavourite = !_isFavourite;
       if (_isFavourite) {
-        wishlistViewModel.addWishList(widget.product.id, userDetails.id);
+        heartPath = "assets/icons/heart.svg";
+        wishlistViewModel
+            .addWishList(widget.product.id, userDetails.id)
+            .then((value) => refreshWishlist());
       } else
-        wishlistViewModel.removeWishList(currentWishListModel);
-      refreshWishlist();
+        heartPath = "assets/icons/heart_outline.svg";
+      wishlistViewModel
+          .removeWishList(currentWishListModel)
+          .then((value) => refreshWishlist());
     });
   }
 
@@ -86,20 +91,23 @@ class _ItemDetailState extends State<ItemDetail> {
     if (globalIsLoggedIn) {
       await wishlistViewModel.getWishlist(userDetails.id).then((datas) {
         wishlists = datas;
-        var wishItem = wishlists.singleWhere(
-            (it) => it.product.id == widget.product.id,
-            orElse: () => null);
+        bool isFav = false;
+        WishlistModel wishItem;
+        wishlists.forEach((item) {
+          if (item.product.id == widget.product.id) {
+            isFav = true;
+            wishItem = item;
+          }
+        });
 
-        if (wishItem != null) {
+        if (isFav) {
           setState(() {
             currentWishListModel = wishItem;
             _isFavourite = true;
-            heartPath = "assets/icons/heart.svg";
           });
         } else {
           setState(() {
             _isFavourite = false;
-            heartPath = "assets/icons/heart_outline.svg";
           });
         }
       });
@@ -156,6 +164,8 @@ class _ItemDetailState extends State<ItemDetail> {
         }
       }
     });
+
+    refreshWishlist();
   }
 
   @override
@@ -223,10 +233,71 @@ class _ItemDetailState extends State<ItemDetail> {
                               _buildItemInfo(),
                               _buildCategoryInfo(),
                               _buildDescriptionPage(),
+                              _buildServicePage(),
                               _buildStoreInfo()
                             ],
                           ),
-                        )
+                        ),
+                        SliverToBoxAdapter(
+                          child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              color: Colors.white,
+                              child: Column(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "Reviews",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(vertical: 5),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  color: Colors.grey[200],
+                                  width: MediaQuery.of(context).size.width,
+                                  child: FutureBuilder(
+                                      future: storeViewModel
+                                          .getReviews(widget.product.id),
+                                      builder: (context,
+                                          AsyncSnapshot<List<ReviewModel>>
+                                              snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                            ],
+                                          );
+                                        } else if (snapshot.data.length > 0) {
+                                          return ListView.builder(
+                                              scrollDirection: Axis.vertical,
+                                              shrinkWrap: true,
+                                              itemCount: snapshot.data.length,
+                                              itemBuilder: (context, index) {
+                                                var review =
+                                                    snapshot.data[index];
+
+                                                return _buildReviewItem(review);
+                                              });
+                                        } else {
+                                          return Center(
+                                              child: Text("No Reviews Yet"));
+                                        }
+                                      }),
+                                )
+                              ])),
+                        ),
                       ],
                     ),
                   ),
@@ -236,6 +307,26 @@ class _ItemDetailState extends State<ItemDetail> {
             ),
           ),
         ));
+  }
+
+  _buildReviewItem(ReviewModel review) {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            review.username,
+            style: TextStyle(color: Colors.grey),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(review.review),
+          Divider(),
+        ],
+      ),
+    );
   }
 
   _buildCategoryInfo() {
@@ -384,6 +475,40 @@ class _ItemDetailState extends State<ItemDetail> {
     );
   }
 
+  _buildServicePage() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      color: Colors.white,
+      child: Column(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "Services",
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 5),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            color: Colors.grey[200],
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("7 days returns"),
+                Text(widget.product.warrenty),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   _buildBottomControl() {
     return Align(
       alignment: Alignment.bottomCenter,
@@ -429,15 +554,7 @@ class _ItemDetailState extends State<ItemDetail> {
             Expanded(
               flex: 1,
               child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ChatPage(
-                                storeInfo: storeInfo,
-                                productModel: widget.product,
-                              )));
-                },
+                onTap: () {},
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
