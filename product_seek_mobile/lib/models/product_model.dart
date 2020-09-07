@@ -13,6 +13,7 @@ class ProductModel {
   String images;
   double price;
   String description;
+  String warrenty;
   @ColumnInfo(name: "category_id")
   int categoryId;
   @ColumnInfo(name: "store_id")
@@ -26,6 +27,7 @@ class ProductModel {
     this.title = json[NetworkConfig.API_KEY_PRODUCT_TITLE];
     this.price = json[NetworkConfig.API_KEY_PRODUCT_PRICE].toDouble();
     this.description = json[NetworkConfig.API_KEY_PRODUCT_DESCRIPTION];
+    this.warrenty = json[NetworkConfig.API_KEY_PRODUCT_WARRENTY];
     this.images = jsonEncode(json[NetworkConfig.API_KEY_PRODUCT_IMAGE]);
     try {
       this.categoryId = CategoryModel.fromJson(

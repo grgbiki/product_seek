@@ -13,7 +13,9 @@ class NetworkUtil {
   factory NetworkUtil() => _instance;
   final JsonDecoder _decoder = new JsonDecoder();
 
-  Future<dynamic> get({@required String url}) {
+  Future<dynamic> get({
+    @required String url,
+  }) {
     try {
       return http
           .get(url)

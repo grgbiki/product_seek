@@ -116,17 +116,6 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                               ],
                             ),
                           ),
-                          Visibility(
-                            visible: _isCard,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                _buildSaveCard(),
-                              ],
-                            ),
-                          ),
                         ],
                       ))),
             )),

@@ -17,8 +17,8 @@ class WishlistViewModel extends ChangeNotifier {
 
   Future<List<WishlistModel>> getWishlist(int userId) =>
       wishlistRepo.getWishlist(userId);
-  addWishList(int productId, int userID) =>
+  Future<bool> addWishList(int productId, int userID) =>
       wishlistRepo.addWishList(productId, userID);
-  removeWishList(WishlistModel wishlistModel) =>
+  Future<bool> removeWishList(WishlistModel wishlistModel) =>
       wishlistRepo.removeWishList(wishlistModel.id);
 }

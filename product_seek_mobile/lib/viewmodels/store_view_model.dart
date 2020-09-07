@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:product_seek_mobile/models/review_model.dart';
 import 'package:product_seek_mobile/models/store_model.dart';
 import 'package:product_seek_mobile/repository/store_repository.dart';
 
@@ -27,4 +28,7 @@ class StoreViewModel extends ChangeNotifier {
 
   Future<void> unfollowStore(int userId, int storeId) =>
       storeRepo.unfollowStore(userId, storeId);
+
+  Future<List<ReviewModel>> getReviews(int productId) =>
+      storeRepo.getReviews(productId);
 }

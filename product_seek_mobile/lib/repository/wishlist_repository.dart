@@ -26,12 +26,20 @@ class WishlistRepository {
     });
   }
 
-  Future<void> addWishList(int productId, int userId) =>
-      NetworkUtil().post(url: NetworkEndpoints.ADD_WISHLIST_API, body: {
-        NetworkConfig.API_KEY_WISHLIST_PRODUCT_ID: productId.toString(),
-        NetworkConfig.API_KEY_WISHLIST_USER_ID: userId.toString()
-      });
+  Future<bool> addWishList(int productId, int userId) {
+    return NetworkUtil().post(url: NetworkEndpoints.ADD_WISHLIST_API, body: {
+      NetworkConfig.API_KEY_WISHLIST_PRODUCT_ID: productId.toString(),
+      NetworkConfig.API_KEY_WISHLIST_USER_ID: userId.toString()
+    }).then((response) {
+      return true;
+    });
+  }
 
-  Future<void> removeWishList(int id) => NetworkUtil()
-      .get(url: NetworkEndpoints.REMOVE_WISHLIST_API + id.toString());
+  Future<bool> removeWishList(int id) {
+    return NetworkUtil()
+        .get(url: NetworkEndpoints.REMOVE_WISHLIST_API + id.toString())
+        .then((response) {
+      return true;
+    });
+  }
 }

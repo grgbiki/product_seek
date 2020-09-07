@@ -8,6 +8,7 @@ class NetworkEndpoints {
   static const String REGISTER_API = _BASE_API + "/register";
   static const String RESET_PASSWORD_API = _BASE_API + "/forgot_password";
   static const String PROFILE_UPDATE_API = _BASE_API + "/update/";
+  static const String PASSWORD_UPDATE_API = _BASE_API + "/change-password/";
 
   static const String PRODUCT_API = _BASE_API + "/products";
   static const String PRODUCT_SEARCH_API = _BASE_API + "/products/search/";
@@ -35,4 +36,9 @@ class NetworkEndpoints {
 
   static const String USER_RETURNED_ORDERS_API =
       _BASE_API + "/order/user-returned-orders/";
+
+  static const String REVIEW_API = _BASE_API + "/review";
+  static const String PRODUCT_REVIEW_API = _BASE_API + "/product-review/";
+  static const String USER_PRODUCT_REVIEW_API =
+      _BASE_API + "/reviews-user-product";
 }

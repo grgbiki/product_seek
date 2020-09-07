@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/order_model.dart';
+import 'package:product_seek_mobile/models/review_model.dart';
 import 'package:product_seek_mobile/repository/order_repository.dart';
 
 class OrderViewModel extends ChangeNotifier {
@@ -25,4 +26,10 @@ class OrderViewModel extends ChangeNotifier {
   Future<bool> cancelOrder(int orderId) => orderRepo.cancelOrder(orderId);
   Future<void> returnOrder(int orderId, String returnNote) =>
       orderRepo.returnOrder(orderId, returnNote);
+
+  Future<bool> reviewProduct(int userId, int productId, String review) =>
+      orderRepo.reviewProduct(userId, productId, review);
+
+  Future<List<ReviewModel>> getUserReview(int userId, int productId) =>
+      orderRepo.getUserReview(userId, productId);
 }

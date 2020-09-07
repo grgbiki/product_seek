@@ -114,4 +114,4 @@ Route::get('/product-review/{product_id}','API\APIController@product_review');
 Route::get('/review/delete/{review_id}','API\ReviewController@delete_review');
 Route::put('/review/update/{review_id}','API\ReviewController@update_review');
 
-Route::get('/reviews-user-product/','API\ReviewController@get_review_product_user');
+Route::post('/reviews-user-product','API\ReviewController@get_review_product_user');

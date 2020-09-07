@@ -1,5 +1,6 @@
 import 'package:product_seek_mobile/database/database.dart';
 import 'package:product_seek_mobile/models/product_model.dart';
+import 'package:product_seek_mobile/models/review_model.dart';
 import 'package:product_seek_mobile/models/store_model.dart';
 import 'package:product_seek_mobile/network/network_endpoints.dart';
 import 'package:product_seek_mobile/utils/network_util.dart';
@@ -59,4 +60,19 @@ class StoreRepository {
           print("Could not fetch product data");
         }
       });
+
+  Future<List<ReviewModel>> getReviews(int productId) {
+    return NetworkUtil()
+        .get(url: NetworkEndpoints.PRODUCT_REVIEW_API + productId.toString())
+        .then((response) {
+      if (response != null) {
+        List<ReviewModel> reviewModels;
+        reviewModels =
+            (response as List).map((i) => ReviewModel.fromJson(i)).toList();
+        return reviewModels;
+      } else {
+        print("Could not fetch product data");
+      }
+    });
+  }
 }

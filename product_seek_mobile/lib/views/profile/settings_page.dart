@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:product_seek_mobile/models/user_model.dart';
 import 'package:product_seek_mobile/viewmodels/profile_view_model.dart';
+import 'package:product_seek_mobile/views/profile/update_password.dart';
 import 'package:product_seek_mobile/views/profile/update_profile.dart';
 
 class SettingPage extends StatelessWidget {
@@ -75,7 +76,12 @@ class SettingPage extends StatelessWidget {
       child: Column(
         children: [
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => UpdatePasswordPage()));
+            },
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 5),
               child: Row(
