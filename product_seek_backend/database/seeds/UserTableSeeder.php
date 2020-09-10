@@ -15,29 +15,14 @@ class UserTableSeeder extends Seeder
     {
       $users=array(
       	[
-      		'name'         =>'Govinda Thapa',
-      		'email'        =>'thapagovinda560@gmail.com',
-      		'phone_number' =>'9860151059',
-      		'address'      =>'Budhanilkantha',
+      		'name'         =>'Administration',
+      		'email'        =>'admin@admin.com',
+      		'phone_number' =>'123456789',
+      		'address'      =>'Sydney Australia',
       		'role'				 =>'admin',
       		'password'		 =>'123456789'
       	],
-      	[
-      		'name'         =>'Bhishan',
-      		'email'        =>'bhishang@gmail.com',
-      		'phone_number' =>'9860151059',
-      		'address'      =>'Gongabu',
-      		'role'				 =>'admin',
-      		'password'		 =>'123456789'
-      	],
-        [
-          'name'         =>'Bikram',
-          'email'        =>'gbikram53@gmail.com',
-          'phone_number' =>'9860151059',
-          'address'      =>'Gongabu',
-          'role'         =>'admin',
-          'password'     =>'123456789'
-        ],
+      	
       );
 
       foreach ($users as $user){
