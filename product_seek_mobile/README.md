@@ -23,3 +23,13 @@ flutter get package
 ```
 
 After getting all the required packages, run this project on any emulator or any connected mobile device
+
+## Screenshots
+![ScreenShot](/product_seek_mobile/screenshots/screenshot_1.jpg)
+![ScreenShot](/product_seek_mobile/screenshots/screenshot_2.jpg)
+![ScreenShot](/product_seek_mobile/screenshots/screenshot_3.jpg)
+![ScreenShot](/product_seek_mobile/screenshots/screenshot_4.jpg)
+![ScreenShot](/product_seek_mobile/screenshots/screenshot_5.jpg)
+![ScreenShot](/product_seek_mobile/screenshots/screenshot_6.jpg)
+![ScreenShot](/product_seek_mobile/screenshots/screenshot_7.jpg)
+![ScreenShot](/product_seek_mobile/screenshots/screenshot_8.jpg)
