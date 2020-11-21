@@ -25,4 +25,4 @@ flutter get package
 After getting all the required packages, run this project on any emulator or any connected mobile device
 
 ## Screenshots
-![ScreenShot](/screenshots/screenshot_1.jpg)
+![ScreenShot](/product_seek_mobile/screenshots/screenshot_1.jpg)
